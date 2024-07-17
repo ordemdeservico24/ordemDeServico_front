@@ -5,22 +5,25 @@ import { IRequest } from "@/interfaces/create-order-request/create-order-request
 
 
 export default function Page() {
-
-	const request: IRequest = {} as IRequest
-
 	const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		const values = e.currentTarget.children
-		const numberValues = e.currentTarget.childElementCount
-		
-		for(let i= 0; i < numberValues; i++){
-			const input = values[i] as HTMLInputElement;
-			if(input.name){
-				//@ts-expect-error 
-				request[input.name] = input.value
-			}
-		}
 
+		const getInput = (name:string): HTMLInputElement => {			
+			return e.currentTarget.querySelector(`[name="${name}"]`) as HTMLInputElement;
+		}
+		
+		const request: IRequest = {
+			subject: getInput('subject').value || '',
+			requesterName: getInput('requesterName').value || '',
+			requesterPhone: +getInput('requesterPhone').value || 0,
+			requesterStreet: getInput('requesterStreet').value || '',
+			requesterHouseNumber: +getInput('requesterHouseNumber').value || 0,
+			requesterComplement: getInput('requesterComplement').value || '',
+			requesterZipcode: getInput('requesterZipcode').value || '',
+			expirationDate: getInput('expirationDate').value ?  new Date(getInput('expirationDate').value).toISOString(): '',
+			notes: getInput('notes').value || ''		
+		}
+		
 		await fetch("http://localhost:8080/api/order/create-order", {
 			method: "POST",
 			headers: {
@@ -39,6 +42,7 @@ export default function Page() {
 			.catch((error) => {
 				console.log(error);
 			});
+			
 	};
 
 	return (
@@ -71,7 +75,7 @@ export default function Page() {
 					/>
 					<input
 						type="text"
-						name="requesterPhone"
+						name="requesterStreet"
 						placeholder="Endereço do solicitante"
 					/>
 					<input

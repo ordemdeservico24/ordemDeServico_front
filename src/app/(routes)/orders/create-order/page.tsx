@@ -2,28 +2,32 @@
 import Link from "next/link";
 import React, { FormEvent } from "react";
 import { IRequest } from "@/interfaces/create-order-request/create-order-request.interface";
-
+import { Input } from "@/components/input";
 
 export default function Page() {
 	const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		const getInput = (name:string): HTMLInputElement => {			
-			return e.currentTarget.querySelector(`[name="${name}"]`) as HTMLInputElement;
-		}
-		
+		const getInput = (name: string): HTMLInputElement => {
+			return e.currentTarget.querySelector(
+				`[name="${name}"]`
+			) as HTMLInputElement;
+		};
+
 		const request: IRequest = {
-			subject: getInput('subject').value || '',
-			requesterName: getInput('requesterName').value || '',
-			requesterPhone: +getInput('requesterPhone').value || 0,
-			requesterStreet: getInput('requesterStreet').value || '',
-			requesterHouseNumber: +getInput('requesterHouseNumber').value || 0,
-			requesterComplement: getInput('requesterComplement').value || '',
-			requesterZipcode: getInput('requesterZipcode').value || '',
-			expirationDate: getInput('expirationDate').value ?  new Date(getInput('expirationDate').value).toISOString(): '',
-			notes: getInput('notes').value || ''		
-		}
-		
+			subject: getInput("subject").value || "",
+			requesterName: getInput("requesterName").value || "",
+			requesterPhone: getInput("requesterPhone").value || "",
+			requesterStreet: getInput("requesterStreet").value || "",
+			requesterHouseNumber: +getInput("requesterHouseNumber").value || 0,
+			requesterComplement: getInput("requesterComplement").value || "",
+			requesterZipcode: getInput("requesterZipcode").value || "",
+			expirationDate: getInput("expirationDate").value
+				? new Date(getInput("expirationDate").value).toISOString()
+				: "",
+			notes: getInput("notes").value || "",
+		};
+
 		await fetch("http://localhost:8080/api/order/create-order", {
 			method: "POST",
 			headers: {
@@ -42,7 +46,6 @@ export default function Page() {
 			.catch((error) => {
 				console.log(error);
 			});
-			
 	};
 
 	return (
@@ -57,47 +60,45 @@ export default function Page() {
 				>
 					Voltar
 				</Link>
-				<form action='#' onSubmit={(e)=>onSubmit(e)} className="mt-4 flex flex-wrap">
-						<input
-							type="text"
-							name="subject"
-							placeholder="Assunto"
-						/>
-					<input
+				<form
+					action="#"
+					onSubmit={(e) => onSubmit(e)}
+					className="mt-4 flex flex-wrap"
+				>
+					<Input type="text" name="subject" placeholder="Assunto" />
+					<Input
 						type="text"
 						name="requesterName"
 						placeholder="Nome do solicitante"
 					/>
-					<input
+					<Input
 						type="tel"
 						name="requesterPhone"
 						placeholder="Telefone do solicitante"
 					/>
-					<input
+					<Input
 						type="text"
 						name="requesterStreet"
 						placeholder="Endereço do solicitante"
 					/>
-					<input
+					<Input
 						type="number"
 						name="requesterHouseNumber"
 						placeholder="N° da casa do solicitante"
 					/>
-					<input
+					<Input
 						type="text"
 						name="requesterComplement"
 						placeholder="Complemento do solicitante"
 					/>
-					<input
+					<Input
 						type="text"
 						name="requesterZipcode"
 						placeholder="CEP do solicitante"
 					/>
-					<input
-						type="date"
-						name="expirationDate"
-					/>
-					<textarea
+					<Input type="date" name="expirationDate" />
+					<Input
+						textArea={true}
 						name="notes"
 						placeholder="Observações"
 					/>

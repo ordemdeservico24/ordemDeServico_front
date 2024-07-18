@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { AssignTeam } from "./assignTeam";
 
 interface AssignedTeamProps {
 	assignedTeam: {
@@ -8,9 +9,13 @@ interface AssignedTeamProps {
 		createdAt: string;
 		updatedAt: string;
 	} | null;
+	orderId: string;
 }
 
-export const AssignedTeam: React.FC<AssignedTeamProps> = ({ assignedTeam }) => {
+export const AssignedTeam: React.FC<AssignedTeamProps> = ({
+	assignedTeam,
+	orderId,
+}) => {
 	return (
 		<div>
 			{assignedTeam ? (
@@ -21,9 +26,12 @@ export const AssignedTeam: React.FC<AssignedTeamProps> = ({ assignedTeam }) => {
 					<p>{assignedTeam.teamName}</p>
 				</>
 			) : (
-				<h1 className="font-medium text-lg py-4">
-					Não possui equipe atribuída
-				</h1>
+				<>
+					<h1 className="font-medium text-lg py-4">
+						Não possui equipe atribuída
+					</h1>
+					<AssignTeam orderId={orderId} />
+				</>
 			)}
 		</div>
 	);

@@ -1,4 +1,5 @@
 "use client";
+import { Container } from "@/components/container";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
@@ -57,8 +58,8 @@ export default function Page() {
 	return (
 		<div>
 			<h1 className="font-semibold text-xl">Ordens de serviço</h1>
-			<div className="mt-4 bg-white min-w-full p-4 rounded-lg">
-				<div className="flex justify-between">
+			<Container>
+				<div className="flex justify-between text-xs sm:text-base">
 					<input
 						type="search"
 						name=""
@@ -73,8 +74,8 @@ export default function Page() {
 						Cadastrar OS
 					</Link>
 				</div>
-				<div className="mt-8">
-					<ul className="flex gap-32">
+				<div className="mt-4 md:mt-8">
+					<ul className="flex justify-around xl:justify-normal xl:gap-32 text-xs sm:text-base">
 						<li
 							className={`hover:text-[#7F56D8] cursor-pointer font-medium`}
 						>
@@ -97,26 +98,28 @@ export default function Page() {
 							key={index}
 						>
 							<div className="flex justify-between items-center">
-								<h1 className="font-semibold text-xl">
+								<h1 className="font-semibold text-sm md:text-xl">
 									Ordem de Serviço - {orders.orderId}
 								</h1>
-								<p className="text-[#84818A] text-xs">
+								<p className="text-[#84818A] text-[.6rem] md:text-xs text-right">
 									Data de abertura: {orders.openningDate}
 								</p>
 							</div>
-							<h1 className="font-medium">{orders.subject}</h1>
+							<h1 className="font-medium text-xs sm:text-base">
+								{orders.subject}
+							</h1>
 							<div className="flex justify-between items-center">
-								<p className="text-[#84818A] text-xs">
+								<p className="text-[#84818A] text-[.6rem] md:text-xs">
 									{truncateNotes(orders.notes, 200)}
 								</p>
-								<p className="text-white bg-[#4FAFCB] px-2 py-1 rounded">
+								<p className="text-white bg-[#4FAFCB] px-2 py-1 rounded text-sm sm:text-base">
 									{orders.orderStatus}
 								</p>
 							</div>
 						</Link>
 					))}
 				</div>
-			</div>
+			</Container>
 		</div>
 	);
 }

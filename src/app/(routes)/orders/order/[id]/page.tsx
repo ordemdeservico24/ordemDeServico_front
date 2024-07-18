@@ -63,8 +63,7 @@ export default function Page({ params }: { params: { id: string } }) {
 							Ordem de Serviço - {order.orderId}
 						</h1>
 						<p className="text-[#84818A] text-xs">
-							Data de abertura:{" "}
-							{order.openningDate.split(", ")[0]}
+							Data de abertura: {order.openningDate}
 						</p>
 					</div>
 					<h1 className="font-medium text-xl">{order.subject}</h1>

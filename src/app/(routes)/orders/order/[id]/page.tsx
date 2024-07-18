@@ -100,7 +100,10 @@ export default function Page({ params }: { params: { id: string } }) {
 							</p>
 						</div>
 					</div>
-					<AssignedTeam assignedTeam={order.assignedTeam} />
+					<AssignedTeam
+						assignedTeam={order.assignedTeam}
+						orderId={order.id}
+					/>
 				</div>
 			) : (
 				<h1>Não há ordem de serviço com este id</h1>

@@ -23,7 +23,10 @@ export const AssignedTeam: React.FC<AssignedTeamProps> = ({
 					<h1 className="font-medium text-lg py-4">
 						Equipe atribuída
 					</h1>
-					<p>{assignedTeam.teamName}</p>
+					<AssignTeam
+						orderId={orderId}
+						teamName={assignedTeam.teamName}
+					/>
 				</>
 			) : (
 				<>

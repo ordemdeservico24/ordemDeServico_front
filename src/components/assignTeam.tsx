@@ -33,13 +33,16 @@ export const AssignTeam: React.FC<Order> = ({ orderId, teamName }) => {
 	};
 
 	const assignTeam = async () => {
-		await fetch(`http://localhost:8080/api/order/assign-team/${orderId}`, {
-			method: "PATCH",
-			headers: {
-				"Content-type": "application/json",
-			},
-			body: JSON.stringify({ teamId: selectedTeam }),
-		})
+		await fetch(
+			`https://ordemdeservicosdev.onrender.com/api/order/assign-team/${orderId}`,
+			{
+				method: "PATCH",
+				headers: {
+					"Content-type": "application/json",
+				},
+				body: JSON.stringify({ teamId: selectedTeam }),
+			}
+		)
 			.then((res) => {
 				if (res.ok) {
 					return res.json();

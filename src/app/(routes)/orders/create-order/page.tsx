@@ -29,13 +29,16 @@ export default function Page() {
 			notes: getInput("notes").value || "",
 		};
 
-		await fetch("http://localhost:8080/api/order/create-order", {
-			method: "POST",
-			headers: {
-				"Content-type": "application/json",
-			},
-			body: JSON.stringify(request),
-		})
+		await fetch(
+			"https://ordemdeservicosdev.onrender.com/api/order/create-order",
+			{
+				method: "POST",
+				headers: {
+					"Content-type": "application/json",
+				},
+				body: JSON.stringify(request),
+			}
+		)
 			.then((res) => {
 				if (res.ok) {
 					return res.json();

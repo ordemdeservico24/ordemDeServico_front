@@ -1,5 +1,6 @@
 "use client";
 import { AssignTeamLeader } from "@/components/assignTeamLeader";
+import { Container } from "@/components/container";
 import { Input } from "@/components/input";
 import { ICreateTeam } from "@/interfaces/create-team-request/createTeam.interface";
 import Link from "next/link";
@@ -46,7 +47,7 @@ export default function Page() {
 	return (
 		<div>
 			<h1 className="font-semibold text-xl">Criar nova equipe</h1>
-			<div className="mt-4 bg-white min-w-full p-4 rounded-lg flex flex-col gap-4">
+			<Container>
 				<Link
 					href="/teams"
 					className="bg-[#7F56D8] text-white font-medium rounded px-4 py-2 hover:-translate-y-1 transition-all w-fit"
@@ -73,7 +74,7 @@ export default function Page() {
 						</button>
 					</div>
 				</form>
-			</div>
+			</Container>
 		</div>
 	);
 }

@@ -1,5 +1,6 @@
 "use client";
 import { AssignedTeam } from "@/components/assignedTeam";
+import { Container } from "@/components/container";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
@@ -49,7 +50,7 @@ export default function Page({ params }: { params: { id: string } }) {
 			});
 	}, [params.id]);
 	return (
-		<div className="mt-4 bg-white min-w-full p-4 rounded-lg">
+		<Container>
 			{order ? (
 				<div className="mt-4 py-2 px-4 rounded flex flex-col gap-2">
 					<Link
@@ -107,6 +108,6 @@ export default function Page({ params }: { params: { id: string } }) {
 			) : (
 				<h1>Não há ordem de serviço com este id</h1>
 			)}
-		</div>
+		</Container>
 	);
 }

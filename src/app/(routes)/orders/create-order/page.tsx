@@ -3,6 +3,7 @@ import Link from "next/link";
 import React, { FormEvent } from "react";
 import { IRequest } from "@/interfaces/create-order-request/create-order-request.interface";
 import { Input } from "@/components/input";
+import { Container } from "@/components/container";
 
 export default function Page() {
 	const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -51,9 +52,9 @@ export default function Page() {
 	return (
 		<>
 			<h1 className="font-semibold text-xl">
-				Cadastrar nova ordem de serviço
+				Cadastrar ordem de serviço
 			</h1>
-			<div className="mt-4 bg-white min-w-full p-4 rounded-lg">
+			<Container>
 				<Link
 					href="/orders"
 					className="bg-[#7F56D8] text-white font-medium rounded px-4 py-2 hover:-translate-y-1 transition-all w-fit"
@@ -109,7 +110,7 @@ export default function Page() {
 						Cadastrar
 					</button>
 				</form>
-			</div>
+			</Container>
 		</>
 	);
 }

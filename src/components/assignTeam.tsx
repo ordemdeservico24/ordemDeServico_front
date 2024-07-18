@@ -3,9 +3,10 @@ import React, { useEffect, useState } from "react";
 
 interface Order {
 	orderId: string;
+	teamName?: string;
 }
 
-export const AssignTeam: React.FC<Order> = ({ orderId }) => {
+export const AssignTeam: React.FC<Order> = ({ orderId, teamName }) => {
 	console.log(orderId);
 	const [teams, setTeams] = useState<ITeam[]>([]);
 	const [selectedTeam, setSelectedTeam] = useState("");
@@ -61,7 +62,9 @@ export const AssignTeam: React.FC<Order> = ({ orderId }) => {
 				onChange={handleSelectChange}
 				value={selectedTeam}
 			>
-				<option value="">Selecione uma equipe</option>
+				<option value="">
+					{teamName ? teamName : "Selecione uma equipe"}
+				</option>
 				{teams.map((teams, index) => (
 					<option value={teams.id} key={index}>
 						{teams.teamName}

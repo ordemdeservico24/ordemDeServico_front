@@ -1,7 +1,12 @@
+import { IOrder } from "./order.interface";
+
 export interface ITeam {
 	id: string;
 	teamLeaderId: string;
 	teamName: string;
+	leader: ITeamLeader;
+	orders: IOrder[];
+	members: ITeamMember[];
 }
 
 export interface ITeamLeader {

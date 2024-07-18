@@ -101,8 +101,7 @@ export default function Page() {
 									Ordem de Serviço - {orders.orderId}
 								</h1>
 								<p className="text-[#84818A] text-xs">
-									Data de abertura:{" "}
-									{orders.openningDate.split(", ")[0]}
+									Data de abertura: {orders.openningDate}
 								</p>
 							</div>
 							<h1 className="font-medium">{orders.subject}</h1>

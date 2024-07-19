@@ -1,13 +1,36 @@
 "use client";
 import Link from "next/link";
-import React, { ReactNode } from "react";
+import React, { ReactNode, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
-import { IoMenu } from "react-icons/io5";
+import { IoClose, IoMenu } from "react-icons/io5";
 
 export default function Menu() {
+	const [mobileMenu, setMobileMenu] = useState(false);
+
+	const handleMenu = () => {
+		setMobileMenu(!mobileMenu);
+	};
+
 	return (
 		<>
-			<div className="border-x border-[#d7d7d7] relative shadow-inner hidden lg:inline">
+			{mobileMenu ? (
+				<IoClose
+					size={30}
+					className="m-2 z-10 lg:hidden"
+					onClick={handleMenu}
+				/>
+			) : (
+				<IoMenu
+					size={30}
+					className="m-2 z-10 lg:hidden"
+					onClick={handleMenu}
+				/>
+			)}
+			<div
+				className={`border-x border-[#d7d7d7] shadow-inner absolute transition-all duration-200 ${
+					mobileMenu ? "bg-[#ffffff]" : "-left-52"
+				} h-full lg:relative lg:inline`}
+			>
 				<ul className="flex flex-col mt-8 gap-4">
 					<Link href="/">
 						<li className="hover:bg-[rgba(127,86,216,0.1)] px-8 py-4 hover:text-[#7F56D8] cursor-pointer font-medium">

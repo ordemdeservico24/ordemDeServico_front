@@ -47,11 +47,11 @@ export default function Menu() {
 							Ordens de serviço
 						</li>
 					</Link>
-					<li className="hover:bg-[rgba(127,86,216,0.1)] px-8 py-4 hover:text-[#7F56D8] cursor-pointer font-medium group">
-						<p
-							className="flex items-center justify-between"
-							onClick={handleSubMenu}
-						>
+					<li
+						className="hover:bg-[rgba(127,86,216,0.1)] px-8 py-4 hover:text-[#7F56D8] cursor-pointer font-medium group"
+						onClick={handleSubMenu}
+					>
+						<p className="flex items-center justify-between">
 							Equipes
 							<IoIosArrowDown
 								className={`transition-all duration-200 ${

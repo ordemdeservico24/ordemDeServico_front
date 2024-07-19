@@ -16,13 +16,13 @@ export default function Menu() {
 			{mobileMenu ? (
 				<IoClose
 					size={30}
-					className="m-2 z-10 lg:hidden"
+					className="m-2 z-10 lg:hidden absolute"
 					onClick={handleMenu}
 				/>
 			) : (
 				<IoMenu
 					size={30}
-					className="m-2 z-10 lg:hidden"
+					className="m-2 z-10 lg:hidden absolute right-0"
 					onClick={handleMenu}
 				/>
 			)}

@@ -6,9 +6,14 @@ import { IoClose, IoMenu } from "react-icons/io5";
 
 export default function Menu() {
 	const [mobileMenu, setMobileMenu] = useState(false);
+	const [subMenuTeams, setSubMenuTeams] = useState(false);
 
 	const handleMenu = () => {
 		setMobileMenu(!mobileMenu);
+	};
+
+	const handleSubMenu = () => {
+		setSubMenuTeams(!subMenuTeams);
 	};
 
 	return (
@@ -43,11 +48,22 @@ export default function Menu() {
 						</li>
 					</Link>
 					<li className="hover:bg-[rgba(127,86,216,0.1)] px-8 py-4 hover:text-[#7F56D8] cursor-pointer font-medium group">
-						<p className="flex items-center justify-between">
+						<p
+							className="flex items-center justify-between"
+							onClick={handleSubMenu}
+						>
 							Equipes
-							<IoIosArrowDown className="transition-all duration-200 group-hover:rotate-180" />
+							<IoIosArrowDown
+								className={`transition-all duration-200 ${
+									subMenuTeams ? "rotate-180" : ""
+								}`}
+							/>
 						</p>
-						<div className="flex-col pl-4 hidden group-hover:flex gap-4 w-full">
+						<div
+							className={`flex-col pl-4 ${
+								subMenuTeams ? "flex" : "hidden"
+							} gap-4 w-full`}
+						>
 							<Link
 								href="/teams"
 								className="mt-4 hover:text-[#5100ff]"

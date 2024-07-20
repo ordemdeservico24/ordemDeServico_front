@@ -1,3 +1,4 @@
+import { ICreateTeam } from "./create-team-request/createTeam.interface";
 import { IOrder } from "./order.interface";
 
 export interface ITeam {
@@ -16,6 +17,7 @@ export interface ITeamLeader {
 	phone: string;
 	role: string;
 	teamId: string;
+	team: ICreateTeam;
 }
 
 export interface ITeamMember {

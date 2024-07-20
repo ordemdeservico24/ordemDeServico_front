@@ -27,7 +27,7 @@ export const Input: React.FC<InputProps> = ({
 						name={name}
 						id={labelName}
 						placeholder={placeholder}
-						className={`outline-none border border-[#2a2a2a] rounded px-2 py-1 w-full mb-4 ${className}`}
+						className={`outline-none border border-[#2a2a2a] rounded px-2 py-1 mb-4 ${className}`}
 					></textarea>
 				</>
 			) : (
@@ -38,7 +38,7 @@ export const Input: React.FC<InputProps> = ({
 						name={name}
 						placeholder={placeholder}
 						id={labelName}
-						className={`outline-none border border-[#2a2a2a] rounded px-2 py-1 w-full mb-4 ${className}`}
+						className={`outline-none border border-[#2a2a2a] rounded px-2 py-1 mb-4 ${className}`}
 					/>
 				</>
 			)}

@@ -1,5 +1,6 @@
 "use client";
 import { Container } from "@/components/container";
+import { OrderStatus } from "@/components/orderStatus";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
@@ -92,15 +93,19 @@ export default function Page() {
 						</li>
 					</ul>
 					{orders.map((orders, index) => (
-						<Link
+						<div
 							className="mt-4 border border-[#e2e2e2] py-2 px-4 rounded flex flex-col gap-2"
-							href={`/orders/order/${orders.id}`}
 							key={index}
 						>
 							<div className="flex justify-between items-center">
-								<h1 className="font-semibold text-sm md:text-xl">
-									Ordem de Serviço - {orders.orderId}
-								</h1>
+								<Link
+									href={`/orders/order/${orders.id}`}
+									className="hover:text-[#2c5cc5]"
+								>
+									<h1 className="font-semibold text-sm md:text-xl">
+										Ordem de Serviço - {orders.orderId}
+									</h1>
+								</Link>
 								<p className="text-[#84818A] text-[.6rem] md:text-xs text-right">
 									Data de abertura: {orders.openningDate}
 								</p>
@@ -112,11 +117,9 @@ export default function Page() {
 								<p className="text-[#84818A] text-[.6rem] md:text-xs">
 									{truncateNotes(orders.notes, 200)}
 								</p>
-								<p className="text-white bg-[#4FAFCB] px-2 py-1 rounded text-sm sm:text-base">
-									{orders.orderStatus}
-								</p>
+								<OrderStatus status={orders.orderStatus} />
 							</div>
-						</Link>
+						</div>
 					))}
 				</div>
 			</Container>

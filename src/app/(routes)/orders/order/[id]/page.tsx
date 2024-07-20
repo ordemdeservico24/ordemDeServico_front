@@ -80,19 +80,23 @@ export default function Page({ params }: { params: { id: string } }) {
 						</h1>
 						<div className="flex flex-wrap gap-x-16 gap-y-4">
 							<p>
-								<strong>Endereço:</strong>{" "}
+								<strong>Nome: </strong>
+								{order.requesterName}
+							</p>
+							<p>
+								<strong>Endereço: </strong>
 								{order.requesterStreet}
 							</p>
 							<p>
-								<strong>N°:</strong>{" "}
+								<strong>N°: </strong>
 								{order.requesterHouseNumber}
 							</p>
 							<p>
-								<strong>Complemento:</strong>{" "}
+								<strong>Complemento: </strong>
 								{order.requesterComplement}
 							</p>
 							<p>
-								<strong>Telefone/celular:</strong>{" "}
+								<strong>Telefone/celular: </strong>
 								{order.requesterPhone}
 							</p>
 							<p>

@@ -64,6 +64,7 @@ export default function Page() {
 							type="text"
 							name="teamName"
 							placeholder="Nome da equipe"
+							className="w-full"
 						/>
 						<AssignTeamLeader />
 						<button

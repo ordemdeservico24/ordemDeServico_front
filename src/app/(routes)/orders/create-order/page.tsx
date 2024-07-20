@@ -64,55 +64,61 @@ export default function Page() {
 				>
 					Voltar
 				</Link>
-				<form
-					action="#"
-					onSubmit={(e) => onSubmit(e)}
-					className="mt-4 flex flex-wrap"
-				>
-					<Input type="text" name="subject" placeholder="Assunto" />
-					<Input
-						type="text"
-						name="requesterName"
-						placeholder="Nome do solicitante"
-					/>
-					<Input
-						type="tel"
-						name="requesterPhone"
-						placeholder="Telefone do solicitante"
-					/>
-					<Input
-						type="text"
-						name="requesterStreet"
-						placeholder="Endereço do solicitante"
-					/>
-					<Input
-						type="number"
-						name="requesterHouseNumber"
-						placeholder="N° da casa do solicitante"
-					/>
-					<Input
-						type="text"
-						name="requesterComplement"
-						placeholder="Complemento do solicitante"
-					/>
-					<Input
-						type="text"
-						name="requesterZipcode"
-						placeholder="CEP do solicitante"
-					/>
-					<Input type="date" name="expirationDate" />
-					<Input
-						textArea={true}
-						name="notes"
-						placeholder="Observações"
-					/>
-					<button
-						className="bg-[#7F56D8] text-white font-medium rounded px-4 py-2 hover:-translate-y-1 transition-all w-full"
-						type="submit"
+				<div className="flex flex-col items-center">
+					<form
+						action="#"
+						onSubmit={(e) => onSubmit(e)}
+						className="mt-4 flex flex-col max-w-96 w-full"
 					>
-						Cadastrar
-					</button>
-				</form>
+						<Input
+							type="text"
+							name="subject"
+							placeholder="Assunto"
+						/>
+						<Input
+							type="text"
+							name="requesterName"
+							placeholder="Nome do solicitante"
+						/>
+						<Input
+							type="tel"
+							name="requesterPhone"
+							placeholder="Telefone do solicitante"
+						/>
+						<Input
+							type="text"
+							name="requesterStreet"
+							placeholder="Endereço do solicitante"
+						/>
+						<Input
+							type="number"
+							name="requesterHouseNumber"
+							placeholder="N° da casa do solicitante"
+						/>
+						<Input
+							type="text"
+							name="requesterComplement"
+							placeholder="Complemento do solicitante"
+						/>
+						<Input
+							type="text"
+							name="requesterZipcode"
+							placeholder="CEP do solicitante"
+						/>
+						<Input type="date" name="expirationDate" />
+						<Input
+							textArea={true}
+							name="notes"
+							placeholder="Observações"
+						/>
+						<button
+							className="bg-[#7F56D8] text-white font-medium rounded px-4 py-2 hover:-translate-y-1 transition-all w-full"
+							type="submit"
+						>
+							Cadastrar
+						</button>
+					</form>
+				</div>
 			</Container>
 		</>
 	);

@@ -26,4 +26,5 @@ export interface ITeamMember {
 	memberRole: string;
 	memberPhone: string;
 	memberName: string;
+	team: ICreateTeam;
 }

@@ -1,5 +1,6 @@
 "use client";
 import { Container } from "@/components/container";
+import { EditDeleteOrder } from "@/components/editDeleteOrder";
 import { OrderStatus } from "@/components/orderStatus";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -110,14 +111,20 @@ export default function Page() {
 									Data de abertura: {orders.openningDate}
 								</p>
 							</div>
-							<h1 className="font-medium text-xs sm:text-base">
-								{orders.subject}
-							</h1>
+							<div className="flex justify-between">
+								<h1 className="font-medium text-xs sm:text-base">
+									{orders.subject}
+								</h1>
+								<EditDeleteOrder orderId={orders.id} />
+							</div>
 							<div className="flex justify-between items-center">
 								<p className="text-[#84818A] text-[.6rem] md:text-xs">
 									{truncateNotes(orders.notes, 200)}
 								</p>
-								<OrderStatus status={orders.orderStatus} />
+								<OrderStatus
+									currentStatus={orders.orderStatus}
+									orderId={orders.id}
+								/>
 							</div>
 						</div>
 					))}

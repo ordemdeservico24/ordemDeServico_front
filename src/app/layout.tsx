@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
 import Menu from "@/components/menu";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const inter = Montserrat({ subsets: ["latin"] });
 
@@ -23,6 +25,7 @@ export default function RootLayout({
 					<main className="px-2 py-2 sm:py-4 sm:px-6 md:py-8 md:px-12 bg-[#ececff] w-screen">
 						{children}
 					</main>
+					<ToastContainer />
 				</div>
 			</body>
 		</html>

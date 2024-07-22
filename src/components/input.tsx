@@ -8,6 +8,7 @@ interface InputProps {
 	labelName?: string;
 	labelText?: string;
 	textArea?: boolean;
+	value?: string | number;
 }
 
 export const Input: React.FC<InputProps> = ({
@@ -18,6 +19,7 @@ export const Input: React.FC<InputProps> = ({
 	labelName,
 	labelText,
 	textArea,
+	value,
 }) => {
 	return (
 		<>
@@ -27,6 +29,7 @@ export const Input: React.FC<InputProps> = ({
 						name={name}
 						id={labelName}
 						placeholder={placeholder}
+						defaultValue={value}
 						className={`outline-none border border-[#2a2a2a] rounded px-2 py-1 mb-4 ${className}`}
 					></textarea>
 				</>
@@ -38,6 +41,7 @@ export const Input: React.FC<InputProps> = ({
 						name={name}
 						placeholder={placeholder}
 						id={labelName}
+						defaultValue={value}
 						className={`outline-none border border-[#2a2a2a] rounded px-2 py-1 mb-4 ${className}`}
 					/>
 				</>

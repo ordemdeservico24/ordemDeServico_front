@@ -1,12 +1,32 @@
 "use client";
 import Link from "next/link";
-import React, { FormEvent } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { IRequest } from "@/interfaces/create-order-request/create-order-request.interface";
 import { Input } from "@/components/input";
 import { Container } from "@/components/container";
 import { toast } from "react-toastify";
+import { ISubject } from "@/interfaces/subject.interface";
 
 export default function Page() {
+	const [subjects, setSubjects] = useState<ISubject[]>();
+
+	useEffect(() => {
+		fetch(
+			`https://ordemdeservicosdev.onrender.com/api/order/get-all-subjects/`,
+			{
+				method: "GET",
+			}
+		)
+			.then((res) => {
+				const status = res.status;
+				return res.json().then((data) => ({ status, data }));
+			})
+			.then(({ status, data }) => {
+				console.log(status, data);
+				setSubjects(data);
+			});
+	}, []);
+
 	const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
@@ -17,16 +37,13 @@ export default function Page() {
 		};
 
 		const request: IRequest = {
-			subject: getInput("subject").value || "",
+			subjectId: getInput("subjectId").value || "",
 			requesterName: getInput("requesterName").value || "",
 			requesterPhone: getInput("requesterPhone").value || "",
 			requesterStreet: getInput("requesterStreet").value || "",
 			requesterHouseNumber: +getInput("requesterHouseNumber").value || 0,
 			requesterComplement: getInput("requesterComplement").value || "",
 			requesterZipcode: getInput("requesterZipcode").value || "",
-			expirationDate: getInput("expirationDate").value
-				? new Date(getInput("expirationDate").value).toISOString()
-				: "",
 			notes: getInput("notes").value || "",
 		};
 
@@ -54,7 +71,7 @@ export default function Page() {
 				}),
 			{
 				pending: "Criando ordem",
-				success: "Orden criada com sucesso",
+				success: "Ordem criada com sucesso",
 				error: "Ocorreu um erro",
 			}
 		);
@@ -78,11 +95,21 @@ export default function Page() {
 						onSubmit={(e) => onSubmit(e)}
 						className="mt-4 flex flex-col max-w-96 w-full"
 					>
-						<Input
-							type="text"
-							name="subject"
-							placeholder="Assunto"
-						/>
+						<select
+							name="subjectId"
+							id="subjectId"
+							className="outline-none border border-[#2a2a2a] rounded px-2 py-1 mb-4"
+						>
+							{/* Opção para o subject atual */}
+							<option value="">Selecione um assunto</option>
+							{/* Opções para os demais subjects, filtrando o subject atual */}
+							{subjects?.map((subject, index) => (
+								<option value={subject.id} key={index}>
+									{subject.name} ({subject.expirationDays}{" "}
+									dias de prazo)
+								</option>
+							))}
+						</select>
 						<Input
 							type="text"
 							name="requesterName"
@@ -113,7 +140,6 @@ export default function Page() {
 							name="requesterZipcode"
 							placeholder="CEP do solicitante"
 						/>
-						<Input type="date" name="expirationDate" />
 						<Input
 							textArea={true}
 							name="notes"

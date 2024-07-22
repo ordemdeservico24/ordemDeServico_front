@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React, { useState } from "react";
 import { FaCheck, FaEdit, FaTrash } from "react-icons/fa";
 import { Bounce, toast } from "react-toastify";
@@ -44,7 +45,9 @@ export const EditDeleteOrder: React.FC<OrderID> = ({ orderId }) => {
 
 	return (
 		<div className="flex gap-2">
-			<FaEdit className="text-[#44D2FF] cursor-pointer" size={20} />
+			<Link href={`/orders/order/edit/${orderId}`}>
+				<FaEdit className="text-[#44D2FF] cursor-pointer" size={20} />
+			</Link>
 			{!deleteConfirmation ? (
 				<FaTrash
 					className="text-[#FE5E64] cursor-pointer transition-all duration-200"

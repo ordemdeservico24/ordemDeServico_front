@@ -2,37 +2,12 @@
 import { Container } from "@/components/container";
 import { EditDeleteOrder } from "@/components/editDeleteOrder";
 import { OrderStatus } from "@/components/orderStatus";
+import { IOrderGet } from "@/interfaces/order.interface";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
-interface Order {
-	id: string;
-	orderId: number;
-	openningDate: string;
-	expirationDate: string;
-	orderStatus: string;
-	subject: string;
-	notes: string;
-	requesterName: string;
-	requesterPhone: string;
-	requesterStreet: string;
-	requesterHouseNumber: number;
-	requesterComplement: string;
-	requesterZipcode: string;
-	teamId: string;
-	createdAt: string;
-	updatedAt: string;
-	assignedTeam: {
-		id: string;
-		teamLeaderId: string;
-		teamName: string;
-		createdAt: string;
-		updatedAt: string;
-	};
-}
-
 export default function Page() {
-	const [orders, setOrders] = useState<Order[]>([]);
+	const [orders, setOrders] = useState<IOrderGet[]>([]);
 	useEffect(() => {
 		fetch(
 			"https://ordemdeservicosdev.onrender.com/api/order/get-all-orders",
@@ -113,7 +88,7 @@ export default function Page() {
 							</div>
 							<div className="flex justify-between">
 								<h1 className="font-medium text-xs sm:text-base">
-									{orders.subject}
+									{orders.subject.name}
 								</h1>
 								<EditDeleteOrder orderId={orders.id} />
 							</div>

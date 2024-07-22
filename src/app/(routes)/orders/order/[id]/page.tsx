@@ -1,37 +1,12 @@
 "use client";
 import { AssignedTeam } from "@/components/assignedTeam";
 import { Container } from "@/components/container";
+import { IOrderGet } from "@/interfaces/order.interface";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
-interface Order {
-	id: string;
-	orderId: number;
-	openningDate: string;
-	expirationDate: string;
-	orderStatus: string;
-	subject: string;
-	notes: string;
-	requesterName: string;
-	requesterPhone: string;
-	requesterStreet: string;
-	requesterHouseNumber: number;
-	requesterComplement: string;
-	requesterZipcode: string;
-	teamId: string;
-	createdAt: string;
-	updatedAt: string;
-	assignedTeam: {
-		id: string;
-		teamLeaderId: string;
-		teamName: string;
-		createdAt: string;
-		updatedAt: string;
-	};
-}
-
 export default function Page({ params }: { params: { id: string } }) {
-	const [order, setOrder] = useState<Order>();
+	const [order, setOrder] = useState<IOrderGet>();
 
 	useEffect(() => {
 		fetch(
@@ -67,7 +42,9 @@ export default function Page({ params }: { params: { id: string } }) {
 							Data de abertura: {order.openningDate}
 						</p>
 					</div>
-					<h1 className="font-medium text-xl">{order.subject}</h1>
+					<h1 className="font-medium text-xl">
+						{order.subject.name}
+					</h1>
 					<div className="flex justify-between items-center">
 						<p className="text-[#84818A] text-sm">{order.notes}</p>
 						<p className="text-white bg-[#4FAFCB] px-2 py-1 rounded">

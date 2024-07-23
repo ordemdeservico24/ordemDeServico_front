@@ -101,9 +101,7 @@ export default function Page() {
 							className="outline-none border border-[#2a2a2a] rounded px-2 py-1 mb-4"
 							required
 						>
-							{/* Opção para o subject atual */}
-							<option value="">Selecione um assunto</option>
-							{/* Opções para os demais subjects, filtrando o subject atual */}
+							<option value="">Selecione uma categoria</option>
 							{subjects?.map((subject, index) => (
 								<option value={subject.id} key={index}>
 									{subject.name} ({subject.expirationDays}{" "}

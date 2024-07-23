@@ -84,6 +84,11 @@ export default function Menu() {
 							</Link>
 						</div>
 					</li>
+					<Link href="/subjects">
+						<li className="hover:bg-[rgba(127,86,216,0.1)] px-8 py-4 hover:text-[#7F56D8] cursor-pointer font-medium">
+							Categorias
+						</li>
+					</Link>
 					<li className="hover:bg-[rgba(127,86,216,0.1)] px-8 py-4 hover:text-[#7F56D8] cursor-pointer font-medium">
 						Usuários
 					</li>

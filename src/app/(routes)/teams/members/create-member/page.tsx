@@ -5,6 +5,7 @@ import { ICreateMember } from "@/interfaces/create-member-request/createMember.i
 import { ITeam } from "@/interfaces/team.interfaces";
 import Link from "next/link";
 import React, { FormEvent, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function Page() {
 	const [teams, setTeams] = useState<ITeam[]>();
@@ -23,27 +24,34 @@ export default function Page() {
 			memberRole: getInput("memberRole").value || "",
 			teamId: getInput("teamId").value || "",
 		};
-		await fetch(
-			"https://ordemdeservicosdev.onrender.com/api/team/create-member",
-			{
-				method: "POST",
-				headers: {
-					"Content-type": "application/json",
-				},
-				body: JSON.stringify(request),
-			}
-		)
-			.then((res) => {
-				if (res.ok) {
-					return res.json();
+		toast.promise(
+			fetch(
+				"https://ordemdeservicosdev.onrender.com/api/team/create-member",
+				{
+					method: "POST",
+					headers: {
+						"Content-type": "application/json",
+					},
+					body: JSON.stringify(request),
 				}
-			})
-			.then((data) => {
-				console.log(data);
-			})
-			.catch((error) => {
-				console.log(error);
-			});
+			)
+				.then((res) => {
+					if (res.ok) {
+						return res.json();
+					}
+				})
+				.then((data) => {
+					console.log(data);
+				})
+				.catch((error) => {
+					console.log(error);
+				}),
+			{
+				pending: "Criando membro de equipe",
+				success: "Membro de equipe criado com sucesso!",
+				error: "Ocorreu um erro ao criar membro de equipe",
+			}
+		);
 	};
 
 	useEffect(() => {

@@ -1,5 +1,6 @@
 import { ITeam } from "@/interfaces/team.interfaces";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 interface Order {
 	orderId: string;
@@ -33,27 +34,34 @@ export const AssignTeam: React.FC<Order> = ({ orderId, teamName }) => {
 	};
 
 	const assignTeam = async () => {
-		await fetch(
-			`https://ordemdeservicosdev.onrender.com/api/order/assign-team/${orderId}`,
-			{
-				method: "PATCH",
-				headers: {
-					"Content-type": "application/json",
-				},
-				body: JSON.stringify({ teamId: selectedTeam }),
-			}
-		)
-			.then((res) => {
-				if (res.ok) {
-					return res.json();
+		toast.promise(
+			fetch(
+				`https://ordemdeservicosdev.onrender.com/api/order/assign-team/${orderId}`,
+				{
+					method: "PATCH",
+					headers: {
+						"Content-type": "application/json",
+					},
+					body: JSON.stringify({ teamId: selectedTeam }),
 				}
-			})
-			.then((data) => {
-				console.log(data);
-			})
-			.catch((error) => {
-				console.log(error);
-			});
+			)
+				.then((res) => {
+					if (res.ok) {
+						return res.json();
+					}
+				})
+				.then((data) => {
+					console.log(data);
+				})
+				.catch((error) => {
+					console.log(error);
+				}),
+			{
+				pending: "Atribuíndo equipe",
+				success: "Equipe atribuída com sucesso!",
+				error: "Ocorreu um erro ao atribuir equipe",
+			}
+		);
 	};
 
 	return (

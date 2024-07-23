@@ -11,7 +11,7 @@ export const Container: React.FC<ContainerProps> = ({
 }) => {
 	return (
 		<div
-			className={`mt-4 bg-white min-w-full p-4 rounded-lg flex flex-col gap-4 ${className}`}
+			className={`mt-8 bg-white min-w-full p-4 rounded-lg flex flex-col gap-4 ${className}`}
 		>
 			{children}
 		</div>

@@ -99,6 +99,7 @@ export default function Page() {
 							name="subjectId"
 							id="subjectId"
 							className="outline-none border border-[#2a2a2a] rounded px-2 py-1 mb-4"
+							required
 						>
 							{/* Opção para o subject atual */}
 							<option value="">Selecione um assunto</option>
@@ -114,31 +115,37 @@ export default function Page() {
 							type="text"
 							name="requesterName"
 							placeholder="Nome do solicitante"
+							required
 						/>
 						<Input
 							type="tel"
 							name="requesterPhone"
 							placeholder="Telefone do solicitante"
+							required
 						/>
 						<Input
 							type="text"
 							name="requesterStreet"
 							placeholder="Endereço do solicitante"
+							required
 						/>
 						<Input
 							type="number"
 							name="requesterHouseNumber"
 							placeholder="N° da casa do solicitante"
+							required
 						/>
 						<Input
 							type="text"
 							name="requesterComplement"
 							placeholder="Complemento do solicitante"
+							required
 						/>
 						<Input
 							type="text"
 							name="requesterZipcode"
 							placeholder="CEP do solicitante"
+							required
 						/>
 						<Input
 							textArea={true}

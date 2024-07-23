@@ -1,7 +1,7 @@
 import { IOrder } from "./order.interface";
 
 export interface ISubject {
-	id: string;
+	id?: string;
 	name: string;
 	expirationDays: number;
 	orders?: IOrder[];

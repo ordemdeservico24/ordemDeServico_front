@@ -67,7 +67,7 @@ export default function Page() {
 					onSubmit={(e) => onSubmit(e)}
 					className="mt-4 flex flex-col justify-center items-center"
 				>
-					<div className="flex flex-col items-center w-96">
+					<div className="flex flex-col items-center max-w-96 w-full">
 						<Input
 							type="text"
 							name="teamName"

@@ -1,6 +1,7 @@
 "use client";
 import { AssignedTeam } from "@/components/assignedTeam";
 import { Container } from "@/components/container";
+import { OrderStatus } from "@/components/orderStatus";
 import { IOrderGet } from "@/interfaces/order.interface";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -47,9 +48,10 @@ export default function Page({ params }: { params: { id: string } }) {
 					</h1>
 					<div className="flex justify-between items-center">
 						<p className="text-[#84818A] text-sm">{order.notes}</p>
-						<p className="text-white bg-[#4FAFCB] px-2 py-1 rounded">
-							{order.orderStatus}
-						</p>
+						<OrderStatus
+							currentStatus={order.orderStatus}
+							orderId={order.id}
+						/>
 					</div>
 					<div className="flex flex-col gap-4 py-4 border-b-2">
 						<h1 className="text-lg font-medium">

@@ -57,7 +57,7 @@ export default function Page({ params }: { params: { id: string } }) {
 						>
 							<div className="flex flex-col gap-2">
 								<p className="font-semibold text-xs sm:text-base">
-									{order.subject}
+									{order.subject.name}
 								</p>
 								<p className="text-[.6rem] sm:text-xs">
 									{truncateNotes(order.notes, 100)}

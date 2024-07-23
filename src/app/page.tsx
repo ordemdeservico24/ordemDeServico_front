@@ -63,9 +63,19 @@ export default function Home() {
 		return orderDate === today;
 	}).length;
 
+	const ordersDelayed = orders.filter((order) => {
+		const newToday = new Date();
+		const [day, month, year] = order.expirationDate
+			.split(", ")[0]
+			.split("/");
+		const expirationDate = new Date(`${year}-${month}-${day}`);
+
+		return newToday.getTime() > expirationDate.getTime();
+	}).length;
+
 	return (
 		<Container>
-			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
 				<div className="p-4 bg-blue-500 text-white rounded shadow">
 					<h2 className="text-lg font-bold">Total de Ordens</h2>
 					<p className="text-2xl">{totalOrders}</p>
@@ -78,9 +88,13 @@ export default function Home() {
 					<h2 className="text-lg font-bold">Ordens em Andamento</h2>
 					<p className="text-2xl">{inProgressOrders}</p>
 				</div>
-				<div className="p-4 bg-red-500 text-white rounded shadow">
+				<div className="p-4 bg-gray-500 text-white rounded shadow">
 					<h2 className="text-lg font-bold">Ordens Abertas Hoje</h2>
 					<p className="text-2xl">{ordersOpenedToday}</p>
+				</div>
+				<div className="p-4 bg-red-500 text-white rounded shadow">
+					<h2 className="text-lg font-bold">Ordens em Atraso</h2>
+					<p className="text-2xl">{ordersDelayed}</p>
 				</div>
 			</div>
 		</Container>

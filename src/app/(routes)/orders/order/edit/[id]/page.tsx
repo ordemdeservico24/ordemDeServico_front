@@ -88,7 +88,7 @@ export default function Page({ params }: { params: { id: string } }) {
 						onSubmit={(e) => onSubmit(e)}
 						className="mt-4 flex flex-col max-w-96 w-full"
 					>
-						<label htmlFor="subjectId">Assunto:</label>
+						<label htmlFor="subjectId">Categoria:</label>
 						<OrderSubjectSelect
 							name={order.subject.name}
 							id={order.subject.id}

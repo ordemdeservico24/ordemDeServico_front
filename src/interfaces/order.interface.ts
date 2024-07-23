@@ -1,9 +1,12 @@
+import { ISubject } from "./subject.interface";
+
 export interface IOrder {
 	id: string;
 	openningDate: Date;
 	expirationDate: Date;
 	orderStatus: string;
-	subject: string;
+	subjectId: string;
+	subject: ISubject;
 	notes: string;
 	requesterName: string;
 	requesterPhone: string;

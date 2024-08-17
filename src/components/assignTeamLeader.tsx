@@ -9,6 +9,10 @@ export const AssignTeamLeader = () => {
 			"https://ordemdeservicosdev.onrender.com/api/team/get-all-leaders",
 			{
 				method: "GET",
+				headers: {
+					"Content-type": "application/json",
+					Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiR3VpbGhlcm1lIiwiaWQiOiJiZWU1MGU4Yy04ZmU0LTQ0NTYtYjgzZS1hZTk5MjBhNjlmMmIiLCJyb2xlSWQiOiIyNzhmNGNlOS0xNGY2LTQxNmQtYWRkZi1kMzJmNWFmNzI0MWYiLCJpYXQiOjE3MjM3NzYwOTV9.CJIubrQDHJSEHa6TgzcG1_2_rkls_V2fEXXUNvo6gAc`,
+				},
 			}
 		)
 			.then((res) => {
@@ -21,14 +25,14 @@ export const AssignTeamLeader = () => {
 			});
 	}, []);
 
-	const availableLeaders = leaders.filter((leader) => !leader.teamId);
+	const availableLeaders = Array.isArray(leaders) ? leaders.filter((leader) => !leader.teamId) : [];
 
 	return (
 		<>
 			<select
 				name="teamLeaderId"
 				id="teamLeaderId"
-				className="outline-none border border-[#2a2a2a] rounded px-2 py-1 w-full mb-4"
+				className="outline-none border focus:border-[#2a2a2a] rounded px-2 py-1 w-full mb-4"
 			>
 				<option value="">{"Selecione um líder"}</option>
 				{availableLeaders.map((leader, index) => (

@@ -1,65 +1,69 @@
+"use client";
 import React from "react";
 import { toast } from "react-toastify";
+import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select"; // Importar componentes da Shadcn UI
 
-interface OrderStatus {
-	currentStatus: string;
-	orderId: string;
+interface OrderStatusProps {
+    currentStatus: string;
+    orderId: string;
 }
 
-export const OrderStatus: React.FC<OrderStatus> = ({
-	currentStatus,
-	orderId,
+export const OrderStatus: React.FC<OrderStatusProps> = ({
+    currentStatus,
+    orderId,
 }) => {
-	const statuses = ["Aberto", "Em andamento", "Finalizado"];
+    const statuses = ["Aberto", "Em andamento", "Finalizado"];
 
-	// Filtre a lista de status para excluir o status atual
-	const filteredStatuses = statuses.filter(
-		(status) => status !== currentStatus
-	);
+    const filteredStatuses = statuses.filter(
+        (status) => status !== currentStatus
+    );
 
-	const handleChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-		const newStatus = e.target.value;
-		toast.promise(
-			fetch(
-				`https://ordemdeservicosdev.onrender.com/api/order/update-status/${orderId}`,
-				{
-					method: "PATCH",
-					headers: {
-						"Content-type": "application/json",
-					},
-					body: JSON.stringify({ orderStatus: e.target.value }),
-				}
-			)
-				.then((res) => {
-					const status = res.status;
-					return res.json().then((data) => ({ status, data }));
-				})
-				.then(({ status, data }) => {
-					console.log(status, data);
-				}),
-			{
-				pending: "Atualizando status",
-				success: "Status atualizado com sucesso",
-				error: "Ocorreu um erro",
-			}
-		);
-	};
+    const handleChange = async (value: string) => {
+        toast.promise(
+            fetch(
+                `https://ordemdeservicosdev.onrender.com/api/order/update-status/${orderId}`,
+                {
+                    method: "PATCH",
+                    headers: {
+                        "Content-type": "application/json",
+                    },
+                    body: JSON.stringify({ orderStatus: value }),
+                }
+            )
+                .then((res) => {
+                    if (!res.ok) {
+                        throw new Error("Falha ao atualizar status");
+                    }
+                    return res.json();
+                })
+                .then((data) => {
+                    console.log(data);
+                }),
+            {
+                pending: "Atualizando status",
+                success: "Status atualizado com sucesso",
+                error: "Ocorreu um erro",
+            }
+        );
+    };
 
-	return (
-		<select
-			value={currentStatus}
-			onChange={handleChange}
-			className="text-white bg-[#4FAFCB] py-1 rounded text-[.6rem] sm:text-base outline-none"
-		>
-			{/* Adiciona a opção do status atual no início */}
-			<option value={currentStatus} disabled>
-				{currentStatus}
-			</option>
-			{filteredStatuses.map((status) => (
-				<option key={status} value={status}>
-					{status}
-				</option>
-			))}
-		</select>
-	);
+    return (
+        <div className="flex justify-end">
+            <Select onValueChange={handleChange} defaultValue={currentStatus}>
+                <SelectTrigger className="py-1 px-2 rounded text-sm bg-[#3b82f6] text-white">
+                    {currentStatus}
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem value={currentStatus} disabled>
+                        {currentStatus}
+                    </SelectItem>
+                    {filteredStatuses.map((status) => (
+                        <SelectItem key={status} value={status}>
+                            {status}
+                        </SelectItem>
+                    ))}
+                </SelectContent>
+            </Select>
+        </div>
+    );
 };

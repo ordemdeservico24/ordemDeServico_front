@@ -13,6 +13,10 @@ export const OrderSubjectSelect: React.FC<ISubject> = ({
 			`https://ordemdeservicosdev.onrender.com/api/order/get-all-subjects/`,
 			{
 				method: "GET",
+				headers: {
+					"Content-type": "application/json",
+					Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiR3VpbGhlcm1lIiwiaWQiOiJiZWU1MGU4Yy04ZmU0LTQ0NTYtYjgzZS1hZTk5MjBhNjlmMmIiLCJyb2xlSWQiOiIyNzhmNGNlOS0xNGY2LTQxNmQtYWRkZi1kMzJmNWFmNzI0MWYiLCJpYXQiOjE3MjM3NzYwOTV9.CJIubrQDHJSEHa6TgzcG1_2_rkls_V2fEXXUNvo6gAc`,
+				},
 			}
 		)
 			.then((res) => {
@@ -32,11 +36,9 @@ export const OrderSubjectSelect: React.FC<ISubject> = ({
 				id="subjectId"
 				className="outline-none border border-[#2a2a2a] rounded px-2 py-1 mb-4"
 			>
-				{/* Opção para o subject atual */}
 				<option value={id}>
 					{name} ({expirationDays} dias de prazo)
 				</option>
-				{/* Opções para os demais subjects, filtrando o subject atual */}
 				{subjects
 					?.filter((subject) => subject.id !== id)
 					.map((subject, index) => (

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
-import Menu from "@/components/menu";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -19,10 +18,9 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="pt-BR">
-			<body className={inter.className}>
-				<div className="flex min-h-screen relative">
-					<Menu />
-					<main className="px-2 py-2 sm:py-4 sm:px-6 md:py-8 md:px-12 bg-[#ececff] w-screen">
+			<body className={`${inter.className} min-h-screen bg-background`}>
+				<div className="relative">
+					<main className="w-full">
 						{children}
 					</main>
 					<ToastContainer />

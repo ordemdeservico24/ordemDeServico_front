@@ -10,6 +10,7 @@ interface InputProps {
 	textArea?: boolean;
 	value?: string | number;
 	required?: boolean;
+	defaultValue?: string;
 }
 
 export const Input: React.FC<InputProps> = ({

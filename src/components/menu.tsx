@@ -27,15 +27,15 @@ export default function Menu() {
 			) : (
 				<IoMenu
 					size={30}
-					className="m-2 z-10 lg:hidden absolute right-0"
+					className="m-2 z-10 lg:hidden absolute left-0"
 					onClick={handleMenu}
 				/>
 			)}
 			<div
 				className={`border-x border-[#d7d7d7] shadow-inner absolute transition-all duration-200 ${
 					mobileMenu ? "bg-[#ffffff]" : "-left-52 lg:left-0"
-				} h-full lg:relative lg:inline`}
-			>
+					} h-full lg:relative lg:inline`}>
+				
 				<ul className="flex flex-col mt-8 gap-4">
 					<Link href="/">
 						<li className="hover:bg-[rgba(127,86,216,0.1)] px-8 py-4 hover:text-[#7F56D8] cursor-pointer font-medium">

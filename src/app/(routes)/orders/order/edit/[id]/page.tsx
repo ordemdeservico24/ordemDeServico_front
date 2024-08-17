@@ -37,6 +37,7 @@ export default function Page({ params }: { params: { id: string } }) {
 					method: "PATCH",
 					headers: {
 						"Content-type": "application/json",
+						Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiR3VpbGhlcm1lIiwiaWQiOiJiZWU1MGU4Yy04ZmU0LTQ0NTYtYjgzZS1hZTk5MjBhNjlmMmIiLCJyb2xlSWQiOiIyNzhmNGNlOS0xNGY2LTQxNmQtYWRkZi1kMzJmNWFmNzI0MWYiLCJpYXQiOjE3MjM3NzYwOTV9.CJIubrQDHJSEHa6TgzcG1_2_rkls_V2fEXXUNvo6gAc`,
 					},
 					body: JSON.stringify(request),
 				}
@@ -55,12 +56,15 @@ export default function Page({ params }: { params: { id: string } }) {
 			}
 		);
 	};
-
 	useEffect(() => {
 		fetch(
 			`https://ordemdeservicosdev.onrender.com/api/order/get-order/${params.id}`,
 			{
 				method: "GET",
+				headers: {
+					"Content-type": "application/json",
+					Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiR3VpbGhlcm1lIiwiaWQiOiJiZWU1MGU4Yy04ZmU0LTQ0NTYtYjgzZS1hZTk5MjBhNjlmMmIiLCJyb2xlSWQiOiIyNzhmNGNlOS0xNGY2LTQxNmQtYWRkZi1kMzJmNWFmNzI0MWYiLCJpYXQiOjE3MjM3NzYwOTV9.CJIubrQDHJSEHa6TgzcG1_2_rkls_V2fEXXUNvo6gAc`,
+				},
 			}
 		)
 			.then((res) => {
@@ -72,7 +76,7 @@ export default function Page({ params }: { params: { id: string } }) {
 				setOrder(data);
 			});
 	}, [params.id]);
-
+	
 	return (
 		<Container>
 			<Link
@@ -108,6 +112,12 @@ export default function Page({ params }: { params: { id: string } }) {
 						/>
 						<Input
 							type="text"
+							name="requesterZipcode"
+							placeholder="CEP do solicitante"
+							value={order.requesterZipcode}
+						/>
+						<Input
+							type="text"
 							name="requesterStreet"
 							placeholder="Endereço do solicitante"
 							value={order.requesterStreet}
@@ -123,12 +133,6 @@ export default function Page({ params }: { params: { id: string } }) {
 							name="requesterComplement"
 							placeholder="Complemento do solicitante"
 							value={order.requesterComplement}
-						/>
-						<Input
-							type="text"
-							name="requesterZipcode"
-							placeholder="CEP do solicitante"
-							value={order.requesterZipcode}
 						/>
 						<Input
 							textArea={true}

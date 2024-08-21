@@ -6,15 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { toast } from "react-toastify";
-import Link from "next/link";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Tabs, TabsContent } from "@/components/ui/tabs"
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Search } from "lucide-react"
-import Image from "next/image"
-import ImageProfile from '../../../assets/profile.png'
 
 export default function Page() {
   const [subjects, setSubjects] = useState<ISubject[]>([]);
@@ -24,7 +19,7 @@ export default function Page() {
 		method: "GET",
 		headers: {
 			"Content-type": "application/json",
-			Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiR3VpbGhlcm1lIiwiaWQiOiJiZWU1MGU4Yy04ZmU0LTQ0NTYtYjgzZS1hZTk5MjBhNjlmMmIiLCJyb2xlSWQiOiIyNzhmNGNlOS0xNGY2LTQxNmQtYWRkZi1kMzJmNWFmNzI0MWYiLCJpYXQiOjE3MjM3NzYwOTV9.CJIubrQDHJSEHa6TgzcG1_2_rkls_V2fEXXUNvo6gAc`,
+			Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiR3VpbGhlcm1lIiwiaWQiOiIxNTdhODg5MC1hYjBkLTQ1YWQtOTM2ZS0xYTg5ZjlmOWYzNTMiLCJyb2xlSWQiOiIzYThlMGEwMy03YWE0LTQ2MjktYWRlMS04ODE5YzdjYmMxOTYiLCJpYXQiOjE3MjQyNDMzNDd9.tB6DOfAN1TmILIvIdx6hYy2ENWOooCml6fFEeNmokGA`,
 		},
     })
       .then((res) => {
@@ -86,50 +81,6 @@ export default function Page() {
 
   return (
 	  <Container className="overflow-x-auto">
-		  	<header className="z-30 flex justify-start items-start border-b flex-col md:flex-row md:justify-between md:items-center gap-2 bg-background sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-          		<Breadcrumb className="md:flex">
-					<BreadcrumbList>
-						<BreadcrumbItem>
-							<BreadcrumbLink asChild>
-							<Link href="/home">Dashboard</Link>
-							</BreadcrumbLink>
-						</BreadcrumbItem>
-						<BreadcrumbSeparator />
-						<BreadcrumbItem>
-							<BreadcrumbPage>Categorias</BreadcrumbPage>
-						</BreadcrumbItem>
-					</BreadcrumbList>
-			  	</Breadcrumb>
-			  	<div className="flex flex-row-reverse md:flex-row items-center gap-3 pb-3">
-				  	<h1>Débora Almeida</h1>
-				  	<DropdownMenu>
-						<DropdownMenuTrigger asChild>
-							<Button
-								variant="outline"
-								size="icon"
-								className="overflow-hidden rounded-full"
-							>
-								<Image
-									src={ImageProfile}
-									width={36}
-									height={36}
-									alt="Avatar"
-									className="overflow-hidden rounded-full"
-								/>
-							</Button>
-						</DropdownMenuTrigger>
-						<DropdownMenuContent align="end">
-							<DropdownMenuLabel>Minha conta</DropdownMenuLabel>
-							<DropdownMenuSeparator />
-							<DropdownMenuItem>Configurações</DropdownMenuItem>
-							<DropdownMenuItem>Suporte</DropdownMenuItem>
-							<DropdownMenuSeparator />
-							<DropdownMenuItem>Sair</DropdownMenuItem>
-						</DropdownMenuContent>
-					</DropdownMenu>
-			  	</div>
-		  	</header>
-		  
 		  	<main className="grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">
 				<Tabs defaultValue="all">
 					<TabsContent value="all">

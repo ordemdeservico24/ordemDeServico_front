@@ -1,16 +1,8 @@
 "use client";
 import { Container } from "@/components/container";
 import { useEffect, useState } from "react";
-import {
-	Card,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card"
-import {
-	Tabs,
-	TabsContent,
-} from "@/components/ui/tabs"
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsContent } from "@/components/ui/tabs"
 import { Search } from "lucide-react"
 import { Input } from "@/components/ui/input";
 interface Order {
@@ -38,7 +30,6 @@ interface Order {
 		updatedAt: string;
 	};
 }
-
 export default function Home() {
 	const [orders, setOrders] = useState<Order[]>([]);
 
@@ -49,7 +40,7 @@ export default function Home() {
 				method: "GET",
 				headers: {
 					"Content-type": "application/json",
-					Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiR3VpbGhlcm1lIiwiaWQiOiJiZWU1MGU4Yy04ZmU0LTQ0NTYtYjgzZS1hZTk5MjBhNjlmMmIiLCJyb2xlSWQiOiIyNzhmNGNlOS0xNGY2LTQxNmQtYWRkZi1kMzJmNWFmNzI0MWYiLCJpYXQiOjE3MjM3NzYwOTV9.CJIubrQDHJSEHa6TgzcG1_2_rkls_V2fEXXUNvo6gAc`,
+					Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiR3VpbGhlcm1lIiwiaWQiOiIxNTdhODg5MC1hYjBkLTQ1YWQtOTM2ZS0xYTg5ZjlmOWYzNTMiLCJyb2xlSWQiOiIzYThlMGEwMy03YWE0LTQ2MjktYWRlMS04ODE5YzdjYmMxOTYiLCJpYXQiOjE3MjQyNDMzNDd9.tB6DOfAN1TmILIvIdx6hYy2ENWOooCml6fFEeNmokGA`,
 				},
 			}
 		)
@@ -93,7 +84,7 @@ export default function Home() {
 
 	return (
 		<Container>
-			<main className="mt-6 grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">
+			<main className="grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">
 				<Tabs defaultValue="all">
 					<TabsContent value="all">
 						<Card x-chunk="dashboard-06-chunk-0">

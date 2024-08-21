@@ -6,14 +6,14 @@ export default function Menu() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="flex flex-col min-h-[100dvh] bg-muted/40 border-r md:w-[220px] lg:w-[280px] xl:w-[280px]">
+    <div className="flex flex-col bg-muted/40 border-r md:w-[220px] lg:w-[280px] xl:w-[280px]">
       <div className="flex items-center h-14 border-b px-4 lg:h-[60px] lg:px-6">
         <Link href="#" className="flex items-center gap-2 font-semibold" prefetch={false}>
           <FiPackage className="h-6 w-6 text-[#3b82f6]" />
           <span className="hidden text-[#3b82f6] md:inline">Test</span>
         </Link>
       </div>
-      <div className="flex-1">
+      <div>
         <nav className="flex flex-col justify-center items-center md:items-start text-[16px] mt-4 font-bold lg:px-4">
           <Link
             href="/home"

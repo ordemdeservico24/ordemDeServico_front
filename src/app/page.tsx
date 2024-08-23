@@ -1,4 +1,5 @@
-"use client"
+"use client";
+import { useRouter } from 'next/navigation';
 import Link from "next/link";
 import Image from "next/image";
 import Bg from '../assets/bg.jpg';
@@ -10,6 +11,10 @@ import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from 'axios';
+import { useStore } from "../zustandStore";
+import { EyeIcon, EyeOffIcon, Loader } from 'lucide-react';
+import { useState } from 'react';
 
 const loginSchema = z.object({
     email: z.string().email("Email inválido"),
@@ -17,18 +22,38 @@ const loginSchema = z.object({
 });
 
 export default function Page() {
+    const router = useRouter();
 
     const {
         register,
         handleSubmit,
-        formState: { errors },
+        formState: { errors, isSubmitting },
     } = useForm({
         resolver: zodResolver(loginSchema),
     });
 
-    const onSubmit = (data: any) => {
-        console.log(data);
+    const setToken = useStore((state) => state.setToken);
+
+    const onSubmit = async (data: any) => {
+        try {
+            const response = await axios.post('https://ordemdeservicosdev.onrender.com/api/user/login', data);
+            console.log('Login successful:', response.data);
+
+            const { token } = response.data;
+
+            if (token) {
+                setToken(token);
+            }
+
+            console.log('Login token:', token);
+
+            router.push('/home');
+        } catch (error) {
+            console.error('Login failed:', error);
+        }
     };
+
+    const [isPasswordVisible, setIsPasswordVisibile] = useState(false);
 
     return (
         <div className="flex min-h-screen">
@@ -52,36 +77,46 @@ export default function Page() {
                                     required
                                 />
                                 {errors.email && <span className="text-red-500">{errors.email.message?.toString()}</span>}
-
                             </div>
                             <div className="grid gap-2">
                                 <div className="flex items-center">
                                     <Label htmlFor="password">Senha</Label>
                                     <Link
                                         href="#"
-                                        className="ml-auto inline-block text-sm underline"
+                                        className="ml-auto text-sm text-blue-500 hover:underline"
                                     >
                                         Esqueceu a senha?
                                     </Link>
                                 </div>
-                                <Input
-                                    id="password"
-                                    type="password"
-                                    placeholder="********"
-                                    {...register("password")}
-                                    required
-                                />
-                                {errors.password && <span className="text-red-500">{errors.password.message?.toString()}</span>}
+                                <div className="relative">
+                                    <Input
+                                        id="password"
+                                        type={isPasswordVisible ? "text" : "password"}
+                                        placeholder="********"
+                                        {...register("password")}
+                                        required
+                                    />
+                                    <span className="absolute right-3 top-1/2 -translate-y-1/2 ">
+                                        <button type="button" onClick={() => setIsPasswordVisibile(!isPasswordVisible)}>
+                                            { isPasswordVisible ? <EyeIcon size={20} className="text-slate-600 cursor-pointer" /> : <EyeOffIcon size={20} className="text-slate-600 cursor-pointer" /> }
+                                        </button>
+                                    </span>
+                                </div>
 
+                                {errors.password && <span className="text-red-500">{errors.password.message?.toString()}</span>}
                             </div>
-                            <Button type="submit" className="w-full">
-                                Login
+                            <Button type="submit" disabled={isSubmitting} className="w-full flex justify-center items-center">
+                                {isSubmitting
+									?
+								<Loader className="animate-spin" />
+									:
+								("Entrar")}
                             </Button>
                         </div>
                         <div className="mt-4 text-center text-sm">
                             Não tem uma conta?{" "}
                             <Link href="/register" className="underline">
-                                Cadastre-se
+                                Cadastrar
                             </Link>
                         </div>
                     </form>

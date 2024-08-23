@@ -11,16 +11,18 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Tabs, TabsContent } from "@/components/ui/tabs"
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Search } from "lucide-react"
+import { getCookie } from 'cookies-next';
 
 export default function Page() {
   const [leaders, setLeaders] = useState<ITeamLeader[]>([]);
-
+	const token = getCookie('access_token');
+	
   useEffect(() => {
     fetch("https://ordemdeservicosdev.onrender.com/api/team/get-all-leaders", {
 		method: "GET",
 		headers: {
 			"Content-type": "application/json",
-			Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiR3VpbGhlcm1lIiwiaWQiOiJiZWU1MGU4Yy04ZmU0LTQ0NTYtYjgzZS1hZTk5MjBhNjlmMmIiLCJyb2xlSWQiOiIyNzhmNGNlOS0xNGY2LTQxNmQtYWRkZi1kMzJmNWFmNzI0MWYiLCJpYXQiOjE3MjM3NzYwOTV9.CJIubrQDHJSEHa6TgzcG1_2_rkls_V2fEXXUNvo6gAc`,
+			Authorization: `Bearer ${token}`,
 		},
     })
       .then((res) => {
@@ -40,7 +42,7 @@ export default function Page() {
         console.error("Fetch error:", error);
         setLeaders([]);
       });
-  }, []);
+  }, [token]);
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
 	e.preventDefault();
@@ -65,7 +67,7 @@ export default function Page() {
 				method: "POST",
 				headers: {
 					"Content-type": "application/json",
-					Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiR3VpbGhlcm1lIiwiaWQiOiIxNTdhODg5MC1hYjBkLTQ1YWQtOTM2ZS0xYTg5ZjlmOWYzNTMiLCJyb2xlSWQiOiIzYThlMGEwMy03YWE0LTQ2MjktYWRlMS04ODE5YzdjYmMxOTYiLCJpYXQiOjE3MjQyNDMzNDd9.tB6DOfAN1TmILIvIdx6hYy2ENWOooCml6fFEeNmokGA`,
+					Authorization: `Bearer ${token}`,
 				},
 				body: JSON.stringify(request),
 			}

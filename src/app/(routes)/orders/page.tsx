@@ -15,18 +15,20 @@ import { ISubject } from "@/interfaces/subject.interface";
 import { Search } from "lucide-react"
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { getCookie } from 'cookies-next';
 
 export default function Page() {
   const [orders, setOrders] = useState<IOrderGet[]>([]);
   const [subjects, setSubjects] = useState<ISubject[]>();
   const [error, setError] = useState<string | null>(null);
-
+	const token = getCookie('access_token');
+	
   useEffect(() => {
     fetch("https://ordemdeservicosdev.onrender.com/api/order/get-all-orders", {
       method: "GET",
       headers: {
 		"Content-type": "application/json",
-		Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiR3VpbGhlcm1lIiwiaWQiOiJiZWU1MGU4Yy04ZmU0LTQ0NTYtYjgzZS1hZTk5MjBhNjlmMmIiLCJyb2xlSWQiOiIyNzhmNGNlOS0xNGY2LTQxNmQtYWRkZi1kMzJmNWFmNzI0MWYiLCJpYXQiOjE3MjM3NzYwOTV9.CJIubrQDHJSEHa6TgzcG1_2_rkls_V2fEXXUNvo6gAc`,
+		Authorization: `Bearer ${token}`,
 	},
     })
       .then((res) => {
@@ -45,7 +47,7 @@ export default function Page() {
       .catch((err) => {
         setError(err.message);
       });
-  }, []);
+  }, [token]);
   const truncateNotes = (notes: string, maxLength: number) => {
     if (notes.length > maxLength) {
       return notes.substring(0, maxLength) + "...";
@@ -59,7 +61,7 @@ export default function Page() {
         method: "GET",
         headers: {
 			"Content-type": "application/json",
-			Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiR3VpbGhlcm1lIiwiaWQiOiJiZWU1MGU4Yy04ZmU0LTQ0NTYtYjgzZS1hZTk5MjBhNjlmMmIiLCJyb2xlSWQiOiIyNzhmNGNlOS0xNGY2LTQxNmQtYWRkZi1kMzJmNWFmNzI0MWYiLCJpYXQiOjE3MjM3NzYwOTV9.CJIubrQDHJSEHa6TgzcG1_2_rkls_V2fEXXUNvo6gAc`,
+			Authorization: `Bearer ${token}`,
 		},
       }
     )
@@ -71,7 +73,7 @@ export default function Page() {
         console.log(status, data);
         setSubjects(data);
       });
-  }, []);
+  }, [token]);
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -99,7 +101,7 @@ export default function Page() {
           method: "POST",
           headers: {
 			"Content-type": "application/json",
-			Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiR3VpbGhlcm1lIiwiaWQiOiIxNTdhODg5MC1hYjBkLTQ1YWQtOTM2ZS0xYTg5ZjlmOWYzNTMiLCJyb2xlSWQiOiIzYThlMGEwMy03YWE0LTQ2MjktYWRlMS04ODE5YzdjYmMxOTYiLCJpYXQiOjE3MjQyNDMzNDd9.tB6DOfAN1TmILIvIdx6hYy2ENWOooCml6fFEeNmokGA`,
+			Authorization: `Bearer ${token}`,
 		},
           body: JSON.stringify(request),
         }

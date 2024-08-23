@@ -6,9 +6,10 @@ import React, { useEffect, useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent } from "@/components/ui/tabs"
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-
+import { getCookie } from 'cookies-next';
 export default function Page({ params }: { params: { id: string } }) {
     const [team, setTeam] = useState<ITeam>();
+    const token = getCookie('access_token');
 
     useEffect(() => {
         fetch(
@@ -17,7 +18,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 method: "GET",
                 headers: {
                     "Content-type": "application/json",
-                    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiR3VpbGhlcm1lIiwiaWQiOiIxNTdhODg5MC1hYjBkLTQ1YWQtOTM2ZS0xYTg5ZjlmOWYzNTMiLCJyb2xlSWQiOiIzYThlMGEwMy03YWE0LTQ2MjktYWRlMS04ODE5YzdjYmMxOTYiLCJpYXQiOjE3MjQyNDMzNDd9.tB6DOfAN1TmILIvIdx6hYy2ENWOooCml6fFEeNmokGA`,
+                    Authorization: `Bearer ${token}`,
                 },
             }
         )
@@ -29,7 +30,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 console.log(status, data);
                 setTeam(data);
             });
-    }, [params.id]);
+    }, [params.id, token]);
     const truncateNotes = (notes: string, maxLength: number) => {
         if (notes.length > maxLength) {
             return notes.substring(0, maxLength) + "...";

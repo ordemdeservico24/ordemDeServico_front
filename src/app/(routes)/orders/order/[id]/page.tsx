@@ -6,10 +6,12 @@ import { IOrderGet } from "@/interfaces/order.interface";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { getCookie } from 'cookies-next';
 
 export default function Page({ params }: { params: { id: string } }) {
     const [order, setOrder] = useState<IOrderGet>();
+    const token = getCookie('access_token');
 
     useEffect(() => {
         fetch(
@@ -18,7 +20,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 method: "GET",
                 headers: {
                     "Content-type": "application/json",
-                    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiR3VpbGhlcm1lIiwiaWQiOiIxNTdhODg5MC1hYjBkLTQ1YWQtOTM2ZS0xYTg5ZjlmOWYzNTMiLCJyb2xlSWQiOiIzYThlMGEwMy03YWE0LTQ2MjktYWRlMS04ODE5YzdjYmMxOTYiLCJpYXQiOjE3MjQyNDMzNDd9.tB6DOfAN1TmILIvIdx6hYy2ENWOooCml6fFEeNmokGA`,
+                    Authorization: `Bearer ${token}`,
                 },
             }
         )
@@ -30,7 +32,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 console.log(status, data);
                 setOrder(data);
             });
-    }, [params.id]);
+    }, [params.id, token]);
 
     return (
         <Container>

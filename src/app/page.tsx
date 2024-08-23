@@ -83,7 +83,7 @@ export default function Page() {
                                     <Label htmlFor="password">Senha</Label>
                                     <Link
                                         href="#"
-                                        className="ml-auto text-sm text-blue-500 hover:underline"
+                                        className="ml-auto text-sm text-black hover:underline"
                                     >
                                         Esqueceu a senha?
                                     </Link>

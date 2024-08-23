@@ -53,7 +53,7 @@ export default function Page({ params }: { params: { id: string } }) {
 								<CardDescription>Cheque todas as informações relacionado aos líderes apresentados.</CardDescription>
                             </CardHeader>
 
-                            <div className="flex px-3 gap-2 sm:gap-4 mt-4 flex-wrap">
+                            <div className="flex px-4 gap-2 sm:gap-4 flex-wrap">
                                 {team?.orders.map((order, index) => (
                                     <Link
                                         className="bg-primary text-white bg-[#3b82f6] p-4 rounded flex flex-col justify-between gap-2 w-[250px] sm:max-w-sm"
@@ -75,9 +75,9 @@ export default function Page({ params }: { params: { id: string } }) {
                                 ))}
                             </div>
                             
-                            <div className="px-3 mt-5">
+                            <div className="px-4">
                                 <p>Membros na equipe: ({team?.members.length})</p>
-                                <Table className="mt-4 min-w-full bg-white rounded-xl divide-y divide-gray-200">
+                                <Table className="min-w-full bg-white rounded-xl divide-y divide-gray-200">
                                     <TableHeader>
                                         <TableRow>
                                             <TableHead>Nome</TableHead>

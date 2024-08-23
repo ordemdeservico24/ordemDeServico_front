@@ -88,7 +88,7 @@ export default function Page() {
 							<CardHeader>
 								<CardTitle className="text-[#3b82f6] text-2xl font-bold">Categorias</CardTitle>
 								<CardDescription>Cheque todas as informações relacionado as categorias apresentadas.</CardDescription>
-							  <div className="flex items-center justify-between">
+							  <div className="flex items-center gap-3 justify-between">
 								  
 							  <div className="relative flex-1 md:grow-0">
 									<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />

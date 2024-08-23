@@ -5,6 +5,7 @@ import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/ca
 import { Tabs, TabsContent } from "@/components/ui/tabs"
 import { Search } from "lucide-react"
 import { Input } from "@/components/ui/input";
+import { useStore } from "../../../zustandStore";
 interface Order {
 	id: string;
 	orderId: number;
@@ -32,6 +33,8 @@ interface Order {
 }
 export default function Home() {
 	const [orders, setOrders] = useState<Order[]>([]);
+
+	const { name } = useStore();
 
 	useEffect(() => {
 		fetch(
@@ -89,7 +92,9 @@ export default function Home() {
 					<TabsContent value="all">
 						<Card x-chunk="dashboard-06-chunk-0">
 							<CardHeader>
-								<CardTitle className="text-[#3b82f6] text-2xl font-bold">Seja bem-vindo, Débora Almeida.</CardTitle>
+							<CardTitle className="text-[#3b82f6] text-2xl font-bold">
+                                    Seja bem-vindo, {name || 'Usuário'}.
+                                </CardTitle>
 								<CardDescription className="max-w-[90ch]">Cheque todas as informações, navegue por todas as abas e acostume-se com esse gerenciamento de tarefas. Tudo didático e aprimorado. Abaixo, cheque algumas informações sobre o que você terá acesso aqui na plataforma:</CardDescription>
 							  <div className="flex items-center justify-between">
 								

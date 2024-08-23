@@ -12,15 +12,16 @@ import ImageProfile from "../assets/profile.png";
 import Image from "next/image";
 import { FaHome, FaGlobe, FaQuestionCircle } from "react-icons/fa";
 import { FiMenu } from "react-icons/fi";
-
+import { useStore } from "../zustandStore";
 interface HeaderProps {
   onMenuToggle: () => void;
 }
 
 export default function Header({ onMenuToggle }: HeaderProps) {
+  const { name } = useStore();
 
   return (
-    <header className="w-full flex items-center px-10 justify-between p-3 bg-[#3b86fb] text-[#fff]">
+    <header className="w-full flex items-center px-3 sm:px-10 justify-between p-3 bg-[#3b86fb] text-[#fff]">
       <div className="flex gap-5 items-center space-x-4">
         <div className="sm:hidden">
           <p onClick={onMenuToggle} className="cursor-pointer"><FiMenu size={24} /></p>
@@ -42,7 +43,7 @@ export default function Header({ onMenuToggle }: HeaderProps) {
 
       <div>
         <div className="flex flex-row items-center gap-3">
-          <h1>Débora Almeida</h1>
+          <h1>{name || 'Usuário'}</h1>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button

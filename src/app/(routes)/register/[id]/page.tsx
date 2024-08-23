@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-import { useRouter } from 'next/router';
 import Image from "next/image";
 import Bg from "../../../../assets/bg.jpg";
 import { useParams } from "next/navigation";
@@ -67,7 +66,6 @@ export default function Page() {
 	
 	const registerWithMask = useHookFormMask(register);
 
-    const router = useRouter();
     const params = useParams();
     const id = params.id;
 
@@ -106,7 +104,6 @@ export default function Page() {
             });
 
             console.log("User created:", result);
-			router.push('/');
 		} catch (error) {
 			console.error("Error creating user:", error);
 		}

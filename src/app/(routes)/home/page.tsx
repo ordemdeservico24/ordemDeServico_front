@@ -6,6 +6,7 @@ import { Tabs, TabsContent } from "@/components/ui/tabs"
 import { Search } from "lucide-react"
 import { Input } from "@/components/ui/input";
 import { useStore } from "../../../zustandStore";
+import { getCookie } from 'cookies-next';
 interface Order {
 	id: string;
 	orderId: number;
@@ -35,6 +36,7 @@ export default function Home() {
 	const [orders, setOrders] = useState<Order[]>([]);
 
 	const { name } = useStore();
+	const token = getCookie('access_token');
 
 	useEffect(() => {
 		fetch(
@@ -43,7 +45,7 @@ export default function Home() {
 				method: "GET",
 				headers: {
 					"Content-type": "application/json",
-					Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiR3VpbGhlcm1lIiwiaWQiOiIxNTdhODg5MC1hYjBkLTQ1YWQtOTM2ZS0xYTg5ZjlmOWYzNTMiLCJyb2xlSWQiOiIzYThlMGEwMy03YWE0LTQ2MjktYWRlMS04ODE5YzdjYmMxOTYiLCJpYXQiOjE3MjQyNDMzNDd9.tB6DOfAN1TmILIvIdx6hYy2ENWOooCml6fFEeNmokGA`,
+					Authorization: `Bearer ${token}`,
 				},
 			}
 		)
@@ -58,7 +60,7 @@ export default function Home() {
 			.catch((error) => {
 				console.error("Erro ao buscar ordens:", error);
 			});
-	}, []);
+	}, [token]);
 
 	const totalOrders = orders.length;
 	const openOrders = orders.filter(

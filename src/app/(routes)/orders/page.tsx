@@ -8,6 +8,7 @@ import React, { useEffect, FormEvent, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent,DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
 import { Textarea } from "@/components/ui/textarea";
 import { IRequest } from "@/interfaces/create-order-request/create-order-request.interface";
 import { toast } from "react-toastify";
@@ -333,9 +334,11 @@ export default function Page() {
 												</div>
 											</div>
 										))}
+
+
 									</div>
 								) : (
-									<p>Nenhuma ordem encontrada.</p>
+									<p>Nenhuma ordem encontrada</p>	
 								)}
 							</div>
 						</Card>

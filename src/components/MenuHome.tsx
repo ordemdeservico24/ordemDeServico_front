@@ -7,10 +7,11 @@ import Logo from '../assets/logo.png';
 import Image from 'next/image';
 import { useStore } from '../zustandStore';
 import { FaBuilding } from 'react-icons/fa';
+import { Role } from '../zustandStore';
 
 const MenuHome = () => {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  const { role, logout } = useStore();
+  const { role = [], logout } = useStore();
 
   const toggleDropdown = (dropdown: string) => {
     setOpenDropdown((prevDropdown) => (prevDropdown === dropdown ? null : dropdown));
@@ -20,9 +21,14 @@ const MenuHome = () => {
     logout();
   };
 
-  const hasRole = (requiredRole: string) => {
-    return role === requiredRole;
+  const hasRole = (roles: Role[], resource: string) => {
+    if (!Array.isArray(roles)) {
+      console.error('Expected an array for roles, but got:', roles);
+      return false;
+    }
+    return roles.some(role => role.resource === resource);
   };
+  
 
   return (
     <Card className="hidden md:block w-[300px] h-[80vh] p-4 transition-transform duration-300 ease-in-out z-20">
@@ -41,7 +47,7 @@ const MenuHome = () => {
               </Button>
             </Link>
 
-            {hasRole('admin_management') && (
+            {hasRole(role, 'admin_management') && (
               <div>
                 <Button
                   onClick={() => toggleDropdown('empresa')}
@@ -83,16 +89,17 @@ const MenuHome = () => {
               </div>
             )}
 
-            {/* {hasRole('orders_management') && ( */}
+
+            {hasRole(role, 'orders_management') && (
               <Link href="/orders">
                 <Button variant="link" className="flex items-center pl-1 gap-2 py-2">
                   <FiShoppingCart className="h-4 w-4 md:h-5 md:w-5" />
                   <span>Ordens de serviço</span>
                 </Button>
               </Link>
-            {/* )} */}
+            )}
 
-            {/* {hasRole('teams_management') && ( */}
+            {hasRole(role, 'teams_management') && (
               <div>
                 <Button
                   onClick={() => toggleDropdown('equipe')}
@@ -133,7 +140,7 @@ const MenuHome = () => {
                   </div>
                 )}
               </div>
-            {/* )} */}
+            )}
             
             <Link href="/subjects">
               <Button variant="link" className="flex items-center pl-1 gap-2 py-2">
@@ -141,6 +148,7 @@ const MenuHome = () => {
                 <span>Categoria</span>
               </Button>
             </Link>
+
             <Link href="/users">
               <Button variant="link" className="flex items-center pl-1 gap-2 py-2">
                 <FiUser className="h-4 w-4 md:h-5 md:w-5" />

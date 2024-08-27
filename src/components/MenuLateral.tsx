@@ -22,7 +22,9 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
     setOpenDropdown((prevDropdown) => (prevDropdown === dropdown ? null : dropdown));
   };
 
-  const isAdmin = role === 'admin_management'; 
+  const hasRole = (requiredRole: string) => {
+    return role === requiredRole;
+  };
 
   return (
     <div
@@ -41,45 +43,52 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
           <span>Dashboard</span>
         </Link>
 
-        {isAdmin && ( 
-          <button
-            onClick={() => toggleDropdown('empresa')}
-            className="flex items-center justify-between px-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9] w-full"
-          >
-            <div className="flex items-center gap-2">
-              <FaBuilding className="h-4 w-4 md:h-5 md:w-5" />
-              <span>Minha Empresa</span>
-            </div>
-            <FiChevronDown
-              className={`h-4 w-4 md:h-5 md:w-5 transition-transform ${
-                openDropdown === 'empresa' ? 'rotate-180' : 'rotate-0'
-              }`}
-            />
-          </button>
-        )}
+        {hasRole('admin_management') && (
+          <div>
+            <button
+              onClick={() => toggleDropdown('empresa')}
+              className="flex items-center justify-between px-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9] w-full"
+            >
+              <div className="flex items-center gap-2">
+                <FaBuilding className="h-4 w-4 md:h-5 md:w-5" />
+                <span>Minha Empresa</span>
+              </div>
+              <FiChevronDown
+                className={`h-4 w-4 md:h-5 md:w-5 transition-transform ${
+                  openDropdown === 'empresa' ? 'rotate-180' : 'rotate-0'
+                }`}
+              />
+            </button>
 
-        {isAdmin && ( 
-          <div className="flex flex-col">
-            <Link href="#" className="flex items-center pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]">
-              <FiGrid className="h-4 w-4 md:h-5 md:w-5" />
-              <span>Estado</span>
-            </Link>
-            <Link href="#" className="flex items-center pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]">
-              <FiArchive className="h-4 w-4 md:h-5 md:w-5" />
-              <span>Cidade</span>
-            </Link>
-            <Link href="#" className="flex items-center pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]">
-              <FiCalendar className="h-4 w-4 md:h-5 md:w-5" />
-              <span>Distrito</span>
-            </Link>
+            {openDropdown === 'empresa' && (
+              <div className="flex flex-col">
+                <Link href="#" className="flex items-center pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]">
+                  <FiGrid className="h-4 w-4 md:h-5 md:w-5" />
+                  <span>Estado</span>
+                </Link>
+                <Link href="#" className="flex items-center pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]">
+                  <FiArchive className="h-4 w-4 md:h-5 md:w-5" />
+                  <span>Cidade</span>
+                </Link>
+                <Link href="#" className="flex items-center pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]">
+                  <FiCalendar className="h-4 w-4 md:h-5 md:w-5" />
+                  <span>Distrito</span>
+                </Link>
+                </div>
+              )}
           </div>
         )}
 
+        {hasRole('orders_management') && (
         <Link href="/orders" className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]">
           <FiShoppingCart className="h-4 w-4 md:h-5 md:w-5" />
           <span>Ordens de serviço</span>
         </Link>
+          )}
 
+        
+        {hasRole('teams_management') && (
+              <div>
         <button
           onClick={() => toggleDropdown('equipe')}
           className="flex items-center justify-between px-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9] w-full"
@@ -109,6 +118,8 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
               <FiCalendar className="h-4 w-4 md:h-5 md:w-5" />
               <span>Membros</span>
             </Link>
+            </div>
+            )}
           </div>
         )}
 

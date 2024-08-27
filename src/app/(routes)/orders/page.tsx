@@ -7,28 +7,27 @@ import Link from "next/link";
 import React, { useEffect, FormEvent, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent,DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { IRequest } from "@/interfaces/create-order-request/create-order-request.interface";
 import { toast } from "react-toastify";
 import { ISubject } from "@/interfaces/subject.interface";
 import { Search } from "lucide-react";
-import {
-	Card,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getCookie } from "cookies-next";
+import { z } from 'zod';
 
+export const orderSchema = z.object({
+  subjectId: z.string().min(1, "Selecione uma categoria"),
+  requesterName: z.string().min(1, "Nome do solicitante é obrigatório"),
+  requesterPhone: z.string().min(1, "Telefone do solicitante é obrigatório"),
+  requesterStreet: z.string().min(1, "Endereço do solicitante é obrigatório"),
+  requesterHouseNumber: z.string().min(1, "Número da casa é obrigatório").transform(Number),
+  requesterComplement: z.string().optional(),
+  requesterZipcode: z.string().min(1, "CEP do solicitante é obrigatório"),
+  notes: z.string().optional(),
+});
 export default function Page() {
 	const [orders, setOrders] = useState<IOrderGet[]>([]);
 	const [subjects, setSubjects] = useState<ISubject[]>();
@@ -109,6 +108,14 @@ export default function Page() {
 			notes: getInput("notes").value || "",
 		};
 
+		const result = orderSchema.safeParse(request);
+
+		if (!result.success) {
+			const errorMessages = result.error.format();
+			toast.error("Erro de validação: " + Object.values(errorMessages).join(", "));
+			return;
+		}
+
 		toast.promise(
 			fetch(
 				"https://ordemdeservicosdev.onrender.com/api/order/create-order",
@@ -125,6 +132,7 @@ export default function Page() {
 					if (res.ok) {
 						return res.json();
 					}
+					throw new Error("Erro ao criar a ordem.");
 				})
 				.then((data) => {
 					console.log(data);
@@ -140,6 +148,7 @@ export default function Page() {
 		);
 	};
 	console.log(orders, "orders");
+
 	return (
 		<Container>
 			<main className="grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">

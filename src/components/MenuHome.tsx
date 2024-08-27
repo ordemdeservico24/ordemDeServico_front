@@ -20,7 +20,9 @@ const MenuHome = () => {
     logout();
   };
 
-  const isAdmin = role === 'admin_management'; 
+  const hasRole = (requiredRole: string) => {
+    return role === requiredRole;
+  };
 
   return (
     <Card className="hidden md:block w-[300px] h-[80vh] p-4 transition-transform duration-300 ease-in-out z-20">
@@ -39,7 +41,7 @@ const MenuHome = () => {
               </Button>
             </Link>
 
-            {isAdmin && ( 
+            {hasRole('admin_management') && (
               <div>
                 <Button
                   onClick={() => toggleDropdown('empresa')}
@@ -81,51 +83,58 @@ const MenuHome = () => {
               </div>
             )}
 
-            <Link href="/orders">
-              <Button variant="link" className="flex items-center pl-1 gap-2 py-2">
-                <FiShoppingCart className="h-4 w-4 md:h-5 md:w-5" />
-                <span>Ordens de serviço</span>
-              </Button>
-            </Link>
+            {/* {hasRole('orders_management') && ( */}
+              <Link href="/orders">
+                <Button variant="link" className="flex items-center pl-1 gap-2 py-2">
+                  <FiShoppingCart className="h-4 w-4 md:h-5 md:w-5" />
+                  <span>Ordens de serviço</span>
+                </Button>
+              </Link>
+            {/* )} */}
 
-            <Button
-              onClick={() => toggleDropdown('equipe')}
-              className="flex w-full justify-between items-center pl-1 gap-2 py-2 text-[#000] transition-all"
-              variant="link"
-            >
-              <div className='flex items-center gap-2'>
-                <FiBriefcase className="h-4 w-4 md:h-5 md:w-5" />
-                <span>Equipes</span>
-              </div>
-              {openDropdown === 'equipe' ? (
-                <FiChevronUp className="h-4 w-4 md:h-5 md:w-5" />
-              ) : (
-                <FiChevronDown className="h-4 w-4 md:h-5 md:w-5" />
-              )}
-            </Button>
+            {/* {hasRole('teams_management') && ( */}
+              <div>
+                <Button
+                  onClick={() => toggleDropdown('equipe')}
+                  className="flex w-full justify-between items-center pl-1 gap-2 py-2 text-[#000] transition-all"
+                  variant="link"
+                >
+                  <div className='flex items-center gap-2'>
+                    <FiBriefcase className="h-4 w-4 md:h-5 md:w-5" />
+                    <span>Equipes</span>
+                  </div>
+                  {openDropdown === 'equipe' ? (
+                    <FiChevronUp className="h-4 w-4 md:h-5 md:w-5" />
+                  ) : (
+                    <FiChevronDown className="h-4 w-4 md:h-5 md:w-5" />
+                  )}
+                </Button>
 
-            {openDropdown === 'equipe' && (
-              <div className="flex flex-col ml-1">
-                <Link href="/teams">
-                  <Button variant="link" className="flex items-center gap-2 py-2">
-                    <FiGrid className="h-4 w-4 md:h-5 md:w-5" />
-                    <span>Ver Equipes</span>
-                  </Button>
-                </Link>
-                <Link href="/teams/leaders">
-                  <Button variant="link" className="flex items-center gap-2 py-2">
-                    <FiArchive className="h-4 w-4 md:h-5 md:w-5" />
-                    <span>Líderes</span>
-                  </Button>
-                </Link>
-                <Link href="/teams/members">
-                  <Button variant="link" className="flex items-center gap-2 py-2">
-                    <FiCalendar className="h-4 w-4 md:h-5 md:w-5" />
-                    <span>Membros</span>
-                  </Button>
-                </Link>
+                {openDropdown === 'equipe' && (
+                  <div className="flex flex-col ml-1">
+                    <Link href="/teams">
+                      <Button variant="link" className="flex items-center gap-2 py-2">
+                        <FiGrid className="h-4 w-4 md:h-5 md:w-5" />
+                        <span>Ver Equipes</span>
+                      </Button>
+                    </Link>
+                    <Link href="/teams/leaders">
+                      <Button variant="link" className="flex items-center gap-2 py-2">
+                        <FiArchive className="h-4 w-4 md:h-5 md:w-5" />
+                        <span>Líderes</span>
+                      </Button>
+                    </Link>
+                    <Link href="/teams/members">
+                      <Button variant="link" className="flex items-center gap-2 py-2">
+                        <FiCalendar className="h-4 w-4 md:h-5 md:w-5" />
+                        <span>Membros</span>
+                      </Button>
+                    </Link>
+                  </div>
+                )}
               </div>
-            )}
+            {/* )} */}
+            
             <Link href="/subjects">
               <Button variant="link" className="flex items-center pl-1 gap-2 py-2">
                 <FiTag className="h-4 w-4 md:h-5 md:w-5" />

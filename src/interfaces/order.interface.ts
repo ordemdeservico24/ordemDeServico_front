@@ -21,7 +21,8 @@ export interface IOrderGet {
 	orderId: number;
 	openningDate: string;
 	expirationDate: string;
-	orderStatus: string;
+	orderStatusId: string;
+	orderStatus: IOrderStatus;
 	subjectId: string;
 	subject: {
 		id: string;
@@ -45,4 +46,11 @@ export interface IOrderGet {
 		createdAt: string;
 		updatedAt: string;
 	};
+}
+
+export interface IOrderStatus {
+	id: string;
+	orderStatusName: string;
+	tertiaryGroupId: string;
+	companyId: string;
 }

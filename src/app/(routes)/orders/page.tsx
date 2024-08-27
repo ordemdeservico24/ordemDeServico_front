@@ -18,9 +18,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { getCookie } from 'cookies-next';
 
 export default function Page() {
-  const [orders, setOrders] = useState<IOrderGet[]>([]);
-  const [subjects, setSubjects] = useState<ISubject[]>();
-  const [error, setError] = useState<string | null>(null);
+  	const [orders, setOrders] = useState<IOrderGet[]>([]);
+  	const [subjects, setSubjects] = useState<ISubject[]>();
+  	const [error, setError] = useState<string | null>(null);
 	const token = getCookie('access_token');
 	
   useEffect(() => {

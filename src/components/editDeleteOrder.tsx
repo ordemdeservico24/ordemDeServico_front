@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { FaCheck, FaEdit, FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { Bounce } from "react-toastify";
+import { getCookie } from 'cookies-next';
 
 interface OrderID {
   orderId: string;
@@ -10,7 +11,7 @@ interface OrderID {
 
 export const EditDeleteOrder: React.FC<OrderID> = ({ orderId }) => {
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
-
+  const token = getCookie('access_token');
   const handleConfirmation = () => {
     setDeleteConfirmation(true);
   };
@@ -20,9 +21,9 @@ export const EditDeleteOrder: React.FC<OrderID> = ({ orderId }) => {
       {
         method: "DELETE",
         headers: {
-			"Content-type": "application/json",
-			Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiR3VpbGhlcm1lIiwiaWQiOiJiZWU1MGU4Yy04ZmU0LTQ0NTYtYjgzZS1hZTk5MjBhNjlmMmIiLCJyb2xlSWQiOiIyNzhmNGNlOS0xNGY2LTQxNmQtYWRkZi1kMzJmNWFmNzI0MWYiLCJpYXQiOjE3MjM3NzYwOTV9.CJIubrQDHJSEHa6TgzcG1_2_rkls_V2fEXXUNvo6gAc`,
-		},
+          "Content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       }
     )
       .then((res) => {

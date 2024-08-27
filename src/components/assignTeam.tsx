@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { getCookie } from 'cookies-next';
 
 interface Order {
     orderId: string;
@@ -13,10 +14,15 @@ interface Order {
 export const AssignTeam: React.FC<Order> = ({ orderId, teamName }) => {
     const [teams, setTeams] = useState<ITeam[]>([]);
     const [selectedTeam, setSelectedTeam] = useState<string>("");
+    const token = getCookie('access_token');
 
     useEffect(() => {
         fetch("https://ordemdeservicosdev.onrender.com/api/team/get-all-teams", {
             method: "GET",
+            headers: {
+                "Content-type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
         })
             .then((res) => res.json())
             .then((data) => {
@@ -31,7 +37,7 @@ export const AssignTeam: React.FC<Order> = ({ orderId, teamName }) => {
                 console.error("Erro ao buscar equipes", error);
                 setTeams([]);
             });
-    }, []);
+    }, [token]);
 
     const handleSelectChange = (value: string) => {
         setSelectedTeam(value);
@@ -45,7 +51,7 @@ export const AssignTeam: React.FC<Order> = ({ orderId, teamName }) => {
                     method: "PATCH",
                     headers: {
                         "Content-type": "application/json",
-                        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiR3VpbGhlcm1lIiwiaWQiOiJiZWU1MGU4Yy04ZmU0LTQ0NTYtYjgzZS1hZTk5MjBhNjlmMmIiLCJyb2xlSWQiOiIyNzhmNGNlOS0xNGY2LTQxNmQtYWRkZi1kMzJmNWFmNzI0MWYiLCJpYXQiOjE3MjM3NzYwOTV9.CJIubrQDHJSEHa6TgzcG1_2_rkls_V2fEXXUNvo6gAc`,
+                        Authorization: `Bearer ${token}`,
                     },
                     body: JSON.stringify({ teamId: selectedTeam }),
                 }

@@ -1,12 +1,13 @@
 import { ISubject } from "@/interfaces/subject.interface";
 import React, { useEffect, useState } from "react";
-
+import { getCookie } from 'cookies-next';
 export const OrderSubjectSelect: React.FC<ISubject> = ({
 	name,
 	id,
 	expirationDays,
 }) => {
 	const [subjects, setSubjects] = useState<ISubject[]>();
+	const token = getCookie('access_token');
 
 	useEffect(() => {
 		fetch(
@@ -15,7 +16,7 @@ export const OrderSubjectSelect: React.FC<ISubject> = ({
 				method: "GET",
 				headers: {
 					"Content-type": "application/json",
-					Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiR3VpbGhlcm1lIiwiaWQiOiJiZWU1MGU4Yy04ZmU0LTQ0NTYtYjgzZS1hZTk5MjBhNjlmMmIiLCJyb2xlSWQiOiIyNzhmNGNlOS0xNGY2LTQxNmQtYWRkZi1kMzJmNWFmNzI0MWYiLCJpYXQiOjE3MjM3NzYwOTV9.CJIubrQDHJSEHa6TgzcG1_2_rkls_V2fEXXUNvo6gAc`,
+					Authorization: `Bearer ${token}`,
 				},
 			}
 		)
@@ -27,7 +28,7 @@ export const OrderSubjectSelect: React.FC<ISubject> = ({
 				console.log(status, data);
 				setSubjects(data);
 			});
-	}, []);
+	}, [token]);
 
 	return (
 		<>

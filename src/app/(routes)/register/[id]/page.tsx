@@ -101,6 +101,7 @@ export default function Page() {
 				name: data.name,
 				profilePicture: result.profilePicture,
 				token: result.token,
+				role: result.role,
             });
 
             console.log("User created:", result);

@@ -97,7 +97,7 @@ export default function Home() {
 							<CardTitle className="text-[#3b82f6] text-2xl font-bold">
                                     Seja bem-vindo, {name || 'Usuário'}.
                                 </CardTitle>
-								<CardDescription className="max-w-[90ch]">Cheque todas as informações, navegue por todas as abas e acostume-se com esse gerenciamento de tarefas. Tudo didático e aprimorado. Abaixo, cheque algumas informações sobre o que você terá acesso aqui na plataforma:</CardDescription>
+								<CardDescription>Cheque todas as informações, navegue por todas as abas e acostume-se com esse gerenciamento de tarefas. Tudo didático e aprimorado. Abaixo, cheque algumas informações sobre o que você terá acesso aqui na plataforma:</CardDescription>
 							  <div className="flex items-center justify-between">
 								
 							  <div className="relative flex-1 md:grow-0">

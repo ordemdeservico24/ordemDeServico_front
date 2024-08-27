@@ -1,7 +1,8 @@
 "use client";
 import React from "react";
 import { toast } from "react-toastify";
-import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select"; // Importar componentes da Shadcn UI
+import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select";
+import { getCookie } from 'cookies-next';
 
 interface OrderStatusProps {
     currentStatus: string;
@@ -18,6 +19,8 @@ export const OrderStatus: React.FC<OrderStatusProps> = ({
         (status) => status !== currentStatus
     );
 
+    const token = getCookie('access_token');
+
     const handleChange = async (value: string) => {
         toast.promise(
             fetch(
@@ -26,6 +29,7 @@ export const OrderStatus: React.FC<OrderStatusProps> = ({
                     method: "PATCH",
                     headers: {
                         "Content-type": "application/json",
+                        Authorization: `Bearer ${token}`,
                     },
                     body: JSON.stringify({ orderStatus: value }),
                 }

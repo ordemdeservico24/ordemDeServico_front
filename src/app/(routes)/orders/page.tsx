@@ -19,7 +19,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getCookie } from "cookies-next";
 import { z } from 'zod';
 
-export const orderSchema = z.object({
+const orderSchema = z.object({
   subjectId: z.string().min(1, "Selecione uma categoria"),
   requesterName: z.string().min(1, "Nome do solicitante é obrigatório"),
   requesterPhone: z.string().min(1, "Telefone do solicitante é obrigatório"),

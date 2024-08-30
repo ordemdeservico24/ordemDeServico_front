@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { FiHome, FiShoppingCart, FiUser, FiTag, FiLogOut, FiGrid, FiArchive, FiCalendar, FiChevronDown, FiBriefcase } from 'react-icons/fi';
 import Logo from '../assets/logo.png';
 import Image from 'next/image';
-import {useStore} from '../zustandStore';
+import {Role, useStore} from '../zustandStore';
 import { FaBuilding } from 'react-icons/fa';
 
 interface MenuProps {
@@ -22,8 +22,8 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
     setOpenDropdown((prevDropdown) => (prevDropdown === dropdown ? null : dropdown));
   };
 
-  const hasRole = (requiredRole: string) => {
-    return role === requiredRole;
+  const hasRole = (requiredResource: string) => {
+    return role.some((r: Role) => r.resource === requiredResource);
   };
 
   return (
@@ -88,7 +88,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 
         
         {hasRole('teams_management') && (
-              <div>
+        <div>
         <button
           onClick={() => toggleDropdown('equipe')}
           className="flex items-center justify-between px-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9] w-full"

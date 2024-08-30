@@ -5,6 +5,7 @@ export const OrderSubjectSelect: React.FC<ISubject> = ({
 	name,
 	id,
 	expirationDays,
+	value,
 }) => {
 	const [subjects, setSubjects] = useState<ISubject[]>();
 	const token = getCookie('access_token');

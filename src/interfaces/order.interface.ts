@@ -46,6 +46,7 @@ export interface IOrderGet {
 		createdAt: string;
 		updatedAt: string;
 	};
+	isExpired: boolean;
 }
 
 export interface IOrderStatus {

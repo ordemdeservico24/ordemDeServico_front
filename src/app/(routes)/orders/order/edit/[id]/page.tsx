@@ -39,7 +39,7 @@ export default function Page({ params }: { params: { id: string } }) {
 					method: "PATCH",
 					headers: {
 						"Content-type": "application/json",
-						uthorization: `Bearer ${token}`,
+						Authorization: `Bearer ${token}`,
 					},
 					body: JSON.stringify(request),
 				}
@@ -65,7 +65,7 @@ export default function Page({ params }: { params: { id: string } }) {
 				method: "GET",
 				headers: {
 					"Content-type": "application/json",
-					uthorization: `Bearer ${token}`,
+					Authorization: `Bearer ${token}`,
 				},
 			}
 		)
@@ -81,6 +81,7 @@ export default function Page({ params }: { params: { id: string } }) {
 	
 	return (
 		<Container>
+			<main className="flex flex-col p-4">
 			<Link
 				href="/orders"
 				className="bg-[#7F56D8] text-white font-medium rounded px-4 py-2 hover:-translate-y-1 transition-all w-fit"
@@ -155,6 +156,7 @@ export default function Page({ params }: { params: { id: string } }) {
 					<p>Carregando</p>
 				</>
 			)}
+			</main>
 		</Container>
 	);
 }

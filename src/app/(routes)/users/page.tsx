@@ -12,6 +12,7 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Search } from "lucide-react";
 import { getCookie } from 'cookies-next';
+import Link from "next/link";
 
 export default function Page() {
 	const [users, setUsers] = useState<IUser[]>([]);
@@ -194,15 +195,20 @@ export default function Page() {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {users.map((user, index) => (
-                                    <TableRow key={index} className="border-b">
-                                        <TableCell>{user.name}</TableCell>
-                                        <TableCell>{user.email}</TableCell>
-                                        <TableCell>{user.phone}</TableCell>
-                                        <TableCell>{user.role?.roleName}</TableCell>
-                                    </TableRow>
-                                    ))}
-                                </TableBody>
+									{users.map((user, index) => (
+										<TableRow key={index} className="border-b">
+												<TableCell>{user.name}</TableCell>
+												<TableCell>{user.email}</TableCell>
+												<TableCell>{user.phone}</TableCell>
+												<TableCell>{user.role?.roleName}</TableCell>
+												<TableCell>
+													<Link href={`/users/${user.id}`}>
+													<Button variant="outline">Ver dados</Button>
+													</Link>
+												</TableCell>
+										</TableRow>
+									))}
+									</TableBody>
                                 </Table>
                             </div>
                             </div>

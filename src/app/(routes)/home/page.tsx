@@ -100,7 +100,7 @@ export default function Home() {
 						<Card x-chunk="dashboard-06-chunk-0">
 							<CardHeader>
 								<CardTitle className="text-[#3b82f6] text-2xl font-bold">
-									Seja bem-vindo, {name || "Usuário"}.
+									Seja bem-vindo, {name}.
 								</CardTitle>
 								<CardDescription>
 									Cheque todas as informações, navegue por

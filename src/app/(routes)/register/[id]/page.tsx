@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from 'next/router'
 import Link from "next/link";
 import Image from "next/image";
 import Bg from "../../../../assets/bg.jpg";
@@ -63,7 +64,7 @@ export default function Page() {
 	const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>({
 		resolver: zodResolver(schema),
 	});
-	
+	const router = useRouter();
 	const registerWithMask = useHookFormMask(register);
 
     const params = useParams();
@@ -104,7 +105,8 @@ export default function Page() {
 				role: result.role,
             });
 
-            console.log("User created:", result);
+			console.log("User created:", result);
+			router.push('/');
 		} catch (error) {
 			console.error("Error creating user:", error);
 		}

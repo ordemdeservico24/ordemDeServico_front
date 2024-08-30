@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { FiHome, FiShoppingCart, FiUser, FiTag, FiLogOut, FiGrid, FiArchive, FiCalendar, FiChevronDown, FiBriefcase } from 'react-icons/fi';
 import Logo from '../assets/logo.png';
 import Image from 'next/image';
-import {useStore} from '../zustandStore';
+import {Role, useStore} from '../zustandStore';
 import { FaBuilding } from 'react-icons/fa';
 
 interface MenuProps {
@@ -22,11 +22,13 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
     setOpenDropdown((prevDropdown) => (prevDropdown === dropdown ? null : dropdown));
   };
 
-  const isAdmin = role === 'admin_management'; 
+  const hasRole = (requiredResource: string) => {
+    return role.some((r: Role) => r.resource === requiredResource);
+  };
 
   return (
     <div
-      className={`sm:hidden fixed left-0 w-[260px] h-full p-4 bg-[#f1f1f1] transition-transform duration-300 ease-in-out z-20 [box-shadow:rgba(60,_64,_67,_0.3)_0px_1px_2px_0px,_rgba(60,_64,_67,_0.15)_0px_1px_3px_1px] ${
+      className={`sm:hidden fixed left-0 w-[261px] h-full p-4 bg-[#f1f1f1] transition-transform duration-300 ease-in-out z-20 [box-shadow:rgba(60,_64,_67,_0.3)_0px_1px_2px_0px,_rgba(60,_64,_67,_0.15)_0px_1px_3px_1px] ${
         isOpen ? 'translate-x-0' : '-translate-x-full'
       }`}
     >
@@ -41,45 +43,52 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
           <span>Dashboard</span>
         </Link>
 
-        {isAdmin && ( 
-          <button
-            onClick={() => toggleDropdown('empresa')}
-            className="flex items-center justify-between px-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9] w-full"
-          >
-            <div className="flex items-center gap-2">
-              <FaBuilding className="h-4 w-4 md:h-5 md:w-5" />
-              <span>Minha Empresa</span>
-            </div>
-            <FiChevronDown
-              className={`h-4 w-4 md:h-5 md:w-5 transition-transform ${
-                openDropdown === 'empresa' ? 'rotate-180' : 'rotate-0'
-              }`}
-            />
-          </button>
-        )}
+        {hasRole('admin_management') && (
+          <div>
+            <button
+              onClick={() => toggleDropdown('empresa')}
+              className="flex items-center justify-between px-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9] w-full"
+            >
+              <div className="flex items-center gap-2">
+                <FaBuilding className="h-4 w-4 md:h-5 md:w-5" />
+                <span>Minha Empresa</span>
+              </div>
+              <FiChevronDown
+                className={`h-4 w-4 md:h-5 md:w-5 transition-transform ${
+                  openDropdown === 'empresa' ? 'rotate-180' : 'rotate-0'
+                }`}
+              />
+            </button>
 
-        {isAdmin && ( 
-          <div className="flex flex-col">
-            <Link href="#" className="flex items-center pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]">
-              <FiGrid className="h-4 w-4 md:h-5 md:w-5" />
-              <span>Estado</span>
-            </Link>
-            <Link href="#" className="flex items-center pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]">
-              <FiArchive className="h-4 w-4 md:h-5 md:w-5" />
-              <span>Cidade</span>
-            </Link>
-            <Link href="#" className="flex items-center pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]">
-              <FiCalendar className="h-4 w-4 md:h-5 md:w-5" />
-              <span>Distrito</span>
-            </Link>
+            {openDropdown === 'empresa' && (
+              <div className="flex flex-col">
+                <Link href="#" className="flex items-center pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]">
+                  <FiGrid className="h-4 w-4 md:h-5 md:w-5" />
+                  <span>Estado</span>
+                </Link>
+                <Link href="#" className="flex items-center pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]">
+                  <FiArchive className="h-4 w-4 md:h-5 md:w-5" />
+                  <span>Cidade</span>
+                </Link>
+                <Link href="#" className="flex items-center pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]">
+                  <FiCalendar className="h-4 w-4 md:h-5 md:w-5" />
+                  <span>Distrito</span>
+                </Link>
+                </div>
+              )}
           </div>
         )}
 
+        {hasRole('orders_management') && (
         <Link href="/orders" className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]">
           <FiShoppingCart className="h-4 w-4 md:h-5 md:w-5" />
           <span>Ordens de serviço</span>
         </Link>
+          )}
 
+        
+        {hasRole('teams_management') && (
+        <div>
         <button
           onClick={() => toggleDropdown('equipe')}
           className="flex items-center justify-between px-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9] w-full"
@@ -109,6 +118,8 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
               <FiCalendar className="h-4 w-4 md:h-5 md:w-5" />
               <span>Membros</span>
             </Link>
+            </div>
+            )}
           </div>
         )}
 

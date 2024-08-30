@@ -54,7 +54,7 @@ export default function Header({ onMenuToggle }: HeaderProps) {
 
         <div>
           <div className="flex flex-row items-center gap-3">
-            <h1>{name || 'Usuário'}</h1>
+            <h1>{name}</h1>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button

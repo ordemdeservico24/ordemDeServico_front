@@ -12,9 +12,17 @@ import { Tabs, TabsContent } from "@/components/ui/tabs"
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Search } from "lucide-react"
 import { getCookie } from 'cookies-next';
+import { z } from "zod";
+
+const createLeaderSchema = z.object({
+	name: z.string().nonempty("O nome é obrigatório"),
+	email: z.string().nonempty("O e-mail é obrigatório").email("E-mail inválido"),
+	phone: z.string().nonempty("O telefone é obrigatório"),
+	role: z.string().nonempty("A profissão é obrigatória"),
+  });
 
 export default function Page() {
-  const [leaders, setLeaders] = useState<ITeamLeader[]>([]);
+  	const [leaders, setLeaders] = useState<ITeamLeader[]>([]);
 	const token = getCookie('access_token');
 	
   useEffect(() => {
@@ -46,50 +54,65 @@ export default function Page() {
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
 	e.preventDefault();
-
+  
 	const getInput = (name: string): HTMLInputElement => {
-		return e.currentTarget.querySelector(
-			`[name="${name}"]`
-		) as HTMLInputElement;
+	  return e.currentTarget.querySelector(
+		`[name="${name}"]`
+	  ) as HTMLInputElement;
 	};
-
+  
 	const request: ICreateLeader = {
-		name: getInput("name").value || "",
-		email: getInput("email").value || "",
-		phone: getInput("phone").value || "",
-		role: getInput("role").value || "",
+	  name: getInput("name").value.trim(),
+	  email: getInput("email").value.trim(),
+	  phone: getInput("phone").value.trim(),
+	  role: getInput("role").value.trim(),
 	};
-
-	toast.promise(
+  
+	try {
+	  createLeaderSchema.parse(request);
+	  toast.promise(
 		fetch(
-			"https://ordemdeservicosdev.onrender.com/api/team/create-leader",
-			{
-				method: "POST",
-				headers: {
-					"Content-type": "application/json",
-					Authorization: `Bearer ${token}`,
-				},
-				body: JSON.stringify(request),
-			}
+		  "https://ordemdeservicosdev.onrender.com/api/team/create-leader",
+		  {
+			method: "POST",
+			headers: {
+			  "Content-type": "application/json",
+			  Authorization: `Bearer ${token}`,
+			},
+			body: JSON.stringify(request),
+		  }
 		)
-			.then((res) => {
-				if (res.ok) {
-					return res.json();
-				}
-			})
-			.then((data) => {
-				console.log(data);
-			})
-			.catch((error) => {
-				console.log(error);
-			}),
+		  .then((res) => {
+			if (res.ok) {
+			  return res.json();
+			} else {
+			  throw new Error("Failed to create leader");
+			}
+		  })
+		  .then((data) => {
+			console.log(data);
+		  })
+		  .catch((error) => {
+			console.log(error);
+			throw error;
+		  }),
 		{
-			pending: "Criando líder de equipe",
-			success: "Líder de equipe criado com sucesso!",
-			error: "Ocorreu um erro ao criar líder de equipe",
+		  pending: "Criando líder de equipe",
+		  success: "Líder de equipe criado com sucesso!",
+		  error: "Ocorreu um erro ao criar líder de equipe",
 		}
-	);
-};
+	  );
+	} catch (err) {
+	  if (err instanceof z.ZodError) {
+		err.errors.forEach((error) => {
+		  toast.error(error.message);
+		});
+	  } else {
+		toast.error("Ocorreu um erro inesperado.");
+	  }
+	}
+  };
+  
 
   return (
 	  <Container className="p-4">

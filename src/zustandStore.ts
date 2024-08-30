@@ -1,22 +1,30 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { setCookie, getCookie, deleteCookie  } from 'cookies-next';
+import { setCookie, getCookie, deleteCookie } from 'cookies-next';
+
+export interface Role {
+  id: string;
+  operations: string[];
+  resource: string;
+  roleId: string;
+}
 
 interface User {
   name: string;
   profilePicture: string;
   token: string;
-  role: string;
+  role: Role[];
 }
+
 interface StoreState {
   token: string;
   name: string;
   profilePicture: string;
-  role: string; 
+  role: Role[];
   setToken: (token: string) => void;
   setName: (name: string) => void;
   setProfilePicture: (profilePicture: string) => void;
-  setRole: (role: string) => void; 
+  setRole: (role: Role[]) => void;
   setUser: (user: User) => void;
   loadUserFromStorage: () => void;
   logout: () => void;
@@ -28,7 +36,7 @@ export const useStore = create<StoreState>()(
       token: '',
       name: '',
       profilePicture: '',
-      role: '',
+      role: [],
 
       setToken: (token) => {
         set({ token });
@@ -37,14 +45,17 @@ export const useStore = create<StoreState>()(
 
       setName: (name) => {
         set({ name });
+        localStorage.setItem('user_name', name);
       },
 
       setProfilePicture: (profilePicture) => {
         set({ profilePicture });
+        localStorage.setItem('profile_picture', profilePicture);
       },
 
-      setRole: (role) => {
+      setRole: (role: Role[]) => {
         set({ role });
+        localStorage.setItem('role', JSON.stringify(role));
       },
 
       setUser: (user) => {
@@ -52,18 +63,22 @@ export const useStore = create<StoreState>()(
           token: user.token,
           name: user.name,
           profilePicture: user.profilePicture,
-          role: user.role, 
+          role: user.role,
         });
         setCookie('access_token', user.token, { maxAge: 7 * 24 * 60 * 60, path: '/' });
+        localStorage.setItem('user_name', user.name);
+        localStorage.setItem('profile_picture', user.profilePicture);
+        localStorage.setItem('role', JSON.stringify(user.role));
       },
 
       loadUserFromStorage: () => {
         const token = getCookie('access_token')?.toString() || '';
         const name = localStorage.getItem('user_name') || '';
         const profilePicture = localStorage.getItem('profile_picture') || '';
-        const role = localStorage.getItem('role') || '';
+        const role = localStorage.getItem('role');
+        const parsedRole = role ? JSON.parse(role) : [];
 
-        set({ token, name, profilePicture, role });
+        set({ token, name, profilePicture, role: parsedRole });
       },
 
       logout: () => {
@@ -71,7 +86,7 @@ export const useStore = create<StoreState>()(
           token: '',
           name: '',
           profilePicture: '',
-          role: '',
+          role: [],
         });
         deleteCookie('access_token', { path: '/' });
         localStorage.removeItem('user_name');
@@ -80,7 +95,7 @@ export const useStore = create<StoreState>()(
       },
     }),
     {
-      name: 'user-storage', 
+      name: 'user-storage',
       getStorage: () => localStorage,
       partialize: (state) => ({
         name: state.name,

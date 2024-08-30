@@ -28,7 +28,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 
   return (
     <div
-      className={`sm:hidden fixed left-0 w-[260px] h-full p-4 bg-[#f1f1f1] transition-transform duration-300 ease-in-out z-20 [box-shadow:rgba(60,_64,_67,_0.3)_0px_1px_2px_0px,_rgba(60,_64,_67,_0.15)_0px_1px_3px_1px] ${
+      className={`sm:hidden fixed left-0 w-[261px] h-full p-4 bg-[#f1f1f1] transition-transform duration-300 ease-in-out z-20 [box-shadow:rgba(60,_64,_67,_0.3)_0px_1px_2px_0px,_rgba(60,_64,_67,_0.15)_0px_1px_3px_1px] ${
         isOpen ? 'translate-x-0' : '-translate-x-full'
       }`}
     >

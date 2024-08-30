@@ -18,18 +18,19 @@ import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/ca
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getCookie } from "cookies-next";
 import { z } from 'zod';
+
 export default function Page() {
 
 	const orderSchema = z.object({
-		subjectId: z.string().min(1, "Selecione uma categoria"),
-		requesterName: z.string().min(1, "Nome do solicitante é obrigatório"),
-		requesterPhone: z.string().min(1, "Telefone do solicitante é obrigatório"),
-		requesterStreet: z.string().min(1, "Endereço do solicitante é obrigatório"),
-		requesterHouseNumber: z.string().min(1, "Número da casa é obrigatório").transform(Number),
-		requesterComplement: z.string().optional(),
-		requesterZipcode: z.string().min(1, "CEP do solicitante é obrigatório"),
-		notes: z.string().optional(),
-	});
+		  subjectId: z.string().min(1, "Selecione uma categoria"),
+		  requesterName: z.string().min(1, "Nome do solicitante é obrigatório"),
+		  requesterPhone: z.string().min(1, "Telefone do solicitante é obrigatório"),
+		  requesterStreet: z.string().min(1, "Endereço do solicitante é obrigatório"),
+		  requesterHouseNumber: z.string().min(1, "Número da casa é obrigatório").transform(Number),
+		  requesterComplement: z.string().optional(),
+		  requesterZipcode: z.string().min(1, "CEP do solicitante é obrigatório"),
+		  notes: z.string().optional(),
+		});
 	
 	const [orders, setOrders] = useState<IOrderGet[]>([]);
 	const [subjects, setSubjects] = useState<ISubject[]>();

@@ -10,7 +10,8 @@ export interface IUser {
     };
     createdAt?: string;
     updatedAt?: string;
-  }
+}
+
   
   export interface ITypeOfProfile {
     id: string;

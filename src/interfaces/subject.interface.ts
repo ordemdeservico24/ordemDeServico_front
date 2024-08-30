@@ -5,4 +5,5 @@ export interface ISubject {
 	name: string;
 	expirationDays: number;
 	orders?: IOrder[];
+	value?: string;
 }

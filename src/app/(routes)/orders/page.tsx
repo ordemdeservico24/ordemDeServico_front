@@ -38,6 +38,27 @@ export default function Page() {
 	const token = getCookie("access_token");
 
 	useEffect(() => {
+		fetch("https://ordemdeservicosdev.onrender.com/api/order/get-all-subjects", {
+		  method: "GET",
+		  headers: {
+			"Content-type": "application/json",
+			Authorization: `Bearer ${token}`,
+		  },
+		})
+		  .then((res) => {
+			const status = res.status;
+			return res.json().then((data) => ({ status, data }));
+		  })
+		  .then(({ status, data }) => {
+			console.log(status, data);
+			setSubjects(data);
+		  })
+		  .catch((error) => {
+			console.error("Erro ao buscar os dados", error);
+		  });
+	  }, [token]);
+
+	useEffect(() => {
 		fetch(
 			"https://ordemdeservicosdev.onrender.com/api/order/get-all-orders",
 			{
@@ -216,28 +237,30 @@ export default function Page() {
 										<select
 											name="subjectId"
 											id="subjectId"
-											className="border rounded px-2 py-2 mb-2"
+											className="border rounded px-2 py-2"
 											required
-										>
-											<option value="">
-												Selecione uma categoria
-											</option>
+											>
+											<option value="">Selecione uma categoria</option>
 											{Array.isArray(subjects) ? (
 												subjects.map((subject) => (
-													<option
-														value={subject.id}
-														key={subject.id}
-													>
-														{subject.name} (
-														{subject.expirationDays}{" "}
-														dias de prazo)
-													</option>
+												<option value={subject.id} key={subject.id}>
+													{subject.name} ({subject.expirationDays} dias de prazo)
+												</option>
 												))
 											) : (
-												<option value="">
-													Nenhuma categoria encontrada
-												</option>
+												<option value="">Carregando...</option>
 											)}
+											</select>
+										<select
+											name="orderStatus"
+											id="orderStatus"
+											className="border rounded px-2 py-2"
+											required
+										>
+											<option value="">Selecione o status da ordem</option>
+											<option value="pendente">Pendente</option>
+											<option value="em_andamento">Em Andamento</option>
+											<option value="concluida">Concluída</option>
 										</select>
 										<Input
 											type="text"

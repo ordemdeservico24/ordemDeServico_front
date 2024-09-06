@@ -1,19 +1,18 @@
 "use client";
 import { Container } from "@/components/container";
-import { ITeam } from "@/interfaces/team.interfaces";
+import { ITeam, ITeamLeader } from "@/interfaces/team.interfaces";
 import Link from "next/link";
 import React, { useEffect, FormEvent, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { AssignTeamLeader } from "@/components/assignTeamLeader";
-import { ICreateTeam } from "@/interfaces/create-team-request/createTeam.interface";
 import { toast } from "react-toastify";
 import { Tabs, TabsContent } from "@/components/ui/tabs"
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Search } from "lucide-react"
 import { getCookie } from 'cookies-next';
+import { ICreateTeam } from "@/interfaces/create-team-request/createTeam.interface";
 
 export default function Page() {
 	const [teams, setTeams] = useState<ITeam[]>([]);
@@ -42,13 +41,14 @@ export default function Page() {
 				setError("Erro ao carregar dados da equipe.");
 			});
 	}, [token]);
+
 	const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		const getInput = (name: string): HTMLInputElement => {
+		const getInput = (name: string): HTMLInputElement | HTMLSelectElement => {
 			return e.currentTarget.querySelector(
 				`[name="${name}"]`
-			) as HTMLInputElement;
+			) as HTMLInputElement | HTMLSelectElement;
 		};
 
 		const request: ICreateTeam = {
@@ -87,6 +87,26 @@ export default function Page() {
 		);
 	};
 
+	const [leaders, setLeaders] = useState<ITeamLeader[]>([]);
+
+	useEffect(() => {
+		fetch(
+			"https://ordemdeservicosdev.onrender.com/api/team/get-all-leaders",
+			{
+				method: "GET",
+				headers: {
+					"Content-type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+			}
+		)
+			.then((res) => res.json())
+			.then((data) => setLeaders(data))
+			.catch((err) => console.error("Erro ao buscar líderes:", err));
+	}, [token]);
+
+	const availableLeaders = Array.isArray(leaders)? leaders.filter((leader) =>!leader.teamId) : [];
+
 	return (
 		<Container className="overflow-x-auto">
 			<main className="grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">
@@ -98,7 +118,7 @@ export default function Page() {
 								<CardDescription>Cheque todas as informações relacionado aos membros apresentados.</CardDescription>
 							  <div className="flex gap-3 items-center justify-between">
 								  
-							  <div className="relative flex-1 md:grow-0">
+								  <div className="relative flex-1 md:grow-0">
 									<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
 									<Input
 										type="search"
@@ -129,7 +149,18 @@ export default function Page() {
 										placeholder="Nome da equipe"
 										className="w-full"
 									/>
-									<AssignTeamLeader />
+									<select
+										name="teamLeaderId"
+										id="teamLeaderId"
+										className="outline-none border focus:border-[#2a2a2a] rounded px-2 py-1 w-full mb-4"
+									>
+										<option value="">{"Selecione um líder"}</option>
+										{availableLeaders.map((leader, index) => (
+											<option value={leader.id} key={index}>
+												{leader.name}
+											</option>
+										))}
+									</select>
 									<Button
 										className="text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
 										type="submit"
@@ -144,7 +175,7 @@ export default function Page() {
 						  </CardHeader>
 						  
 						  	<div className="p-3">
-				{error ? (
+				{error? (
 					<p className="text-red-500">{error}</p>
 				) : (
 					<Table>

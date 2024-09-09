@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { FiHome, FiShoppingCart, FiUsers, FiUser, FiTag, FiLogOut, FiGrid, FiArchive, FiCalendar, FiChevronDown, FiChevronUp, FiBriefcase, FiGlobe, FiMap, FiMapPin } from 'react-icons/fi';
@@ -8,6 +9,7 @@ import Image from 'next/image';
 import { useStore } from '../zustandStore';
 import { FaBuilding } from 'react-icons/fa';
 import { Role } from '../zustandStore';
+import IconWrapper from './IconWrapper';
 
 const MenuHome = () => {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -93,7 +95,7 @@ const MenuHome = () => {
             {hasRole(role, 'orders_management') && (
               <Link href="/orders">
                 <Button variant="link" className="flex items-center pl-1 gap-2 py-2">
-                  <FiShoppingCart className="h-4 w-4 md:h-5 md:w-5" />
+                  <IconWrapper icon={<FiShoppingCart />} />
                   <span>Ordens de serviço</span>
                 </Button>
               </Link>

@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { FiHome, FiShoppingCart, FiUser, FiTag, FiLogOut, FiGrid, FiArchive, FiCalendar, FiChevronDown, FiBriefcase } from 'react-icons/fi';
@@ -5,6 +6,7 @@ import Logo from '../assets/logo.png';
 import Image from 'next/image';
 import {Role, useStore} from '../zustandStore';
 import { FaBuilding } from 'react-icons/fa';
+import IconWrapper from './IconWrapper';
 
 interface MenuProps {
   isOpen: boolean;
@@ -81,7 +83,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 
         {hasRole('orders_management') && (
         <Link href="/orders" className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]">
-          <FiShoppingCart className="h-4 w-4 md:h-5 md:w-5" />
+          <IconWrapper icon={<FiShoppingCart />} />
           <span>Ordens de serviço</span>
         </Link>
           )}

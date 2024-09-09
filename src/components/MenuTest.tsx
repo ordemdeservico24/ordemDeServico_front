@@ -1,6 +1,8 @@
+"use client";
 import Link from "next/link";
 import React, { useState } from "react";
 import { FiHome, FiShoppingCart, FiPackage, FiLogOut, FiUsers, FiTag, FiUser, FiUsers as FiUsersIcon, FiChevronDown, FiChevronUp } from 'react-icons/fi';
+import IconWrapper from "./IconWrapper";
 
 export default function Menu() {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,7 +30,7 @@ export default function Menu() {
             className="flex items-center gap-2 md:gap-3 rounded-lg py-2 text-muted-foreground transition-all hover:text-primary"
             prefetch={false}
           >
-            <FiShoppingCart className="h-4 w-4 md:h-5 md:w-5" />
+            <IconWrapper icon={<FiShoppingCart />} />
             <span className="hidden md:inline">Ordens de serviço</span>
           </Link>
           <div className="flex flex-col">

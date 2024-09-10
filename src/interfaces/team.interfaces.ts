@@ -1,5 +1,6 @@
 import { ICreateTeam } from "./create-team-request/createTeam.interface";
 import { IOrder } from "./order.interface";
+import { IUser } from "./user.interface";
 
 export interface ITeam {
 	id: string;
@@ -12,19 +13,14 @@ export interface ITeam {
 
 export interface ITeamLeader {
 	id: string;
-	name: string;
-	email: string;
-	phone: string;
-	role: string;
 	teamId: string;
+	user: IUser;
 	team: ICreateTeam;
 }
 
 export interface ITeamMember {
 	id: string;
 	teamId: string;
-	memberRole: string;
-	memberPhone: string;
-	memberName: string;
+	user: IUser;
 	team: ICreateTeam;
 }

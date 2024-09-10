@@ -1,6 +1,4 @@
 export interface ICreateMember {
-	memberName: string;
-	memberPhone: string;
-	memberRole: string;
+	id: string;
 	teamId: string;
 }

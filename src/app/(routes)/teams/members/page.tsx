@@ -32,6 +32,8 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import { useStore } from "@/zustandStore";
+import { hasPermission } from "@/interfaces/hasPermissions";
 
 const createMemberSchema = z.object({
 	id: z.string().nonempty("Usuário é obrigatório."),
@@ -43,6 +45,7 @@ export default function Page() {
 	const [teams, setTeams] = useState<ITeam[]>([]);
 	const [members, setMembers] = useState<ITeamMember[]>([]);
 	const token = getCookie("access_token");
+	const { role = [] } = useStore();
 
 	const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -182,6 +185,7 @@ export default function Page() {
 											className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
 										/>
 									</div>
+									{hasPermission(role, 'team_management', 'create') && (
 									<Dialog>
 										<DialogTrigger asChild>
 											<Button
@@ -258,7 +262,8 @@ export default function Page() {
 												</div>
 											</form>
 										</DialogContent>
-									</Dialog>
+										</Dialog>
+									)}
 								</div>
 							</CardHeader>
 							<div className="p-3">

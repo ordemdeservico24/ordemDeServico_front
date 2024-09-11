@@ -1,7 +1,8 @@
 "use client";
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { FiHome, FiShoppingCart, FiUsers, FiUser, FiTag, FiLogOut, FiGrid, FiArchive, FiCalendar, FiChevronDown, FiChevronUp, FiBriefcase, FiGlobe, FiMap, FiMapPin } from 'react-icons/fi';
+import { FiHome, FiShoppingCart, FiUser, FiTag, FiLogOut, FiGrid, FiArchive, FiCalendar, FiChevronDown, FiChevronUp, FiBriefcase, FiGlobe, FiMap, FiMapPin } from 'react-icons/fi';
+import { RiTeamLine } from "react-icons/ri";
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Logo from '../assets/logo.png';
@@ -10,6 +11,7 @@ import { useStore } from '../zustandStore';
 import { FaBuilding } from 'react-icons/fa';
 import { Role } from '../zustandStore';
 import IconWrapper from './IconWrapper';
+import { hasPermission } from '@/interfaces/hasPermissions';
 
 const MenuHome = () => {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -22,18 +24,10 @@ const MenuHome = () => {
   const handleLogout = () => {
     logout();
   };
-
-  const hasRole = (roles: Role[], resource: string) => {
-    if (!Array.isArray(roles)) {
-      console.error('Expected an array for roles, but got:', roles);
-      return false;
-    }
-    return roles.some(role => role.resource === resource);
-  };
   
 
   return (
-    <Card className="hidden md:block w-[300px] h-[80vh] p-4 transition-transform duration-300 ease-in-out z-20">
+    <Card className="hidden md:block w-[300px] h-[87dvh] p-4 transition-transform duration-300 ease-in-out z-20">
       <div className='flex flex-col justify-between h-full'>
         <div>
           <div className="w-full flex justify-center items-center h-[170px] bg-[#cccccc]">
@@ -49,7 +43,7 @@ const MenuHome = () => {
               </Button>
             </Link>
 
-            {hasRole(role, 'admin_management') && (
+            {hasPermission(role, 'admin_management') && (
               <div>
                 <Button
                   onClick={() => toggleDropdown('empresa')}
@@ -92,7 +86,7 @@ const MenuHome = () => {
             )}
 
 
-            {hasRole(role, 'orders_management') && (
+            {hasPermission(role, 'orders_management') && (
               <Link href="/orders">
                 <Button variant="link" className="flex items-center pl-1 gap-2 py-2">
                   <IconWrapper icon={<FiShoppingCart />} />
@@ -101,7 +95,7 @@ const MenuHome = () => {
               </Link>
             )}
 
-            {hasRole(role, 'teams_management') && (
+            {hasPermission(role, 'teams_management') && (
               <div>
                 <Button
                   onClick={() => toggleDropdown('equipe')}
@@ -121,6 +115,12 @@ const MenuHome = () => {
 
                 {openDropdown === 'equipe' && (
                   <div className="flex flex-col ml-1">
+                    <Link href="#">
+                      <Button variant="link" className="flex items-center gap-2 py-2">
+                        <RiTeamLine className="h-4 w-4 md:h-5 md:w-5" />
+                        <span>Minha Equipe</span>
+                      </Button>
+                    </Link>
                     <Link href="/teams">
                       <Button variant="link" className="flex items-center gap-2 py-2">
                         <FiGrid className="h-4 w-4 md:h-5 md:w-5" />

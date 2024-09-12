@@ -33,7 +33,7 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { useStore } from "@/zustandStore";
-import { hasPermission } from "@/interfaces/hasPermissions";
+import { hasPermission } from "@/utils/hasPermissions";
 
 const createMemberSchema = z.object({
 	id: z.string().nonempty("Usuário é obrigatório."),
@@ -185,7 +185,7 @@ export default function Page() {
 											className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
 										/>
 									</div>
-									{hasPermission(role, 'team_management', 'create') && (
+									{hasPermission(role, ['team_management', 'teamleader'], 'create') && (
 									<Dialog>
 										<DialogTrigger asChild>
 											<Button

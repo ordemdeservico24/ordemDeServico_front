@@ -7,6 +7,8 @@ import Image from 'next/image';
 import {Role, useStore} from '../zustandStore';
 import { FaBuilding } from 'react-icons/fa';
 import IconWrapper from './IconWrapper';
+import { hasPermission } from '@/utils/hasPermissions';
+import { RiTeamLine } from 'react-icons/ri';
 
 interface MenuProps {
   isOpen: boolean;
@@ -45,7 +47,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
           <span>Dashboard</span>
         </Link>
 
-        {hasRole('admin_management') && (
+        {hasPermission(role, 'admin_management') && (
           <div>
             <button
               onClick={() => toggleDropdown('empresa')}
@@ -81,7 +83,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
           </div>
         )}
 
-        {hasRole('orders_management') && (
+        {hasPermission(role, 'orders_management') && (
         <Link href="/orders" className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]">
           <IconWrapper icon={<FiShoppingCart />} />
           <span>Ordens de serviço</span>
@@ -89,7 +91,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
           )}
 
         
-        {hasRole('teams_management') && (
+        {hasPermission(role, 'teams_management') && (
         <div>
         <button
           onClick={() => toggleDropdown('equipe')}
@@ -107,7 +109,11 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
         </button>
 
         {openDropdown === 'equipe' && (
-          <div className="flex flex-col">
+              <div className="flex flex-col">
+            <Link href="#" className="flex items-center pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]">
+              <RiTeamLine className="h-4 w-4 md:h-5 md:w-5" />
+              <span>Minha Equipe</span>
+            </Link>
             <Link href="/teams" className="flex items-center pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]">
               <FiGrid className="h-4 w-4 md:h-5 md:w-5" />
               <span>Ver Equipes</span>

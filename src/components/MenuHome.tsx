@@ -1,17 +1,19 @@
 "use client";
 import React, { useState } from 'react';
 import Link from 'next/link';
+
 import { FiHome, FiShoppingCart, FiUser, FiTag, FiLogOut, FiGrid, FiArchive, FiCalendar, FiChevronDown, FiChevronUp, FiBriefcase, FiGlobe, FiMap, FiMapPin } from 'react-icons/fi';
 import { RiTeamLine } from "react-icons/ri";
+import { FaBuilding } from 'react-icons/fa';
+
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+
 import Logo from '../assets/logo.png';
 import Image from 'next/image';
-import { useStore } from '../zustandStore';
-import { FaBuilding } from 'react-icons/fa';
-import { Role } from '../zustandStore';
+import { useStore, Role } from '../zustandStore';
 import IconWrapper from './IconWrapper';
-import { hasPermission } from '@/interfaces/hasPermissions';
+import { hasPermission } from '@/utils/hasPermissions';
 
 const MenuHome = () => {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);

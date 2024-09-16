@@ -98,7 +98,7 @@ export default function Page() {
 				});
 	
 			setOrders(ordersWithStatus);
-			setTotalPages(Math.ceil(data.totalCount / limit));
+			setTotalPages(data.pages);
 		} else {
 			setError("Dados recebidos não são um array.");
 		}
@@ -372,38 +372,37 @@ export default function Page() {
 							<div className="flex items-center justify-between pt-0 pb-4">
 								<Pagination>
 									<PaginationContent>
-											<PaginationPrevious 
-												style={{ cursor: 'pointer' }}
-										onClick={() => setCurrentPage(currentPage - 1)} 
-										{...(currentPage === 1 ? { className: 'disabled' } : {})}
-										>
+									<PaginationPrevious 
+										style={{ cursor: 'pointer' }}
+										onClick={() => currentPage > 1 && setCurrentPage(currentPage - 1)} 
+										className={`${currentPage === 1 ? 'disabled' : ''}`}
+									>
 										Anterior
-										</PaginationPrevious>
+									</PaginationPrevious>
 
-										{Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-											<PaginationItem key={page}>
-											<PaginationLink
-												onClick={() => setCurrentPage(page)}
-												isActive={currentPage === page}
-												>
-												{page}
-											</PaginationLink>
+									{Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+										<PaginationItem key={page}>
+										<PaginationLink
+											onClick={() => setCurrentPage(page)}
+											isActive={currentPage === page}
+										>
+											{page}
+										</PaginationLink>
 										</PaginationItem>
-										))}
+									))}
 
-											<PaginationNext 
-												style={{ cursor: 'pointer' }}
-											onClick={() => setCurrentPage(currentPage + 1)} 
-											className={currentPage === totalPages ? 'disabled' : ''}
-											>
-											Próximo
-										</PaginationNext>
+									<PaginationNext 
+										style={{ cursor: 'pointer' }}
+										onClick={() => currentPage < totalPages && setCurrentPage(currentPage + 1)} 
+										className={`${currentPage === totalPages ? 'disabled' : ''}`}
+									>
+										Próximo
+									</PaginationNext>
 									</PaginationContent>
 								</Pagination>
-							</div>
+								</div>
 						</Card>
-			</main>
-
+					</main>
 		</Container>
 	);
 }

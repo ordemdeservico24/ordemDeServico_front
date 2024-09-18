@@ -1,14 +1,12 @@
 "use client";
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { FiHome, FiShoppingCart, FiUser, FiTag, FiLogOut, FiGrid, FiArchive, FiCalendar, FiChevronDown, FiBriefcase } from 'react-icons/fi';
-import Logo from '../assets/logo.png';
+import { FaHome, FaShoppingCart, FaUser, FaTag, FaSignOutAlt, FaChevronDown, FaChevronUp, FaBuilding, FaGlobe, FaMap, FaMapPin, FaDatabase, FaBriefcase, FaThLarge, FaArchive, FaCalendar, FaMoneyCheck, FaSlash, FaUsers } from 'react-icons/fa';
+import { RiTeamLine } from "react-icons/ri";import Logo from '../assets/logo.png';
 import Image from 'next/image';
 import {Role, useStore} from '../zustandStore';
-import { FaBuilding } from 'react-icons/fa';
 import IconWrapper from './IconWrapper';
 import { hasPermission } from '@/utils/hasPermissions';
-import { RiTeamLine } from 'react-icons/ri';
 
 interface MenuProps {
   isOpen: boolean;
@@ -43,7 +41,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 
       <div className="flex flex-col mt-6">
         <Link href="/home" className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]">
-          <FiHome className="h-4 w-4 md:h-5 md:w-5" />
+          <FaHome className="h-4 w-4 md:h-5 md:w-5" />
           <span>Dashboard</span>
         </Link>
 
@@ -57,7 +55,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
                 <FaBuilding className="h-4 w-4 md:h-5 md:w-5" />
                 <span>Minha Empresa</span>
               </div>
-              <FiChevronDown
+              <FaChevronDown
                 className={`h-4 w-4 md:h-5 md:w-5 transition-transform ${
                   openDropdown === 'empresa' ? 'rotate-180' : 'rotate-0'
                 }`}
@@ -67,15 +65,15 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
             {openDropdown === 'empresa' && (
               <div className="flex flex-col">
                 <Link href="#" className="flex items-center pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]">
-                  <FiGrid className="h-4 w-4 md:h-5 md:w-5" />
+                  <FaGlobe className="h-4 w-4 md:h-5 md:w-5" />
                   <span>Estado</span>
                 </Link>
                 <Link href="#" className="flex items-center pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]">
-                  <FiArchive className="h-4 w-4 md:h-5 md:w-5" />
+                  <FaMap className="h-4 w-4 md:h-5 md:w-5" />
                   <span>Cidade</span>
                 </Link>
                 <Link href="#" className="flex items-center pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]">
-                  <FiCalendar className="h-4 w-4 md:h-5 md:w-5" />
+                  <FaMapPin className="h-4 w-4 md:h-5 md:w-5" />
                   <span>Distrito</span>
                 </Link>
                 </div>
@@ -83,9 +81,19 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
           </div>
         )}
 
+        <Link href="/stock" className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]">
+          <FaDatabase className="h-4 w-4 md:h-5 md:w-5" />
+          <span>Categorias</span>
+        </Link>
+
+            <Link href="/financial" className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]">
+              <FaMoneyCheck className="h-4 w-4 md:h-5 md:w-5" />
+              <span>Financeiro</span>
+          </Link>
+
         {hasPermission(role, 'orders_management') && (
         <Link href="/orders" className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]">
-          <IconWrapper icon={<FiShoppingCart />} />
+          <IconWrapper icon={<FaShoppingCart />} />
           <span>Ordens de serviço</span>
         </Link>
           )}
@@ -98,10 +106,10 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
           className="flex items-center justify-between px-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9] w-full"
         >
           <div className="flex items-center gap-2">
-            <FiBriefcase className="h-4 w-4 md:h-5 md:w-5" />
+            <FaBriefcase className="h-4 w-4 md:h-5 md:w-5" />
             <span>Equipes</span>
           </div>
-          <FiChevronDown
+          <FaChevronDown
             className={`h-4 w-4 md:h-5 md:w-5 transition-transform ${
               openDropdown === 'equipe' ? 'rotate-180' : 'rotate-0'
             }`}
@@ -109,21 +117,21 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
         </button>
 
         {openDropdown === 'equipe' && (
-              <div className="flex flex-col">
+              <div className="flex flex-col ml-2">
             <Link href="#" className="flex items-center pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]">
-              <RiTeamLine className="h-4 w-4 md:h-5 md:w-5" />
+              <FaUsers className="h-4 w-4 md:h-5 md:w-5" />
               <span>Minha Equipe</span>
             </Link>
             <Link href="/teams" className="flex items-center pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]">
-              <FiGrid className="h-4 w-4 md:h-5 md:w-5" />
+              <FaThLarge className="h-4 w-4 md:h-5 md:w-5" />
               <span>Ver Equipes</span>
             </Link>
             <Link href="/teams/leaders" className="flex items-center pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]">
-              <FiArchive className="h-4 w-4 md:h-5 md:w-5" />
+              <FaArchive className="h-4 w-4 md:h-5 md:w-5" />
               <span>Líderes</span>
             </Link>
             <Link href="/teams/members" className="flex items-center pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]">
-              <FiCalendar className="h-4 w-4 md:h-5 md:w-5" />
+              <FaCalendar className="h-4 w-4 md:h-5 md:w-5" />
               <span>Membros</span>
             </Link>
             </div>
@@ -132,15 +140,15 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
         )}
 
         <Link href="/subjects" className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]">
-          <FiTag className="h-4 w-4 md:h-5 md:w-5" />
+          <FaTag className="h-4 w-4 md:h-5 md:w-5" />
           <span>Categorias</span>
         </Link>
         <Link href="/users" className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]">
-          <FiUser className="h-4 w-4 md:h-5 md:w-5" />
+          <FaUser className="h-4 w-4 md:h-5 md:w-5" />
           <span>Usuários</span>
         </Link>
         <Link href="/" onClick={handleLogout} className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]">
-          <FiLogOut className="h-4 w-4 md:h-5 md:w-5" />
+          <FaSignOutAlt className="h-4 w-4 md:h-5 md:w-5" />
           <span>Sair</span>
         </Link>
       </div>

@@ -2,17 +2,15 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 
-import { FiHome, FiShoppingCart, FiUser, FiTag, FiLogOut, FiGrid, FiArchive, FiCalendar, FiChevronDown, FiChevronUp, FiBriefcase, FiGlobe, FiMap, FiMapPin } from 'react-icons/fi';
+import { FaHome, FaShoppingCart, FaUser, FaTag, FaSignOutAlt, FaChevronDown, FaChevronUp, FaBuilding, FaGlobe, FaMap, FaMapPin, FaDatabase, FaBriefcase, FaThLarge, FaArchive, FaCalendar, FaMoneyCheck, FaSlash, FaUsers } from 'react-icons/fa';
 import { RiTeamLine } from "react-icons/ri";
-import { FaBuilding } from 'react-icons/fa';
 
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
 import Logo from '../assets/logo.png';
 import Image from 'next/image';
-import { useStore, Role } from '../zustandStore';
-import IconWrapper from './IconWrapper';
+import { useStore } from '../zustandStore';
 import { hasPermission } from '@/utils/hasPermissions';
 
 const MenuHome = () => {
@@ -26,7 +24,6 @@ const MenuHome = () => {
   const handleLogout = () => {
     logout();
   };
-  
 
   return (
     <Card className="hidden md:block w-[300px] h-[87dvh] p-4 transition-transform duration-300 ease-in-out z-20">
@@ -40,7 +37,7 @@ const MenuHome = () => {
           <div className="flex flex-col p-4">
             <Link href="/home">
               <Button variant="link" className="flex items-center pl-1 gap-2 py-2">
-                <FiHome className="h-4 w-4 md:h-5 md:w-5" />
+                <FaHome className="h-5 w-5" />
                 <span>Dashboard</span>
               </Button>
             </Link>
@@ -50,15 +47,16 @@ const MenuHome = () => {
                 <Button
                   onClick={() => toggleDropdown('empresa')}
                   className="flex w-full justify-between items-center pl-1 gap-2 py-2 text-[#000] transition-all"
-                  variant="link">
+                  variant="link"
+                >
                   <div className='flex items-center gap-2'>
-                    <FaBuilding className="h-4 w-4 md:h-5 md:w-5" />
+                    <FaBuilding className="h-5 w-5" />
                     <span>Minha Empresa</span>
                   </div>
                   {openDropdown === 'empresa' ? (
-                    <FiChevronUp className="h-4 w-4 md:h-5 md:w-5" />
+                    <FaChevronUp className="h-5 w-5" />
                   ) : (
-                    <FiChevronDown className="h-4 w-4 md:h-5 md:w-5" />
+                    <FaChevronDown className="h-5 w-5" />
                   )}
                 </Button>
 
@@ -66,19 +64,19 @@ const MenuHome = () => {
                   <div className="flex flex-col ml-1">
                     <Link href="#">
                       <Button variant="link" className="flex items-center gap-2 py-2">
-                        <FiGlobe className="h-4 w-4 md:h-5 md:w-5" />
+                        <FaGlobe className="h-5 w-5" />
                         <span>Estado</span>
                       </Button>
                     </Link>
                     <Link href="#">
                       <Button variant="link" className="flex items-center gap-2 py-2">
-                        <FiMap className="h-4 w-4 md:h-5 md:w-5" />
+                        <FaMap className="h-5 w-5" />
                         <span>Cidade</span>
                       </Button>
                     </Link>
                     <Link href="#">
                       <Button variant="link" className="flex items-center gap-2 py-2">
-                        <FiMapPin className="h-4 w-4 md:h-5 md:w-5" />
+                        <FaMapPin className="h-5 w-5" />
                         <span>Distrito</span>
                       </Button>
                     </Link>
@@ -87,11 +85,24 @@ const MenuHome = () => {
               </div>
             )}
 
+            <Link href="/stock">
+              <Button variant="link" className="flex items-center pl-1 gap-2 py-2">
+                <FaDatabase className="h-5 w-5" />
+                <span>Estoque</span>
+              </Button>
+            </Link>
+
+            <Link href="/financial">
+              <Button variant="link" className="flex items-center pl-1 gap-2 py-2">
+                <FaMoneyCheck className="h-5 w-5" />
+                <span>Financeiro</span>
+              </Button>
+            </Link>
 
             {hasPermission(role, 'orders_management') && (
               <Link href="/orders">
                 <Button variant="link" className="flex items-center pl-1 gap-2 py-2">
-                  <IconWrapper icon={<FiShoppingCart />} />
+                  <FaShoppingCart className="h-5 w-5" />
                   <span>Ordens de serviço</span>
                 </Button>
               </Link>
@@ -105,39 +116,39 @@ const MenuHome = () => {
                   variant="link"
                 >
                   <div className='flex items-center gap-2'>
-                    <FiBriefcase className="h-4 w-4 md:h-5 md:w-5" />
+                    <FaBriefcase className="h-5 w-5" />
                     <span>Equipes</span>
                   </div>
                   {openDropdown === 'equipe' ? (
-                    <FiChevronUp className="h-4 w-4 md:h-5 md:w-5" />
+                    <FaChevronUp className="h-5 w-5" />
                   ) : (
-                    <FiChevronDown className="h-4 w-4 md:h-5 md:w-5" />
+                    <FaChevronDown className="h-5 w-5" />
                   )}
                 </Button>
 
                 {openDropdown === 'equipe' && (
-                  <div className="flex flex-col ml-1">
+                  <div className="flex flex-col ml-2">
                     <Link href="#">
                       <Button variant="link" className="flex items-center gap-2 py-2">
-                        <RiTeamLine className="h-4 w-4 md:h-5 md:w-5" />
+                        <FaUsers className="h-5 w-5" />
                         <span>Minha Equipe</span>
                       </Button>
                     </Link>
                     <Link href="/teams">
                       <Button variant="link" className="flex items-center gap-2 py-2">
-                        <FiGrid className="h-4 w-4 md:h-5 md:w-5" />
+                        <FaThLarge className="h-5 w-5" />
                         <span>Ver Equipes</span>
                       </Button>
                     </Link>
                     <Link href="/teams/leaders">
                       <Button variant="link" className="flex items-center gap-2 py-2">
-                        <FiArchive className="h-4 w-4 md:h-5 md:w-5" />
+                        <FaArchive className="h-5 w-5" />
                         <span>Líderes</span>
                       </Button>
                     </Link>
                     <Link href="/teams/members">
                       <Button variant="link" className="flex items-center gap-2 py-2">
-                        <FiCalendar className="h-4 w-4 md:h-5 md:w-5" />
+                        <FaCalendar className="h-5 w-5" />
                         <span>Membros</span>
                       </Button>
                     </Link>
@@ -145,17 +156,17 @@ const MenuHome = () => {
                 )}
               </div>
             )}
-            
+
             <Link href="/subjects">
               <Button variant="link" className="flex items-center pl-1 gap-2 py-2">
-                <FiTag className="h-4 w-4 md:h-5 md:w-5" />
+                <FaTag className="h-5 w-5" />
                 <span>Categoria</span>
               </Button>
             </Link>
 
             <Link href="/users">
               <Button variant="link" className="flex items-center pl-1 gap-2 py-2">
-                <FiUser className="h-4 w-4 md:h-5 md:w-5" />
+                <FaUser className="h-5 w-5" />
                 <span>Usuários</span>
               </Button>
             </Link>
@@ -164,7 +175,7 @@ const MenuHome = () => {
         <div className='p-4'>
           <Link href="/">
             <Button onClick={handleLogout} variant="link" className="flex items-center pl-1 gap-2 py-2">
-              <FiLogOut className="h-4 w-4 md:h-5 md:w-5" />
+              <FaSignOutAlt className="h-5 w-5" />
               <span>Sair</span>
             </Button>
           </Link>

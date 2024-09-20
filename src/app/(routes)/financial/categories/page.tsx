@@ -71,7 +71,7 @@ export default function CategoriesPage() {
                       <DialogHeader>
                         <DialogTitle>Adicionar categoria</DialogTitle>
                         <DialogDescription>
-                          Adicione as informações para criar uma categoria.
+                          Adicione as informações para criar uma categoria!!
                         </DialogDescription>
                       </DialogHeader>
                     </DialogContent>

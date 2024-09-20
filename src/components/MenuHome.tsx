@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 
-import { FaHome, FaShoppingCart, FaUser, FaTag, FaSignOutAlt, FaChevronDown, FaChevronUp, FaBuilding, FaGlobe, FaMap, FaMapPin, FaDatabase, FaBriefcase, FaThLarge, FaArchive, FaCalendar, FaMoneyCheck, FaSlash, FaUsers } from 'react-icons/fa';
+import { FaHome, FaShoppingCart, FaUser, FaTag, FaSignOutAlt, FaChevronDown, FaChevronUp, FaBuilding, FaGlobe, FaMap, FaMapPin, FaDatabase, FaBriefcase, FaThLarge, FaArchive, FaCalendar, FaMoneyCheck, FaSlash, FaUsers, FaFileInvoice, FaChartBar } from 'react-icons/fa';
 import { RiTeamLine } from "react-icons/ri";
 
 import { Card } from '@/components/ui/card';
@@ -92,12 +92,46 @@ const MenuHome = () => {
               </Button>
             </Link>
 
-            <Link href="/financial">
-              <Button variant="link" className="flex items-center pl-1 gap-2 py-2">
-                <FaMoneyCheck className="h-5 w-5" />
-                <span>Financeiro</span>
-              </Button>
-            </Link>
+            <div>
+                <Button
+                  onClick={() => toggleDropdown('financeiro')}
+                  className="flex w-full justify-between items-center pl-1 gap-2 py-2 text-[#000] transition-all"
+                  variant="link"
+                >
+                  <div className='flex items-center gap-2'>
+                    <FaMoneyCheck className="h-5 w-5" />
+                    <span>Financeiro</span>
+                  </div>
+                  {openDropdown === 'financeiro'? (
+                    <FaChevronUp className="h-5 w-5" />
+                  ) : (
+                    <FaChevronDown className="h-5 w-5" />
+                  )}
+                </Button>
+
+                {openDropdown === 'financeiro' && (
+                  <div className="flex flex-col ml-2">
+                    <Link href="/financial/categories">
+                      <Button variant="link" className="flex items-center gap-2 py-2">
+                        <FaTag className="h-5 w-5" />
+                        <span>Categorias</span>
+                      </Button>
+                    </Link>
+                    <Link href="/financial/expenses">
+                      <Button variant="link" className="flex items-center gap-2 py-2">
+                        <FaFileInvoice className="h-5 w-5" />
+                        <span>Despesas</span>
+                      </Button>
+                    </Link>
+                    <Link href="/financial/revenues">
+                      <Button variant="link" className="flex items-center gap-2 py-2">
+                        <FaChartBar className="h-5 w-5" />
+                        <span>Receitas</span>
+                      </Button>
+                    </Link>
+                  </div>
+                )}
+              </div>
 
             {hasPermission(role, 'orders_management') && (
               <Link href="/orders">

@@ -6,6 +6,7 @@ export interface IStockItem {
     productValue: number;
     supplierId: string;
     supplier?: ISupplier; 
+    totalMeasurement: number;
   }
   
 export interface ISupplier {

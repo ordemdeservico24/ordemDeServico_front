@@ -193,7 +193,7 @@ export default function Page() {
 												className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
 											/>
 										</div>
-										{hasPermission(role, ['team_management', 'teamleader'], 'create') && (
+										{hasPermission(role, ['teams_management', 'teamleader'], 'create') && (
 											<Dialog>
 												<DialogTrigger asChild>
 													<Button

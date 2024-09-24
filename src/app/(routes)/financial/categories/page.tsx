@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { getCookie } from "cookies-next";
 import { FinancialCategory } from "@/interfaces/financial.interface";
 import { Table, TableHeader, TableBody, TableRow, TableCell } from "@/components/ui/table";
-
+import Link from "next/link";
 export default function CategoriesPage() {
   const [categories, setCategories] = useState<FinancialCategory[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -89,10 +89,22 @@ export default function CategoriesPage() {
                 <TableBody>
                   {categories.map((category) => (
                     <TableRow key={category.id}>
-                      <TableCell className="cursor-pointer">{category.name}</TableCell>
-                      <TableCell className="cursor-pointer">{category.description || '-'}</TableCell>
-                      <TableCell className="cursor-pointer">{new Date(category.createdAt).toLocaleDateString()}</TableCell>
-                    </TableRow>
+                    <TableCell className="cursor-pointer">
+                      <Link href={`/financial/categories/${category.id}`}>
+                        {category.name}
+                      </Link> 
+                    </TableCell>
+                    <TableCell className="cursor-pointer">
+                      <Link href={`/financial/categories/${category.id}`}>
+                        {category.description || '-'}
+                      </Link>
+                    </TableCell>
+                    <TableCell className="cursor-pointer">
+                      <Link href={`/financial/categories/${category.id}`}>
+                        {new Date(category.createdAt).toLocaleDateString()}
+                      </Link>
+                    </TableCell>
+                  </TableRow>
                   ))}
                 </TableBody>
               </Table>

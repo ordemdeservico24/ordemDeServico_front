@@ -79,8 +79,8 @@ const MenuHome = () => {
 	};
 
 	return (
-		<Card className="hidden md:block w-[300px] h-[87dvh] p-4 transition-transform duration-300 ease-in-out z-20">
-			<div className="flex flex-col justify-between h-full">
+		<Card className="hidden md:block w-[300px] h-full p-4 transition-transform duration-300 ease-in-out z-20">
+			<div className="flex flex-col justify-between ">
 				<div>
 					<div className="w-full flex justify-center items-center h-[170px] bg-[#cccccc]">
 						<Image
@@ -312,7 +312,7 @@ const MenuHome = () => {
 						</Link>
 					</div>
 				</div>
-				<div className="p-4">
+				<div className="p-4 mt-auto">
 					<Link href="/">
 						<Button
 							onClick={handleLogout}

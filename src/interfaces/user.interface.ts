@@ -1,13 +1,14 @@
+import { ITertiaryGroup } from "./company.interface";
+
 export interface IUser {
 	id: string;
 	name: string;
 	email: string;
 	phone: string;
 	tertiaryGroupId: string | null;
+	tertiary: ITertiaryGroup;
 	typeOfProfileId: string | null;
-	role: {
-		roleName: string;
-	};
+	role: IRole;
 	isTeamLeader: boolean;
 	isTeamMember: boolean;
 	isEmployee: boolean;
@@ -33,4 +34,5 @@ export interface IRole {
 export interface IRolePermission {
 	operations: string[];
 	resource: string;
+	resourceLabel: string;
 }

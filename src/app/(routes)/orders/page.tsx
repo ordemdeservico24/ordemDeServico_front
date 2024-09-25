@@ -13,7 +13,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { IRequest } from "@/interfaces/create-order-request/create-order-request.interface";
 import { toast } from "react-toastify";
 import { ISubject } from "@/interfaces/subject.interface";
-import { Search } from "lucide-react";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getCookie } from "cookies-next";
 import { z } from 'zod';
@@ -300,16 +299,6 @@ export default function Page() {
 								</DialogContent>
 										</Dialog>
 										 )}
-										</div>
-									</div>
-									<div className="relative flex-1 md:grow-0">
-										<div>
-											<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-											<Input
-												type="search"
-												placeholder="Pesquisar..."
-												className="w-full rounded-lg bg-background pl-8 md:w-[200px]"
-											/>
 										</div>
 									</div>
 								</div>

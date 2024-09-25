@@ -320,8 +320,8 @@ export default function StoragePage() {
               
                 </div>
               </CardHeader>
-              <div className="px-4">
-              <Table>
+              <div>
+              <Table className="overflow-x-auto">
                   <TableHeader>
                     <TableRow>
                       <TableCell>Nome do Produto</TableCell>

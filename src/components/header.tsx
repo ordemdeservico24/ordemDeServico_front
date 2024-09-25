@@ -42,20 +42,12 @@ export default function Header({ onMenuToggle }: HeaderProps) {
             <FaHome size={24} />
             <span className="hidden md:inline ml-2">Home</span>
           </div>
-          <div className="hidden sm:flex items-center cursor-pointer">
-            <FaGlobe size={24} />
-            <span className="hidden md:inline ml-2">Global</span>
-          </div>
-          <div className="hidden sm:flex items-center cursor-pointer">
-            <FaQuestionCircle size={24} />
-            <span className="hidden md:inline ml-2">Help</span>
-          </div>
         </div>
 
         <div>
           <div className="flex flex-row items-center gap-3">
             <h1>{name}</h1>
-            <DropdownMenu>
+            {/* <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
@@ -78,7 +70,7 @@ export default function Header({ onMenuToggle }: HeaderProps) {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout}>Sair</DropdownMenuItem>
               </DropdownMenuContent>
-            </DropdownMenu>
+            </DropdownMenu> */}
           </div>
         </div>
       </header>

@@ -65,6 +65,7 @@ export default function ExpensesPage() {
                   <h1>Total despesas: R$ {(totalExpenses).toFixed(2)}</h1>
                 </div>
               </CardHeader>
+              <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -84,7 +85,8 @@ export default function ExpensesPage() {
                     </TableRow>
                   ))}
                 </TableBody>
-              </Table>
+                </Table>
+              </div>
             </Card>
           </TabsContent>
         </Tabs>

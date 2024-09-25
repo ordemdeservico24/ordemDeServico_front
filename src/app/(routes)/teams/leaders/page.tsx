@@ -3,7 +3,7 @@ import { Container } from "@/components/container";
 import { ITeam, ITeamLeader } from "@/interfaces/team.interfaces";
 import React, { useEffect, FormEvent, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { FiTrash } from "react-icons/fi";
 import {
 	Table,
 	TableBody,
@@ -28,7 +28,6 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { Search } from "lucide-react";
 import { getCookie } from "cookies-next";
 import { IUser } from "@/interfaces/user.interface";
 import { useStore } from "@/zustandStore";
@@ -113,9 +112,34 @@ export default function Page() {
 			});
 	}, [token]);
 
-	const filteredUsers = users.filter(
-		(user) => user.isTeamMember == false && user.isTeamLeader == false
-	);
+	const filteredUsers = Array.isArray(users)
+		? users.filter((user) => !user.isTeamMember && !user.isTeamLeader)
+		: [];
+	
+		const handleDelete = async (id: string) => {
+			try {
+			  const response = await fetch(
+				`https://ordemdeservicosdev.onrender.com/api/team/delete-leader/${id}`,
+				{
+				  method: "DELETE",
+				  headers: {
+					"Content-type": "application/json",
+					Authorization: `Bearer ${token}`,
+				  },
+				}
+			  );
+		  
+			  if (response.ok) {
+				toast.success("Líder de equipe excluído com sucesso!");
+				setLeaders(leaders.filter((leader) => leader.id !== id)); 
+			  } else {
+				toast.error("Ocorreu um erro ao excluir o líder de equipe.");
+			  }
+			} catch (error) {
+			  console.error("Erro ao deletar líder:", error);
+			  toast.error("Erro ao excluir o líder.");
+			}
+		  };
 
 	return (
 		<Container className="p-4">
@@ -125,22 +149,18 @@ export default function Page() {
 						<TabsContent value="all">
 							<Card x-chunk="dashboard-06-chunk-0">
 								<CardHeader>
-									<CardTitle className="text-[#3b82f6] text-2xl font-bold">
+									<div className="flex justify-between items-center">
+									<div>
+										<CardTitle className="text-[#3b82f6] text-2xl font-bold">
 										Líderes
-									</CardTitle>
-									<CardDescription>
-										Cheque todas as informações relacionado aos
-										líderes apresentados.
-									</CardDescription>
+										</CardTitle>
+										<CardDescription>
+											Cheque todas as informações relacionado aos
+											líderes apresentados.
+										</CardDescription>
+									</div>
+									
 									<div className="flex gap-3 items-center justify-between">
-										<div className="relative flex-1 md:grow-0">
-											<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-											<Input
-												type="search"
-												placeholder="Pesquisar..."
-												className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-											/>
-										</div>
 										{hasPermission(role, ["teams_management"], "create") && (
 											<Dialog>
 												<DialogTrigger asChild>
@@ -201,10 +221,11 @@ export default function Page() {
 												</DialogContent>
 											</Dialog>
 										)}
+										</div>
 									</div>
 								</CardHeader>
 								<div className="p-3">
-									<Table className="w-full bg-white shadow-md rounded-lg overflow-x-auto">
+									<Table className="overflow-x-auto w-full bg-white shadow-md rounded-lg overflow-x-auto">
 										<TableHeader>
 											<TableRow>
 												<TableHead className="font-bold">
@@ -223,25 +244,45 @@ export default function Page() {
 										</TableHeader>
 										<TableBody>
 											{leaders.map((leader, index) => (
-												<TableRow
-													key={index}
-													className="hover:bg-gray-100 cursor-pointer"
-												>
-													<TableCell>
-														{leader.user.name}
-													</TableCell>
-													<TableCell>
-														{leader.user.email}
-													</TableCell>
-													<TableCell>
-														{leader.user.phone}
-													</TableCell>
-													<TableCell>
-														{leader.user.role.roleName}
-													</TableCell>
+												<TableRow key={index} className="hover:bg-gray-100 cursor-pointer">
+												<TableCell>{leader.user.name}</TableCell>
+												<TableCell>{leader.user.email}</TableCell>
+												<TableCell>{leader.user.phone}</TableCell>
+													<TableCell>{leader.user.role.roleName}</TableCell>
+													{hasPermission(role, "teams_management", "delete") && (
+														<TableCell>
+															<Dialog>
+																<DialogTrigger asChild>
+																	<Button variant="ghost">
+																		<FiTrash className="text-red-500 hover:text-red-700" size={20} />
+																	</Button>
+																</DialogTrigger>
+																<DialogContent className="sm:max-w-[425px]">
+																	<DialogHeader>
+																		<DialogTitle>Excluir Líder</DialogTitle>
+																		<DialogDescription>
+																			Tem certeza que deseja excluir o líder <b>{leader.user.name}</b>?
+																			Esta ação não poderá ser desfeita.
+																		</DialogDescription>
+																	</DialogHeader>
+																	<div className="flex justify-end space-x-4">
+																		<Button variant="outline" onClick={() => console.log("Cancelado")}>
+																			Cancelar
+																		</Button>
+																		<Button
+																			variant="destructive"
+																			onClick={() => handleDelete(leader.id)}
+																		>
+																			Confirmar Exclusão
+																		</Button>
+																	</div>
+																</DialogContent>
+															</Dialog>
+														</TableCell>
+													)}
 												</TableRow>
 											))}
-										</TableBody>
+											</TableBody>
 									</Table>
 								</div>
 							</Card>

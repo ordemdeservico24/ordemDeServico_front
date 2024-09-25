@@ -8,7 +8,6 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useStore } from "../../../zustandStore";
 import { getCookie } from "cookies-next";
@@ -110,16 +109,6 @@ export default function Home() {
 									informações sobre o que você terá acesso
 									aqui na plataforma:
 								</CardDescription>
-								<div className="flex items-center justify-between">
-									<div className="relative flex-1 md:grow-0">
-										<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-										<Input
-											type="search"
-											placeholder="Pesquisar..."
-											className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-										/>
-									</div>
-								</div>
 							</CardHeader>
 							<div className="p-3">
 								<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">

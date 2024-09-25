@@ -78,7 +78,8 @@ export default function CategoriesPage() {
                   </Dialog>
                 </div>
               </CardHeader>
-              <Table>
+              <div className="overflow-x-auto">
+<Table>
                 <TableHeader>
                   <TableRow>
                     <TableCell>Nome</TableCell>
@@ -108,6 +109,8 @@ export default function CategoriesPage() {
                   ))}
                 </TableBody>
               </Table>
+              </div>
+              
             </Card>
           </TabsContent>
         </Tabs>

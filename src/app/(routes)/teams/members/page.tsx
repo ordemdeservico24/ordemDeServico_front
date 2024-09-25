@@ -19,7 +19,6 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { Search } from "lucide-react";
 import { getCookie } from "cookies-next";
 import { z } from "zod";
 import { IUser } from "@/interfaces/user.interface";
@@ -34,6 +33,7 @@ import {
 } from "@/components/ui/table";
 import { useStore } from "@/zustandStore";
 import { hasPermission } from "@/utils/hasPermissions";
+import { FiTrash } from "react-icons/fi";
 
 const createMemberSchema = z.object({
 	id: z.string().nonempty("Usuário é obrigatório."),
@@ -165,9 +165,47 @@ export default function Page() {
 			});
 	}, [token]);
 
-	const filteredUsers = users.filter(
-		(user) => user.isTeamMember == false && user.isTeamLeader == false
-	);
+	const filteredUsers = Array.isArray(users)
+		? users.filter((user) => !user.isTeamMember && !user.isTeamLeader)
+		: [];
+
+	const handleDeleteMember = (id: string) => {
+		if (!hasPermission(role, ["teams_management", "teamleader"], "delete")) {
+			toast.error("Você não tem permissão para excluir membros de equipe.");
+			return;
+		}
+	
+		toast.promise(
+			fetch(
+				`https://ordemdeservicosdev.onrender.com/api/team/delete-member/${id}`,
+				{
+					method: "DELETE",
+					headers: {
+						"Content-type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			)
+				.then((res) => {
+					if (res.ok) {
+						setMembers((prevMembers) =>
+							prevMembers.filter((member) => member.id !== id)
+						);
+						return res.json();
+					} else {
+						throw new Error("Erro ao excluir o membro");
+					}
+				})
+				.catch((error) => {
+					console.error("Erro:", error);
+				}),
+			{
+				pending: "Excluindo membro da equipe...",
+				success: "Membro da equipe excluído com sucesso!",
+				error: "Ocorreu um erro ao excluir o membro da equipe.",
+			}
+		);
+	};
 
 	return (
 		<Container className="p-4">
@@ -185,14 +223,6 @@ export default function Page() {
 										membros apresentados.
 									</CardDescription>
 									<div className="flex gap-3 items-center justify-between">
-										<div className="relative flex-1 md:grow-0">
-											<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-											<Input
-												type="search"
-												placeholder="Pesquisar..."
-												className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-											/>
-										</div>
 										{hasPermission(role, ['teams_management', 'teamleader'], 'create') && (
 											<Dialog>
 												<DialogTrigger asChild>
@@ -310,6 +340,37 @@ export default function Page() {
 													<TableCell>
 														{member.user.role.roleName}
 													</TableCell>
+													{hasPermission(role, "teams_management", "delete") && (
+														<TableCell>
+															<Dialog>
+																<DialogTrigger asChild>
+																	<Button variant="ghost">
+																		<FiTrash className="text-red-500 hover:text-red-700" size={20} />
+																	</Button>
+																</DialogTrigger>
+																<DialogContent className="sm:max-w-[425px]">
+																	<DialogHeader>
+																		<DialogTitle>Excluir Líder</DialogTitle>
+																		<DialogDescription>
+																			Tem certeza que deseja excluir o líder <b>{member.user.name}</b>?
+																			Esta ação não poderá ser desfeita.
+																		</DialogDescription>
+																	</DialogHeader>
+																	<div className="flex justify-end space-x-4">
+																		<Button variant="outline" onClick={() => console.log("Cancelado")}>
+																			Cancelar
+																		</Button>
+																		<Button
+																			variant="destructive"
+																			onClick={() => handleDeleteMember(member.id)}
+																		>
+																			Confirmar Exclusão
+																		</Button>
+																	</div>
+																</DialogContent>
+															</Dialog>
+														</TableCell>
+													)}
 												</TableRow>
 											))}
 										</TableBody>

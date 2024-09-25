@@ -10,7 +10,6 @@ import { Table, TableBody,TableCell,TableHead, TableHeader, TableRow } from "@/c
 import { toast } from "react-toastify";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Card, CardDescription, CardHeader,CardTitle } from "@/components/ui/card";
-import { Search } from "lucide-react";
 import { getCookie } from "cookies-next";
 import { ICreateTeam } from "@/interfaces/create-team-request/createTeam.interface";
 import { useStore } from "@/zustandStore";
@@ -133,14 +132,6 @@ export default function Page() {
 										membros apresentados.
 									</CardDescription>
 									<div className="flex gap-3 items-center justify-between">
-										<div className="relative flex-1 md:grow-0">
-											<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-											<Input
-												type="search"
-												placeholder="Pesquisar..."
-												className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-											/>
-										</div>
 										{hasPermission(role, ["teams_management"], "create") && (
 											<Dialog>
 												<DialogTrigger asChild>

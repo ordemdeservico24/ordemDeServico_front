@@ -190,7 +190,8 @@ export default function CategoryDetailPage() {
                 </Dialog>
             </div>
           </CardHeader>
-          <Table>
+          <div className="overflow-x-auto">
+<Table>
             <TableHeader>
               <TableRow>
                 <TableCell>Nome</TableCell>
@@ -224,6 +225,8 @@ export default function CategoryDetailPage() {
               ))}
             </TableBody>
           </Table>
+          </div>
+          
         </Card>
       </main>
     </Container>

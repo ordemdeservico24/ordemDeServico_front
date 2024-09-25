@@ -10,7 +10,6 @@ import { ICreateUserRequest } from "@/interfaces/create-user-request/createUser.
 import { toast } from "react-toastify";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Search } from "lucide-react";
 import { getCookie } from 'cookies-next';
 import Link from "next/link";
 
@@ -70,24 +69,31 @@ export default function Page() {
 
 	useEffect(() => {
 		fetch(
-			"https://ordemdeservicosdev.onrender.com/api/user/get-all-users",
-			{
-				method: "GET",
-				headers: {
-					"Content-type": "application/json",
-					Authorization: `Bearer ${token}`,
-				}
+		  "https://ordemdeservicosdev.onrender.com/api/user/get-all-users",
+		  {
+			method: "GET",
+			headers: {
+			  "Content-type": "application/json",
+			  Authorization: `Bearer ${token}`,
 			}
+		  }
 		)
-			.then((res) => res.json())
-			.then((data) => {
-				setUsers(data);
-			})
-			.catch((error) => {
-				console.error("Fetch error:", error);
-				setUsers([]);
-			});
-	}, [token]);
+		.then((res) => res.json())
+		.then((data) => {
+		  console.log("Resposta da API:", data);
+		  if (Array.isArray(data)) {
+			setUsers(data); 
+		  } else if (data && Array.isArray(data.users)) {
+			setUsers(data.users);  
+		  } else {
+			setUsers([]);
+		  }
+		})
+		.catch((error) => {
+		  console.error("Erro ao buscar usuários:", error);
+		  setUsers([]);
+		});
+	  }, [token]);
 
   	return (
 	  	<Container className="p-4">
@@ -95,20 +101,14 @@ export default function Page() {
 				<Tabs defaultValue="all">
 					<TabsContent value="all">
 						<Card x-chunk="dashboard-06-chunk-0">
-							<CardHeader>
-								<CardTitle className="text-[#3b82f6] text-2xl font-bold">Usuários</CardTitle>
-								<CardDescription>Cheque todas as informações relacionadas aos usuários.</CardDescription>
-							  <div className="flex gap-3 items-center justify-between">
-							  
-							  <div className="relative flex-1 md:grow-0">
-									<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-									<Input
-										type="search"
-										placeholder="Pesquisar..."
-										className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-									/>
-								</div>
-							  		<Dialog>
+								<CardHeader>
+									<div className="flex items-center justify-between">
+										<div>
+											<CardTitle className="text-[#3b82f6] text-2xl font-bold">Usuários</CardTitle>
+											<CardDescription>Cheque todas as informações relacionadas aos usuários.</CardDescription>
+										</div>
+								 		<div>
+							  				<Dialog>
 									<DialogTrigger asChild>
 										<Button variant="default" className="bg-blue-500 hover:bg-blue-600">Criar</Button>
 									</DialogTrigger>
@@ -179,8 +179,9 @@ export default function Page() {
 										</div>
 									</form>
 									</DialogContent>
-									</Dialog>
-								</div>
+											</Dialog>
+										</div>
+									</div>
 						  </CardHeader>
 						  
                           <div className="p-3">
@@ -194,20 +195,22 @@ export default function Page() {
                                     <TableHead className="font-bold">Cargo</TableHead>
                                     </TableRow>
                                 </TableHeader>
-                                <TableBody>
-									{users.map((user, index) => (
+								<TableBody>
+									{users && users.length > 0 &&
+										users.map((user, index) => (
 										<TableRow key={index} className="border-b">
-												<TableCell>{user.name}</TableCell>
-												<TableCell>{user.email}</TableCell>
-												<TableCell>{user.phone}</TableCell>
-												<TableCell>{user.role?.roleName}</TableCell>
-												<TableCell>
-													<Link href={`/users/${user.id}`}>
-													<Button variant="outline">Ver dados</Button>
-													</Link>
-												</TableCell>
+											<TableCell>{user.name}</TableCell>
+											<TableCell>{user.email}</TableCell>
+											<TableCell>{user.phone}</TableCell>
+											<TableCell>{user.role?.roleName}</TableCell>
+											<TableCell>
+											<Link href={`/users/${user.id}`}>
+												<Button variant="outline">Ver dados</Button>
+											</Link>
+											</TableCell>
 										</TableRow>
-									))}
+										))
+									}
 									</TableBody>
                                 </Table>
                             </div>

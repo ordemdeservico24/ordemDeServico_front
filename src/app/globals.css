@@ -67,3 +67,26 @@
     @apply bg-background text-foreground;
   }
 }
+
+::-webkit-scrollbar {
+  width: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3b82f6;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2979fa; 
+}
+
+@media screen and (min-width: 640px) {
+  .TableBody tr:nth-child(even) {
+    background-color: #f9fafb;
+  }
+}

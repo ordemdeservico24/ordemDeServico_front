@@ -100,7 +100,7 @@ export default function Page({ params }: { params: { id: string } }) {
 								<p>
 									Membros na equipe: ({team?.members.length})
 								</p>
-								<Table className="min-w-full bg-white rounded-xl divide-y divide-gray-200">
+								<Table className="overflow-x-auto min-w-full bg-white rounded-xl divide-y divide-gray-200">
 									<TableHeader>
 										<TableRow>
 											<TableHead>Nome</TableHead>

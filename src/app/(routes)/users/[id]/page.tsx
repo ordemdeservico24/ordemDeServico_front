@@ -36,47 +36,110 @@ export default function UserPage({ params }: { params: { id: string } }) {
       });
   }, [params.id, token]);
 
+  const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('pt-BR', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' });
+  };
+
+  const translations = {
+    resources: {
+      orders_management: "Gerenciador de Ordens",
+      teams_management: "Gerenciamento de Equipes",
+      roles_management: "Gerenciamento de Cargos",
+      admin_management: "Gerenciamento Administrativo"
+    },
+    operations: {
+      create: "Criar",
+      read: "Ler",
+      update: "Atualizar",
+      delete: "Deletar"
+    }
+  };
+
   return (
-      <Container className="p-4">
-          <main className="grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">
-            {user ? (
-                <Card className="shadow-lg border border-gray-200 rounded-lg overflow-hidden">
-                <CardHeader className="bg-black text-white p-4 flex justify-between items-center">
-                    <Link href="/users">
-                    <Button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded">
-                        Voltar
-                    </Button>
-                    </Link>
-                    <h1 className="text-2xl font-semibold">
-                    Usuário - {user.name}
-                    </h1>
-                </CardHeader>
-                <CardContent className="p-6">
-                    <div className="border-b border-gray-300 pb-4 mb-4">
-                    <h2 className="text-xl font-semibold mb-4">Dados do Usuário</h2>
-                    <div className="space-y-2">
-                        <p className="text-gray-700">
-                        <strong className="font-medium">Nome:</strong> {user.name}
-                        </p>
-                        <p className="text-gray-700">
-                        <strong className="font-medium">Email:</strong> {user.email}
-                        </p>
-                        <p className="text-gray-700">
-                        <strong className="font-medium">Telefone:</strong> {user.phone}
-                        </p>
-                        <p className="text-gray-700">
-                        <strong className="font-medium">Cargo:</strong> {user.role?.roleName}
-                        </p>
-                    </div>
-                    </div>
-                </CardContent>
-                </Card>
-            ) : (
-                <div className="text-center mt-10">
-                <h1 className="text-xl font-bold text-gray-700">Não há usuário com este id</h1>
+    <Container className="p-4">
+      <main className="grid flex-1 items-start gap-8 sm:px-6 sm:py-0 md:gap-12">
+        {user ? (
+          <>
+            <Card className="shadow-lg border border-gray-200 rounded-lg overflow-hidden">
+              <CardHeader className="bg-white p-4 flex flex-row-reverse justify-between items-center">
+                <Link href="/users">
+                  <Button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded">
+                    Voltar
+                  </Button>
+                </Link>
+                <h1 className="text-2xl font-semibold">
+                  Usuário - {user.name}
+                </h1>
+              </CardHeader>
+              <CardContent className="p-6 space-y-6">
+                <div className="border-b border-gray-300 pb-4 mb-4">
+                  <h2 className="text-xl font-semibold mb-4">Dados do Usuário</h2>
+                  <div className="space-y-2">
+                    <p className="text-gray-700">
+                      <strong className="font-medium">Email:</strong> {user.email}
+                    </p>
+                    <p className="text-gray-700">
+                      <strong className="font-medium">Telefone:</strong> {user.phone}
+                    </p>
+                    <p className="text-gray-700">
+                      <strong className="font-medium">Cargo:</strong> {user.role?.roleName}
+                    </p>
+                  </div>
                 </div>
-            )}
-        </main>
+
+                {user.tertiary && (
+                  <div className="border-b border-gray-300 pb-4 mb-4">
+                    <h2 className="text-xl font-semibold mb-4">Informações do Grupo Terciário</h2>
+                    <div className="space-y-2">
+                      <p className="text-gray-700">
+                        <strong className="font-medium">Distrito:</strong> {user.tertiary.districtName}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {user.typeOfProfile && (
+                  <div className="border-b border-gray-300 pb-4 mb-4">
+                    <h2 className="text-xl font-semibold mb-4">Tipo de Perfil</h2>
+                    <div className="space-y-2">
+                      <p className="text-gray-700">
+                        <strong className="font-medium">Tipo de Perfil:</strong> {user.typeOfProfile}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            <Card className="shadow-lg border border-gray-200 rounded-lg overflow-hidden">
+              <CardHeader className="bg-white p-4 flex justify-between items-center">
+                <h1 className="text-2xl font-semibold">
+                  Permissões e Cargos
+                </h1>
+              </CardHeader>
+              <CardContent className="p-6">
+                {user.role?.permissions.map((permission, index) => (
+                  <div key={index} className="flex flex-wrap gap-4 mb-8">
+                    <span className="text-xl font-semibold w-full">{translations.resources[permission.resource] || permission.resource}</span>
+                    <ul className="list-none flex flex-wrap gap-2">
+                      {permission.operations.map((operation, opIndex) => (
+                        <li key={opIndex} className="bg-gray-100 rounded px-2 py-1 text-sm capitalize">
+                          {translations.operations[operation] || operation}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </>
+        ) : (
+          <div className="text-center mt-10">
+            <h1 className="text-xl font-bold text-gray-700">Não há usuário com este id</h1>
+          </div>
+        )}
+      </main>
     </Container>
   );
 }

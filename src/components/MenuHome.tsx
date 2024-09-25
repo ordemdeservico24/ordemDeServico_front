@@ -1,15 +1,11 @@
 "use client";
 import React, { useState } from 'react';
 import Link from 'next/link';
-
-import { FaHome, FaShoppingCart, FaUser, FaTag, FaSignOutAlt, FaChevronDown, FaChevronUp, FaBuilding, FaGlobe, FaMap, FaMapPin, FaDatabase, FaBriefcase, FaThLarge, FaArchive, FaCalendar, FaMoneyCheck, FaSlash, FaUsers, FaFileInvoice, FaChartBar } from 'react-icons/fa';
-import { RiTeamLine } from "react-icons/ri";
-
+import { FaHome, FaShoppingCart, FaUser, FaTag, FaSignOutAlt, FaChevronDown, FaChevronUp, FaBuilding, FaGlobe, FaMap, FaMapPin, FaDatabase, FaBriefcase, FaThLarge, FaArchive, FaCalendar, FaMoneyCheck, FaUsers, FaFileInvoice, FaChartBar } from 'react-icons/fa';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-
-import Logo from '../assets/logo.png';
 import Image from 'next/image';
+import Logo from '../assets/logo.png';
 import { useStore } from '../zustandStore';
 import { hasPermission } from '@/utils/hasPermissions';
 
@@ -26,8 +22,8 @@ const MenuHome = () => {
   };
 
   return (
-    <Card className="hidden md:block w-[300px] h-[87dvh] p-4 transition-transform duration-300 ease-in-out z-20">
-      <div className='flex flex-col justify-between h-full'>
+    <Card className="hidden md:flex flex-col w-[300px] h-full p-4 transition-transform duration-300 ease-in-out z-20">
+      <div className="flex-grow flex flex-col justify-between">
         <div>
           <div className="w-full flex justify-center items-center h-[170px] bg-[#cccccc]">
             <Image src={Logo} alt="Logo" width={60} height={60} />
@@ -93,45 +89,45 @@ const MenuHome = () => {
             </Link>
 
             <div>
-                <Button
-                  onClick={() => toggleDropdown('financeiro')}
-                  className="flex w-full justify-between items-center pl-1 gap-2 py-2 text-[#000] transition-all"
-                  variant="link"
-                >
-                  <div className='flex items-center gap-2'>
-                    <FaMoneyCheck className="h-5 w-5" />
-                    <span>Financeiro</span>
-                  </div>
-                  {openDropdown === 'financeiro'? (
-                    <FaChevronUp className="h-5 w-5" />
-                  ) : (
-                    <FaChevronDown className="h-5 w-5" />
-                  )}
-                </Button>
-
-                {openDropdown === 'financeiro' && (
-                  <div className="flex flex-col ml-2">
-                    <Link href="/financial/categories">
-                      <Button variant="link" className="flex items-center gap-2 py-2">
-                        <FaTag className="h-5 w-5" />
-                        <span>Categorias</span>
-                      </Button>
-                    </Link>
-                    <Link href="/financial/expenses">
-                      <Button variant="link" className="flex items-center gap-2 py-2">
-                        <FaFileInvoice className="h-5 w-5" />
-                        <span>Despesas</span>
-                      </Button>
-                    </Link>
-                    <Link href="/financial/revenues">
-                      <Button variant="link" className="flex items-center gap-2 py-2">
-                        <FaChartBar className="h-5 w-5" />
-                        <span>Receitas</span>
-                      </Button>
-                    </Link>
-                  </div>
+              <Button
+                onClick={() => toggleDropdown('financeiro')}
+                className="flex w-full justify-between items-center pl-1 gap-2 py-2 text-[#000] transition-all"
+                variant="link"
+              >
+                <div className='flex items-center gap-2'>
+                  <FaMoneyCheck className="h-5 w-5" />
+                  <span>Financeiro</span>
+                </div>
+                {openDropdown === 'financeiro'? (
+                  <FaChevronUp className="h-5 w-5" />
+                ) : (
+                  <FaChevronDown className="h-5 w-5" />
                 )}
-              </div>
+              </Button>
+
+              {openDropdown === 'financeiro' && (
+                <div className="flex flex-col ml-2">
+                  <Link href="/financial/categories">
+                    <Button variant="link" className="flex items-center gap-2 py-2">
+                      <FaTag className="h-5 w-5" />
+                      <span>Categorias</span>
+                    </Button>
+                  </Link>
+                  <Link href="/financial/expenses">
+                    <Button variant="link" className="flex items-center gap-2 py-2">
+                      <FaFileInvoice className="h-5 w-5" />
+                      <span>Despesas</span>
+                    </Button>
+                  </Link>
+                  <Link href="/financial/revenues">
+                    <Button variant="link" className="flex items-center gap-2 py-2">
+                      <FaChartBar className="h-5 w-5" />
+                      <span>Receitas</span>
+                    </Button>
+                  </Link>
+                </div>
+              )}
+            </div>
 
             {hasPermission(role, 'orders_management') && (
               <Link href="/orders">
@@ -206,13 +202,12 @@ const MenuHome = () => {
             </Link>
           </div>
         </div>
-        <div className='p-4'>
-          <Link href="/">
-            <Button onClick={handleLogout} variant="link" className="flex items-center pl-1 gap-2 py-2">
-              <FaSignOutAlt className="h-5 w-5" />
-              <span>Sair</span>
-            </Button>
-          </Link>
+
+        <div className='mt-4'>
+          <Button onClick={handleLogout} variant="link" className="flex items-center gap-2">
+            <FaSignOutAlt className="h-5 w-5" />
+            <span>Sair</span>
+          </Button>
         </div>
       </div>
     </Card>

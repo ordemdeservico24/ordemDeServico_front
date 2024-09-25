@@ -91,7 +91,7 @@ export const AssignTeam: React.FC<Order> = ({ orderId, teamName }) => {
                 </SelectContent>
             </Select>
             <Button
-                className=" text-white font-medium rounded px-3 py-1 hover:-translate-y-1 transition-all"
+                variant="default" className="bg-blue-500 hover:bg-blue-600"
                 onClick={assignTeam}
             >
                 Selecionar

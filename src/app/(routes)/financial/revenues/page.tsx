@@ -6,6 +6,7 @@ import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/ca
 import { Table, TableHeader, TableBody, TableRow, TableCell } from "@/components/ui/table";
 import { getCookie } from "cookies-next";
 import { IRevenue } from "@/interfaces/financial.interface";
+import { Button } from "@/components/ui/button";
 
 export default function RevenuesPage() {
   const [revenues, setRevenues] = useState<IRevenue | null>(null);
@@ -64,6 +65,9 @@ export default function RevenuesPage() {
                   <h1>Total receitas: R$ {revenues?.totalRevenue.toFixed(2)}</h1>
                 </div>
               </CardHeader>
+              <div className="overflow-x-auto">
+
+              
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -71,7 +75,8 @@ export default function RevenuesPage() {
                     <TableCell>Descrição</TableCell>
                     <TableCell>Quantidade</TableCell>
                     <TableCell>Valor</TableCell>
-                    <TableCell>Data de Criação</TableCell>
+                      <TableCell>Data de Criação</TableCell>
+                      <TableCell>Gerar recibo</TableCell>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -82,10 +87,12 @@ export default function RevenuesPage() {
                       <TableCell>{item.quantity}</TableCell>
                       <TableCell>R$ {item.value.toFixed(2)}</TableCell>
                       <TableCell>{new Date(item.createdAt).toLocaleDateString()}</TableCell>
+                      <TableCell><Button variant="default" className="bg-blue-500 hover:bg-blue-600">Gerar recibo</Button></TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
-              </Table>
+                </Table>
+              </div>
             </Card>
           </TabsContent>
         </Tabs>

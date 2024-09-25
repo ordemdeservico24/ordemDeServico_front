@@ -120,12 +120,6 @@ export default function Page() {
 								("Entrar")}
                             </Button>
                         </div>
-                        <div className="mt-4 text-center text-sm">
-                            Não tem uma conta?{" "}
-                            <Link href="/register" className="underline">
-                                Cadastrar
-                            </Link>
-                        </div>
                     </form>
                 </div>
                 <div className="hidden bg-muted lg:block">

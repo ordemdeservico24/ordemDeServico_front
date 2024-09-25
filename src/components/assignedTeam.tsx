@@ -32,9 +32,6 @@ export const AssignedTeam: React.FC<AssignedTeamProps> = ({
                             <strong>Nome da equipe:</strong> {assignedTeam.teamName}
                         </p>
                         <p>
-                            <strong>ID do Líder:</strong> {assignedTeam.teamLeaderId}
-                        </p>
-                        <p>
                             <strong>Data de criação:</strong> {new Date(assignedTeam.createdAt).toLocaleDateString()}
                         </p>
                         <p>

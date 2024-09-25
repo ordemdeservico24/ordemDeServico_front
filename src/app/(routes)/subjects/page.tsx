@@ -9,7 +9,6 @@ import { toast } from "react-toastify";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Search } from "lucide-react";
 import { getCookie } from 'cookies-next';
 import { z } from "zod";
 
@@ -109,14 +108,6 @@ export default function Page() {
                 <CardTitle className="text-[#3b82f6] text-2xl font-bold">Categorias</CardTitle>
                 <CardDescription>Cheque todas as informações relacionado as categorias apresentadas.</CardDescription>
                 <div className="flex items-center gap-3 justify-between">
-                  <div className="relative flex-1 md:grow-0">
-                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      type="search"
-                      placeholder="Pesquisar..."
-                      className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-                    />
-                  </div>
 
                   <Dialog>
                     <DialogTrigger asChild>
@@ -160,7 +151,7 @@ export default function Page() {
                 </div>
               </CardHeader>
               <div className="p-3">
-                <Table>
+                <Table className="overflow-x-auto">
                   <TableHeader>
                     <TableRow>
                       <TableHead>Nome da categoria</TableHead>

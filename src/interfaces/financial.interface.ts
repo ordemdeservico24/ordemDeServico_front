@@ -55,6 +55,8 @@ export interface IRevenueItems {
 }
 interface ICompany {
   id: string;
+  companyName: string,
+  cnpj: string,
 }
 
 export interface FinancialCategory {
@@ -111,4 +113,21 @@ export interface FinancialCategoryItem {
   installmentValue?: number;
   createdAt: Date;
   updatedAt: Date;
+  items: FinancialItem[];
+}
+
+export interface FinancialItem {
+  id: string;
+  name: string;
+  description?: string;
+  amountSpent: number;
+  itemPhoto?: string;
+  financialCategoryId: string;
+  companyId: string;
+  isRecurrent: boolean;
+  installments?: number | null;
+  dueDate?: string | null;  
+  installmentValue?: number;
+  createdAt: string; 
+  updatedAt: string; 
 }

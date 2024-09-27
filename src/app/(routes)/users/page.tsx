@@ -30,42 +30,44 @@ export default function Page() {
 			return e.currentTarget.querySelector(`[name="${name}"]`) as HTMLInputElement;
 		};
 
-		const request: ICreateUserRequest = {
-			name: getInput("name").value || "",
-			email: getInput("email").value || "",
-			password: getInput("password").value || "",
-			phone: getInput("phone").value || "",
-			tertiaryGroupId: getInput("tertiaryGroupId").value || "",
-			typeOfProfileId: getInput("typeOfProfileId").value || "",
-			roleId: getInput("roleId").value || "",
-		};
+		const inputElement = getInput("sheetFile");
 
-		toast.promise(
-			fetch(`https://ordemdeservicosdev.onrender.com/api/user/create-user/:id`, {
-				method: "POST",
-				headers: {
-					"Content-type": "application/json",
-					Authorization: `Bearer ${token}`,
-				},
-				body: JSON.stringify(request),
-			})
-				.then((res) => {
-					if (res.ok) {
-						return res.json();
-					}
+		if (inputElement && inputElement.files && inputElement.files[0]) {
+			const formData = new FormData();
+			formData.append("sheetFile", inputElement.files[0]);
+
+			toast.promise(
+				fetch(`https://ordemdeservicosdev.onrender.com/api/user/import-users`, {
+					method: "POST",
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+					body: formData,
 				})
-				.then((data) => {
-					console.log(data);
-				})
-				.catch((error) => {
-					console.log(error);
-				}),
-			{
-				pending: "Criando usuário",
-				success: "Usuário criado com sucesso!",
-				error: "Ocorreu um erro ao criar usuário",
-			}
-		);
+					.then((res) => {
+						if (res.ok) {
+							return res.json();
+						}
+					})
+					.then((data) => {
+						console.log(data);
+					})
+					.catch((error) => {
+						console.log(error);
+					}),
+				{
+					pending: "Importando...",
+					success: {
+						render: "Importação de usuários concluída",
+						onClose: () => {
+							window.location.reload();
+						},
+						autoClose: 2000,
+					},
+					error: "Ocorreu um erro ao importar",
+				}
+			);
+		}
 	};
 
 	const fetchUsers = async () => {
@@ -91,7 +93,7 @@ export default function Page() {
 
 			if (Array.isArray(data.users)) {
 				setUsers(data.users);
-				setTotalPages(Math.ceil(data.total / limit));
+				setTotalPages(data.pages);
 			} else {
 				setError("Dados recebidos não são um array.");
 			}
@@ -122,41 +124,17 @@ export default function Page() {
 										<Dialog>
 											<DialogTrigger asChild>
 												<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
-													Criar
+													Importar Usuários
 												</Button>
 											</DialogTrigger>
 											<DialogContent className="sm:max-w-[425px]">
 												<DialogHeader>
-													<DialogTitle>Adicionar usuário</DialogTitle>
-													<DialogDescription>Adicione as informações para criar um usuário.</DialogDescription>
+													<DialogTitle>Importar Usuários</DialogTitle>
+													<DialogDescription>Envie uma planilha contendo os usuários.</DialogDescription>
 												</DialogHeader>
 												<form action="#" onSubmit={(e) => onSubmit(e)} className=" flex flex-col justify-center items-center">
 													<div className="flex gap-3 flex-col items-center max-w-96 w-full">
-														<Input type="text" name="name" placeholder="Nome do usuário" className="w-full" />
-														<Input type="email" name="email" placeholder="Email" className="w-full" />
-														<Input type="password" name="password" placeholder="Senha" className="w-full" />
-														<Input type="tel" name="phone" placeholder="Telefone" className="w-full" />
-														<select
-															name="tertiaryGroupId"
-															id="tertiaryGroupId"
-															className="outline-none border focus:border-[#2a2a2a] rounded px-2 py-1 w-full mb-1"
-														>
-															<option value="">Selecione um grupo terciário</option>
-														</select>
-														<select
-															name="typeOfProfileId"
-															id="typeOfProfileId"
-															className="outline-none border focus:border-[#2a2a2a] rounded px-2 py-1 w-full mb-1"
-														>
-															<option value="">Selecione o tipo de perfil</option>
-														</select>
-														<select
-															name="roleId"
-															id="roleId"
-															className="outline-none border focus:border-[#2a2a2a] rounded px-2 py-1 w-full mb-1"
-														>
-															<option value="">Selecione um cargo</option>
-														</select>
+														<Input type="file" name="sheetFile" placeholder="Envie uma planilha" className="w-full" />
 														<Button
 															className=" text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
 															type="submit"

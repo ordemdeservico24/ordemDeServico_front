@@ -93,7 +93,7 @@ export default function Page() {
 
 			if (Array.isArray(data.users)) {
 				setUsers(data.users);
-				setTotalPages(Math.ceil(data.total / limit));
+				setTotalPages(data.pages);
 			} else {
 				setError("Dados recebidos não são um array.");
 			}

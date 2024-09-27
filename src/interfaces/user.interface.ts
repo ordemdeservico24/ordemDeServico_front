@@ -28,6 +28,10 @@ export interface IRole {
 	roleName: string;
 	permissions: IRolePermission[];
 	roleLevel: string;
+	_count?: {
+		users: number;
+	};
+	users?: IUser[];
 	companyId: string | null;
 }
 

@@ -23,6 +23,7 @@ import {
 	FaUsers,
 	FaFileInvoice,
 	FaChartBar,
+	FaClipboardList,
 } from "react-icons/fa";
 import { RiTeamLine } from "react-icons/ri";
 import Logo from "../assets/logo.png";
@@ -279,13 +280,42 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 					<FaTag className="h-4 w-4 md:h-5 md:w-5" />
 					<span>Categorias</span>
 				</Link>
-				<Link
-					href="/users"
-					className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]"
+				<button
+					onClick={() => toggleDropdown("usuarios")}
+					className="flex items-center justify-between px-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9] w-full"
 				>
-					<FaUser className="h-4 w-4 md:h-5 md:w-5" />
-					<span>Usuários</span>
-				</Link>
+					<div className="flex items-center gap-2">
+						<FaUser className="h-4 w-4 md:h-5 md:w-5" />
+						<span>Usuários</span>
+					</div>
+					<FaChevronDown
+						className={`h-4 w-4 md:h-5 md:w-5 transition-transform ${
+							openDropdown === "usuarios"
+								? "rotate-180"
+								: "rotate-0"
+						}`}
+					/>
+				</button>
+
+				{openDropdown === "usuarios" && (
+					<div className="flex flex-col ml-4">
+						<Link
+							href="/users"
+							className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]"
+						>
+							<FaUsers className="h-4 w-4 md:h-5 md:w-5" />
+							<span>Ver todos</span>
+						</Link>
+						<Link
+							href="/users"
+							className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]"
+						>
+							<FaClipboardList className="h-4 w-4 md:h-5 md:w-5" />
+							<span>Cargos</span>
+						</Link>
+					</div>
+				)}
+
 				<Link
 					href="/"
 					onClick={handleLogout}

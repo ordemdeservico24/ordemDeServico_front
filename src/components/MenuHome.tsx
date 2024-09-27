@@ -24,6 +24,7 @@ import {
 	FaUsers,
 	FaFileInvoice,
 	FaChartBar,
+	FaClipboardList,
 } from "react-icons/fa";
 import { RiTeamLine } from "react-icons/ri";
 
@@ -310,15 +311,41 @@ const MenuHome = () => {
 							</Button>
 						</Link>
 
-						<Link href="/users">
+						<div>
 							<Button
+								onClick={() => toggleDropdown("usuarios")}
 								variant="link"
-								className="flex items-center pl-1 gap-2 py-2"
+								className="flex w-full justify-between items-center pl-1 gap-2 py-2 text-[#000] transition-all"
 							>
-								<FaUser className="h-5 w-5" />
-								<span>Usuários</span>
+								<div className="flex items-center gap-2">
+									<FaUser className="h-5 w-5" />
+									<span>Usuários</span>
+								</div>
+								{openDropdown === "usuarios" ? (
+									<FaChevronUp className="h-5 w-5" />
+								) : (
+									<FaChevronDown className="h-5 w-5" />
+								)}
 							</Button>
-						</Link>
+							{openDropdown === "usuarios" && (
+								<div className="flex flex-col ml-1">
+									<Link
+										href="/users"
+										className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]"
+									>
+										<FaUsers className="h-4 w-4 md:h-5 md:w-5" />
+										<span>Ver todos</span>
+									</Link>
+									<Link
+										href="/roles"
+										className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]"
+									>
+										<FaClipboardList className="h-4 w-4 md:h-5 md:w-5" />
+										<span>Cargos</span>
+									</Link>
+								</div>
+							)}
+						</div>
 					</div>
 				</div>
 				<div className="p-4 mt-auto">

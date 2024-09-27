@@ -126,7 +126,16 @@ const MenuHome = () => {
 
 								{openDropdown === "empresa" && (
 									<div className="flex flex-col ml-1">
-										<Link href="#">
+										<Link href="/company/firm">
+											<Button
+												variant="link"
+												className="flex items-center gap-2 py-2"
+											>
+												<FaGlobe className="h-5 w-5" />
+												<span>Minha Empresa</span>
+											</Button>
+										</Link>
+										<Link href="/company/primary">
 											<Button
 												variant="link"
 												className="flex items-center gap-2 py-2"
@@ -135,7 +144,7 @@ const MenuHome = () => {
 												<span>Estado</span>
 											</Button>
 										</Link>
-										<Link href="#">
+										<Link href="/company/secondary">
 											<Button
 												variant="link"
 												className="flex items-center gap-2 py-2"
@@ -144,7 +153,7 @@ const MenuHome = () => {
 												<span>Cidade</span>
 											</Button>
 										</Link>
-										<Link href="#">
+										<Link href="/company/tertiary">
 											<Button
 												variant="link"
 												className="flex items-center gap-2 py-2"

@@ -1,6 +1,7 @@
 "use client";
 import { Container } from "@/components/container";
 import { ITeam, ITeamLeader } from "@/interfaces/team.interfaces";
+import { useRouter } from 'next/navigation';
 import Link from "next/link";
 import React, { useEffect, FormEvent, useState } from "react";
 import { Input } from "@/components/ui/input";
@@ -20,6 +21,7 @@ export default function Page() {
 	const [error, setError] = useState<string | null>(null);
 	const token = getCookie("access_token");
 	const { role = [] } = useStore();
+	const router = useRouter();
 
 	useEffect(() => {
 		fetch(
@@ -124,14 +126,17 @@ export default function Page() {
 						<TabsContent value="all">
 							<Card x-chunk="dashboard-06-chunk-0">
 								<CardHeader>
-									<CardTitle className="text-[#3b82f6] text-2xl font-bold">
-										Equipes
-									</CardTitle>
-									<CardDescription>
-										Cheque todas as informações relacionado aos
-										membros apresentados.
-									</CardDescription>
-									<div className="flex gap-3 items-center justify-between">
+									<div className="flex items-center justify-between">
+									<div>
+										<CardTitle className="text-[#3b82f6] text-2xl font-bold">
+											Equipes
+										</CardTitle>
+										<CardDescription>
+											Cheque todas as informações relacionado aos
+											membros apresentados.
+										</CardDescription>
+									</div>
+										<div className="flex gap-3 items-center justify-between">
 										{hasPermission(role, ["teams_management"], "create") && (
 											<Dialog>
 												<DialogTrigger asChild>
@@ -139,7 +144,7 @@ export default function Page() {
 														variant="default"
 														className="bg-blue-500 hover:bg-blue-600"
 													>
-														Criar
+														Criar Equipe
 													</Button>
 												</DialogTrigger>
 												<DialogContent className="sm:max-w-[425px]">
@@ -202,6 +207,7 @@ export default function Page() {
 												</DialogContent>
 											</Dialog>
 										)}
+										</div>
 									</div>
 								</CardHeader>
 
@@ -231,24 +237,21 @@ export default function Page() {
 													<TableRow
 														key={index}
 														className="cursor-pointer hover:bg-gray-100 whitespace-nowrap"
+														style={{ cursor: 'pointer' }}
+														onClick={() => router.push(`/teams/${team.id}`)}
 													>
 														
-														<TableCell>
+														<TableCell  style={{ cursor: 'pointer' }} onClick={() => router.push(`/teams/${team.id}`)}>
 														{hasPermission(role, ["teams_management", "teamleader", "teammember"], "read") && (
-															<Link
-																href={`/teams/${team.id}`}
-															>
+
 																<span className="block w-full h-full">
 																	{team.teamName}
 																</span>
-																</Link>
 															)}
 														</TableCell>
-														<TableCell>
+														<TableCell  style={{ cursor: 'pointer' }} onClick={() => router.push(`/teams/${team.id}`)}>
 															{hasPermission(role, ["teams_management", "teamleader", "teammember"], "read") && (
-																<Link
-																	href={`/teams/${team.id}`}
-																>
+
 																	<span className="block w-full h-full">
 																		{
 																			team.leader
@@ -256,35 +259,26 @@ export default function Page() {
 																				.name
 																		}
 																	</span>
-																</Link>
 															)}
 														</TableCell>
-														<TableCell>
+														<TableCell  style={{ cursor: 'pointer' }} onClick={() => router.push(`/teams/${team.id}`)}>
 															{hasPermission(role, ["teams_management", "teamleader", "teammember"], "read") && (
-																<Link
-																	href={`/teams/${team.id}`}
-																>
 																	<span className="block w-full h-full">
 																		{
 																			team.orders
 																				.length
 																		}
 																	</span>
-																</Link>
 															)}
 														</TableCell>
-														<TableCell>
+														<TableCell  style={{ cursor: 'pointer' }} onClick={() => router.push(`/teams/${team.id}`)}>
 															{hasPermission(role, ["teams_management", "teamleader", "teammember"], "read") && (
-																<Link
-																	href={`/teams/${team.id}`}
-																>
 																	<span className="block w-full h-full">
 																		{
 																			team.members
 																				.length
 																		}
 																	</span>
-																</Link>
 															)}
 														</TableCell>
 													</TableRow>

@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useRouter } from 'next/navigation';
 import { Container } from "@/components/container";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,11 +9,10 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { getCookie } from "cookies-next";
 import { FinancialCategory } from "@/interfaces/financial.interface";
 import { Table, TableHeader, TableBody, TableRow, TableCell } from "@/components/ui/table";
-import Link from "next/link";
 export default function CategoriesPage() {
   const [categories, setCategories] = useState<FinancialCategory[]>([]);
   const [error, setError] = useState<string | null>(null);
-
+  const router = useRouter();
   const token = getCookie('access_token');
 
   useEffect(() => {
@@ -89,21 +89,15 @@ export default function CategoriesPage() {
                 </TableHeader>
                 <TableBody>
                   {categories.map((category) => (
-                    <TableRow key={category.id}>
-                    <TableCell className="cursor-pointer">
-                      <Link href={`/financial/categories/${category.id}`}>
-                        {category.name}
-                      </Link> 
+                    <TableRow key={category.id}  style={{ cursor: 'pointer' }} onClick={() => router.push(`/financial/categories/${category.id}`)}>
+                    <TableCell>
+                      {category.name}
                     </TableCell>
-                    <TableCell className="cursor-pointer">
-                      <Link href={`/financial/categories/${category.id}`}>
-                        {category.description || '-'}
-                      </Link>
+                    <TableCell>
+                      {category.description || '-'}
                     </TableCell>
-                    <TableCell className="cursor-pointer">
-                      <Link href={`/financial/categories/${category.id}`}>
-                        {new Date(category.createdAt).toLocaleDateString()}
-                      </Link>
+                    <TableCell>
+                      {new Date(category.createdAt).toLocaleDateString()}
                     </TableCell>
                   </TableRow>
                   ))}

@@ -1,14 +1,17 @@
 "use client";
 import { Container } from "@/components/container";
 import { IRole, IUser } from "@/interfaces/user.interface";
-import React, { useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { getCookie } from "cookies-next";
 import Link from "next/link";
 import { EditIcon, EyeIcon, PlusIcon, TrashIcon } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "react-toastify";
+import { Input } from "@/components/ui/input";
+import MoneyFormatter from "@/components/formatMoneyValues";
 
 export default function UserPage({ params }: { params: { id: string } }) {
 	const [user, setUser] = useState<IUser>();
@@ -100,6 +103,52 @@ export default function UserPage({ params }: { params: { id: string } }) {
 		);
 	};
 
+	const addSalary = (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
+		const getInput = (name: string): HTMLInputElement => {
+			return e.currentTarget.querySelector(`[name="${name}"]`) as HTMLInputElement;
+		};
+
+		const request = {
+			salary: getInput("salary").value || 0,
+		};
+
+		toast.promise(
+			fetch(`https://ordemdeservicosdev.onrender.com/api/user/add-salary/${params.id}`, {
+				method: "PATCH",
+				headers: {
+					"Content-type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify(request),
+			})
+				.then((res) => {
+					if (res.ok) {
+						return res.json();
+					}
+					throw new Error("Falha ao adicionar salário");
+				})
+				.then((data) => {
+					console.log(data);
+				})
+				.catch((error) => {
+					console.log(error);
+				}),
+			{
+				pending: "Adicionando salário...",
+				success: {
+					render: "Salário adicionado com sucesso!",
+					onClose: () => {
+						window.location.reload();
+					},
+					autoClose: 2000,
+				},
+				error: "Ocorreu um erro ao adicionar salário",
+			}
+		);
+	};
+
 	return (
 		<Container className="p-4">
 			<main className="grid flex-1 items-start gap-8 sm:px-6 sm:py-0 md:gap-12">
@@ -127,6 +176,47 @@ export default function UserPage({ params }: { params: { id: string } }) {
 										</p>
 										<p className="text-gray-700">
 											<strong className="font-medium">Distrito:</strong> {user.tertiary.districtName}
+										</p>
+										<p className="text-gray-700 flex gap-1">
+											<strong className="font-medium">Salário:</strong>{" "}
+											{user.isEmployee ? (
+												<MoneyFormatter value={user.salary || 0} currency="BRL" />
+											) : (
+												<Dialog>
+													<DialogTrigger asChild>
+														<p className="cursor-pointer">Adicionar salário</p>
+													</DialogTrigger>
+													<DialogContent className="sm:max-w-[425px]">
+														<DialogHeader>
+															<DialogTitle>Adicionar Salário</DialogTitle>
+															<DialogDescription>
+																Adicione um salário a este usuário e transforme ele num funcionário.
+															</DialogDescription>
+														</DialogHeader>
+														<form
+															action="#"
+															onSubmit={(e) => addSalary(e)}
+															className=" flex flex-col justify-center items-center"
+														>
+															<div className="flex gap-3 flex-col items-center max-w-96 w-full">
+																<Input
+																	type="number"
+																	step="0.01"
+																	name="salary"
+																	placeholder="Valor do salário em Reais"
+																	className="w-full"
+																/>
+																<Button
+																	className=" text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
+																	type="submit"
+																>
+																	Criar
+																</Button>
+															</div>
+														</form>
+													</DialogContent>
+												</Dialog>
+											)}
 										</p>
 									</div>
 								</div>

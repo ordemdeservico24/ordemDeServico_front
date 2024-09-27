@@ -196,7 +196,7 @@ export default function Page() {
 								</CardDescription>
 								<div className="flex items-center gap-2 pt-4">
 								{hasPermission(role, ["orders_management"], "create") && (
-											<Dialog>
+										<Dialog>
 								<DialogTrigger asChild>
 									<Button
 										variant="default"

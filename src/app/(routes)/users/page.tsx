@@ -1,5 +1,6 @@
 "use client";
 import { Container } from "@/components/container";
+import { useRouter } from 'next/navigation';
 import { IUser } from "@/interfaces/user.interface";
 import React, { FormEvent, useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
@@ -11,12 +12,17 @@ import { toast } from "react-toastify";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getCookie } from 'cookies-next';
-import Link from "next/link";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 
 export default function Page() {
-	const [users, setUsers] = useState<IUser[]>([]);
-	const token = getCookie('access_token');
-
+  const [users, setUsers] = useState<IUser[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const token = getCookie('access_token');
+	const router = useRouter();
+	
 	const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
@@ -67,33 +73,45 @@ export default function Page() {
 		);
 	};
 
-	useEffect(() => {
-		fetch(
-		  "https://ordemdeservicosdev.onrender.com/api/user/get-all-users",
-		  {
+	const fetchUsers = async () => {
+		try {
+		  setIsLoading(true);
+		  setError(null);
+		  const limit = 30;
+		  const offset = limit * (currentPage - 1);
+	
+		  const response = await fetch(`https://ordemdeservicosdev.onrender.com/api/user/get-all-users?limit=${limit}&offset=${offset}`, {
 			method: "GET",
 			headers: {
 			  "Content-type": "application/json",
 			  Authorization: `Bearer ${token}`,
-			}
+			},
+		  });
+	
+		  if (!response.ok) {
+			throw new Error(`HTTP error! status: ${response.status}`);
 		  }
-		)
-		.then((res) => res.json())
-		.then((data) => {
-		  console.log("Resposta da API:", data);
-		  if (Array.isArray(data)) {
-			setUsers(data); 
-		  } else if (data && Array.isArray(data.users)) {
-			setUsers(data.users);  
+	
+		  const data = await response.json();
+	
+		  if (Array.isArray(data.users)) {
+			setUsers(data.users);
+			setTotalPages(Math.ceil(data.total / limit));
 		  } else {
-			setUsers([]);
+			setError("Dados recebidos não são um array.");
 		  }
-		})
-		.catch((error) => {
-		  console.error("Erro ao buscar usuários:", error);
-		  setUsers([]);
-		});
-	  }, [token]);
+		} catch (error: Error | any) {
+		  setError(error.message || "Erro ao carregar os usuários");
+		} finally {
+		  setIsLoading(false);
+		}
+	  };
+	
+	  useEffect(() => {
+		fetchUsers();
+	  }, [currentPage, token]);
+	
+
 
   	return (
 	  	<Container className="p-4">
@@ -196,25 +214,78 @@ export default function Page() {
                                     </TableRow>
                                 </TableHeader>
 								<TableBody>
-									{users && users.length > 0 &&
-										users.map((user, index) => (
-										<TableRow key={index} className="border-b">
-											<TableCell>{user.name}</TableCell>
-											<TableCell>{user.email}</TableCell>
-											<TableCell>{user.phone}</TableCell>
-											<TableCell>{user.role?.roleName}</TableCell>
-											<TableCell>
-											<Link href={`/users/${user.id}`}>
-												<Button variant="outline">Ver dados</Button>
-											</Link>
-											</TableCell>
-										</TableRow>
-										))
-									}
-									</TableBody>
+                      {isLoading ? (
+                        <TableRow>
+                          <TableCell colSpan={5} className="text-center">
+                            <svg
+                              className="h-8 w-8 animate-spin text-gray-600 mx-auto"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={2}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                              />
+                            </svg>
+                          </TableCell>
+                        </TableRow>
+                      ) : error ? (
+                        <TableRow>
+                          <TableCell colSpan={5} className="text-center text-red-500">{error}</TableCell>
+                        </TableRow>
+                      ) : (
+                        users.map((user, index) => (
+                          <TableRow key={index} className="border-b">
+                            <TableCell>{user.name}</TableCell>
+                            <TableCell>{user.email}</TableCell>
+                            <TableCell>{user.phone}</TableCell>
+                            <TableCell>{user.role?.roleName}</TableCell>
+                            <TableCell  style={{ cursor: 'pointer' }} onClick={() => router.push(`/users/${user.id}`)}>
+                                <Button variant="outline">Ver dados</Button>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      )}
+                    </TableBody>
                                 </Table>
                             </div>
-                            </div>
+								</div>
+								<div className="flex items-center justify-between pt-0 pb-4">
+                <Pagination>
+                  <PaginationContent>
+                    <PaginationPrevious 
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => currentPage > 1 && setCurrentPage(currentPage - 1)} 
+                      className={`${currentPage === 1? 'disabled' : ''}`}
+                    >
+                      Anterior
+                    </PaginationPrevious>
+
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                      <PaginationItem key={page}>
+                        <PaginationLink
+                          onClick={() => setCurrentPage(page)}
+                          isActive={currentPage === page}
+                        >
+                          {page}
+                        </PaginationLink>
+                      </PaginationItem>
+                    ))}
+
+                    <PaginationNext 
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => currentPage < totalPages && setCurrentPage(currentPage + 1)} 
+                      className={`${currentPage === totalPages? 'disabled' : ''}`}
+                    >
+                      Próximo
+                    </PaginationNext>
+                  </PaginationContent>
+                </Pagination>
+              </div>
 						</Card>
 					</TabsContent>
 				</Tabs>

@@ -46,16 +46,13 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 	const { role, logout } = useStore();
 
 	useEffect(() => {
-		fetch(
-			"https://ordemdeservicosdev.onrender.com/api/company/get-company",
-			{
-				method: "GET",
-				headers: {
-					"Content-type": "application/json",
-					Authorization: `Bearer ${token}`,
-				},
-			}
-		)
+		fetch("https://ordemdeservicosdev.onrender.com/api/company/get-company", {
+			method: "GET",
+			headers: {
+				"Content-type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+		})
 			.then((res) => res.json())
 			.then((data) => {
 				setCompany(data);
@@ -74,9 +71,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 	};
 
 	const toggleDropdown = (dropdown: string) => {
-		setOpenDropdown((prevDropdown) =>
-			prevDropdown === dropdown ? null : dropdown
-		);
+		setOpenDropdown((prevDropdown) => (prevDropdown === dropdown ? null : dropdown));
 	};
 
 	const hasRole = (requiredResource: string) => {
@@ -90,23 +85,12 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 			}`}
 		>
 			<div className="w-full flex justify-center items-center h-[170px] bg-[#cccccc]">
-				<Image
-					src={company ? company?.companyPhoto : Logo}
-					alt="Logo"
-					layout="responsive"
-					width={60}
-					height={60}
-				/>
+				<Image src={company ? company?.companyPhoto : Logo} alt="Logo" layout="responsive" width={60} height={60} />
 			</div>
-			<h1 className="text-center text-[#000] text-[1.2rem] mb-1 mt-2">
-				{company?.companyName || "Empresa"}
-			</h1>
+			<h1 className="text-center text-[#000] text-[1.2rem] mb-1 mt-2">{company?.companyName || "Empresa"}</h1>
 
 			<div className="flex flex-col mt-6">
-				<Link
-					href="/home"
-					className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]"
-				>
+				<Link href="/home" className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]">
 					<FaHome className="h-4 w-4 md:h-5 md:w-5" />
 					<span>Dashboard</span>
 				</Link>
@@ -122,34 +106,21 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 								<span>Minha Empresa</span>
 							</div>
 							<FaChevronDown
-								className={`h-4 w-4 md:h-5 md:w-5 transition-transform ${
-									openDropdown === "empresa"
-										? "rotate-180"
-										: "rotate-0"
-								}`}
+								className={`h-4 w-4 md:h-5 md:w-5 transition-transform ${openDropdown === "empresa" ? "rotate-180" : "rotate-0"}`}
 							/>
 						</button>
 
 						{openDropdown === "empresa" && (
 							<div className="flex flex-col ml-4">
-								<Link
-									href="#"
-									className="flex items-center pl-4 rounded-lg gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]"
-								>
+								<Link href="#" className="flex items-center pl-4 rounded-lg gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]">
 									<FaGlobe className="h-4 w-4 md:h-5 md:w-5" />
 									<span>Estado</span>
 								</Link>
-								<Link
-									href="#"
-									className="flex items-center pl-4 rounded-lg gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]"
-								>
+								<Link href="#" className="flex items-center pl-4 rounded-lg gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]">
 									<FaMap className="h-4 w-4 md:h-5 md:w-5" />
 									<span>Cidade</span>
 								</Link>
-								<Link
-									href="#"
-									className="flex items-center pl-4 rounded-lg gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]"
-								>
+								<Link href="#" className="flex items-center pl-4 rounded-lg gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]">
 									<FaMapPin className="h-4 w-4 md:h-5 md:w-5" />
 									<span>Distrito</span>
 								</Link>
@@ -158,10 +129,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 					</div>
 				)}
 
-				<Link
-					href="/stock"
-					className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]"
-				>
+				<Link href="/stock" className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]">
 					<FaDatabase className="h-4 w-4 md:h-5 md:w-5" />
 					<span>Estoque</span>
 				</Link>
@@ -175,11 +143,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 						<span>Financeiro</span>
 					</div>
 					<FaChevronDown
-						className={`h-4 w-4 md:h-5 md:w-5 transition-transform ${
-							openDropdown === "financeiro"
-								? "rotate-180"
-								: "rotate-0"
-						}`}
+						className={`h-4 w-4 md:h-5 md:w-5 transition-transform ${openDropdown === "financeiro" ? "rotate-180" : "rotate-0"}`}
 					/>
 				</button>
 
@@ -210,13 +174,46 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 				)}
 
 				{hasPermission(role, "orders_management") && (
-					<Link
-						href="/orders"
-						className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]"
-					>
-						<IconWrapper icon={<FaShoppingCart />} />
-						<span>Ordens de serviço</span>
-					</Link>
+					<div>
+						<button
+							onClick={() => toggleDropdown("ordem")}
+							className="flex items-center justify-between px-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9] w-full"
+						>
+							<div className="flex items-center gap-2">
+								<FaShoppingCart className="h-5 w-5" />
+								<span>Ordens de Serviço</span>
+							</div>
+							<FaChevronDown
+								className={`h-4 w-4 md:h-5 md:w-5 transition-transform ${openDropdown === "ordem" ? "rotate-180" : "rotate-0"}`}
+							/>
+						</button>
+
+						{openDropdown === "ordem" && (
+							<div className="flex flex-col ml-4">
+								<Link
+									href="/orders"
+									className="flex items-center rounded-lg pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]"
+								>
+									<FaUsers className="h-4 w-4 md:h-5 md:w-5" />
+									<span>Ver todas</span>
+								</Link>
+								<Link
+									href="/subjects"
+									className="flex items-center rounded-lg pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]"
+								>
+									<FaTag className="h-4 w-4 md:h-5 md:w-5" />
+									<span>Categoria</span>
+								</Link>
+								<Link
+									href="/orders/order-status"
+									className="flex items-center rounded-lg pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]"
+								>
+									<FaArchive className="h-4 w-4 md:h-5 md:w-5" />
+									<span>Status das Ordens</span>
+								</Link>
+							</div>
+						)}
+					</div>
 				)}
 
 				{hasPermission(role, "teams_management") && (
@@ -230,20 +227,13 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 								<span>Equipes</span>
 							</div>
 							<FaChevronDown
-								className={`h-4 w-4 md:h-5 md:w-5 transition-transform ${
-									openDropdown === "equipe"
-										? "rotate-180"
-										: "rotate-0"
-								}`}
+								className={`h-4 w-4 md:h-5 md:w-5 transition-transform ${openDropdown === "equipe" ? "rotate-180" : "rotate-0"}`}
 							/>
 						</button>
 
 						{openDropdown === "equipe" && (
 							<div className="flex flex-col ml-4">
-								<Link
-									href="#"
-									className="flex items-center rounded-lg pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]"
-								>
+								<Link href="#" className="flex items-center rounded-lg pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]">
 									<FaUsers className="h-4 w-4 md:h-5 md:w-5" />
 									<span>Minha Equipe</span>
 								</Link>
@@ -273,13 +263,6 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 					</div>
 				)}
 
-				<Link
-					href="/subjects"
-					className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]"
-				>
-					<FaTag className="h-4 w-4 md:h-5 md:w-5" />
-					<span>Categorias</span>
-				</Link>
 				<button
 					onClick={() => toggleDropdown("usuarios")}
 					className="flex items-center justify-between px-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9] w-full"
@@ -289,27 +272,17 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 						<span>Usuários</span>
 					</div>
 					<FaChevronDown
-						className={`h-4 w-4 md:h-5 md:w-5 transition-transform ${
-							openDropdown === "usuarios"
-								? "rotate-180"
-								: "rotate-0"
-						}`}
+						className={`h-4 w-4 md:h-5 md:w-5 transition-transform ${openDropdown === "usuarios" ? "rotate-180" : "rotate-0"}`}
 					/>
 				</button>
 
 				{openDropdown === "usuarios" && (
 					<div className="flex flex-col ml-4">
-						<Link
-							href="/users"
-							className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]"
-						>
+						<Link href="/users" className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]">
 							<FaUsers className="h-4 w-4 md:h-5 md:w-5" />
 							<span>Ver todos</span>
 						</Link>
-						<Link
-							href="/users"
-							className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]"
-						>
+						<Link href="/users" className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]">
 							<FaClipboardList className="h-4 w-4 md:h-5 md:w-5" />
 							<span>Cargos</span>
 						</Link>

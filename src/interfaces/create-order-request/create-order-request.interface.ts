@@ -1,5 +1,6 @@
 export interface IRequest {
 	subjectId: string;
+	orderStatusId: string;
 	requesterName: string;
 	requesterPhone: string;
 	requesterStreet: string;
@@ -7,4 +8,12 @@ export interface IRequest {
 	requesterComplement: string;
 	requesterZipcode: string;
 	notes: string;
+}
+
+export interface ICreateOrderStatus {
+	orderStatusName: string;
+	open?: boolean;
+	inProgress?: boolean;
+	finish?: boolean;
+	review?: boolean;
 }

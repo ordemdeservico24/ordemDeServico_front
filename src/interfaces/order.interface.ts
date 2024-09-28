@@ -52,6 +52,11 @@ export interface IOrderGet {
 export interface IOrderStatus {
 	id: string;
 	orderStatusName: string;
+	open?: boolean;
+	inProgress?: boolean;
+	finish?: boolean;
+	review?: boolean;
+	orders?: IOrder[];
 	tertiaryGroupId: string;
 	companyId: string;
 }

@@ -13,6 +13,7 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getCookie } from "cookies-next";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import MoneyFormatter from "@/components/formatMoneyValues";
 
 export default function Page() {
 	const [users, setUsers] = useState<IUser[]>([]);
@@ -158,6 +159,8 @@ export default function Page() {
 												<TableHead className="font-bold">Email</TableHead>
 												<TableHead className="font-bold">Telefone</TableHead>
 												<TableHead className="font-bold">Cargo</TableHead>
+												<TableHead className="font-bold">Funcionário</TableHead>
+												<TableHead className="font-bold">Salário</TableHead>
 											</TableRow>
 										</TableHeader>
 										<TableBody>
@@ -193,6 +196,10 @@ export default function Page() {
 														<TableCell>{user.email}</TableCell>
 														<TableCell>{user.phone}</TableCell>
 														<TableCell>{user.role?.roleName}</TableCell>
+														<TableCell>{user.isEmployee ? "Sim" : "Não"}</TableCell>
+														<TableCell>
+															<MoneyFormatter value={user.salary || 0} />
+														</TableCell>
 														<TableCell style={{ cursor: "pointer" }} onClick={() => router.push(`/users/${user.id}`)}>
 															<Button variant="outline">Ver dados</Button>
 														</TableCell>

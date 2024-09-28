@@ -326,7 +326,9 @@ export default function Page() {
 														statuses={orderStatus || []}
 													/>
 												)}
-												{hasPermission(role, ["orders_management"], "update") && <EditDeleteOrder orderId={order.id} />}
+												{hasPermission(role, ["orders_management"], "update") && (
+													<EditDeleteOrder orderId={order.id} subjects={subjects || []} orderStatus={orderStatus || []} />
+												)}
 											</div>
 										</div>
 									))}

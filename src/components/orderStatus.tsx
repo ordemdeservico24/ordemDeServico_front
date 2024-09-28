@@ -2,72 +2,65 @@
 import React from "react";
 import { toast } from "react-toastify";
 import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select";
-import { getCookie } from 'cookies-next';
+import { getCookie } from "cookies-next";
+import { IOrderStatus } from "@/interfaces/order.interface";
 
 interface OrderStatusProps {
-    currentStatus: string;
-    orderId: string;
+	currentStatus: string;
+	currentStatusId: string;
+	orderId: string;
+	statuses: IOrderStatus[];
 }
 
-export const OrderStatus: React.FC<OrderStatusProps> = ({
-    currentStatus,
-    orderId,
-}) => {
-    const statuses = ["Aberto", "Em andamento", "Finalizado"];
+export const OrderStatus: React.FC<OrderStatusProps> = ({ currentStatus, orderId, statuses }) => {
+	const filteredStatuses = statuses.filter((status) => status.id !== currentStatus);
 
-    const filteredStatuses = statuses.filter(
-        (status) => status !== currentStatus
-    );
+	const token = getCookie("access_token");
 
-    const token = getCookie('access_token');
+	const handleChange = async (value: string) => {
+		toast.promise(
+			fetch(`https://ordemdeservicosdev.onrender.com/api/order/update-status/${orderId}`, {
+				method: "PATCH",
+				headers: {
+					"Content-type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify({ orderStatusId: value }),
+			})
+				.then((res) => {
+					if (!res.ok) {
+						throw new Error("Falha ao atualizar status");
+					}
+					return res.json();
+				})
+				.then((data) => {
+					console.log(data);
+				}),
+			{
+				pending: "Atualizando status",
+				success: "Status atualizado com sucesso",
+				error: "Ocorreu um erro",
+			}
+		);
+	};
 
-    const handleChange = async (value: string) => {
-        toast.promise(
-            fetch(
-                `https://ordemdeservicosdev.onrender.com/api/order/update-status/${orderId}`,
-                {
-                    method: "PATCH",
-                    headers: {
-                        "Content-type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                    body: JSON.stringify({ orderStatus: value }),
-                }
-            )
-                .then((res) => {
-                    if (!res.ok) {
-                        throw new Error("Falha ao atualizar status");
-                    }
-                    return res.json();
-                })
-                .then((data) => {
-                    console.log(data);
-                }),
-            {
-                pending: "Atualizando status",
-                success: "Status atualizado com sucesso",
-                error: "Ocorreu um erro",
-            }
-        );
-    };
-
-    return (
-        <div className="flex justify-end">
-            <Select onValueChange={handleChange} defaultValue={currentStatus}>
-                <SelectTrigger className="py-1 px-2 rounded text-sm bg-[#3b82f6] text-white">
-                    {currentStatus}
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectItem value={currentStatus} disabled>
-                        {currentStatus}
-                    </SelectItem>
-                    {filteredStatuses.map((status) => (
-                        <SelectItem key={status} value={status}>
-                            {status}
-                        </SelectItem>
-                    ))}
-                </SelectContent>
-            </Select>
-        </div>
-    );
+	return (
+		<div className="flex justify-end">
+			<Select onValueChange={handleChange} defaultValue={currentStatus}>
+				<SelectTrigger className="py-1 px-2 rounded text-sm bg-[#3b82f6] text-white">{currentStatus}</SelectTrigger>
+				<SelectContent>
+					<SelectItem value={currentStatus} disabled>
+						{currentStatus}
+					</SelectItem>
+					{filteredStatuses
+						.filter((status) => status.orderStatusName !== currentStatus)
+						.map((status) => (
+							<SelectItem key={status.id} value={status.id}>
+								{status.orderStatusName}
+							</SelectItem>
+						))}
+				</SelectContent>
+			</Select>
+		</div>
+	);
 };

@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 import { ICreateOrderStatus } from "@/interfaces/create-order-request/create-order-request.interface";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-export default function page() {
+export default function Page() {
 	const [isLoading, setIsLoading] = useState(true);
 	const [orderStatus, setOrderStatus] = useState<IOrderStatus[]>();
 	const [selectedStatus, setSelectedStatus] = useState<string>("");

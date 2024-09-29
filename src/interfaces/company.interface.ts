@@ -9,15 +9,14 @@ export interface ICompany {
 	companyName: string;
 	companyPhoto: string | "";
 	planId: string;
-	Order: IOrderGet[]; 
-	User: IUser[]; 
+	Order: IOrderGet[];
+	User: IUser[];
 	roles: IRole[];
-	Team: ITeam[]; 
+	Team: ITeam[];
 	primaries: IPrimaryGroup[];
-	secondaries: ISecondaryGroup[]; 
-	tertiaries: ITertiaryGroup[]; 
-  }
-  
+	secondaries: ISecondaryGroup[];
+	tertiaries: ITertiaryGroup[];
+}
 
 export interface IPrimaryGroup {
 	id?: string;
@@ -38,7 +37,20 @@ export interface ITertiaryGroup {
 	id?: string;
 	districtName: string;
 	secondaryGroupId?: string;
+	secondary: ISecondaryGroup;
 	users?: IUser[];
 	orders: IOrderGet[];
 	subjects: ISubject[];
+}
+
+export interface ITertiaryInfoPage {
+	totalEmployees: number;
+	totalUsers: number;
+	newUsers30Days: number;
+	last30DaysOrders: number;
+	last7DaysOrders: number;
+	last24HoursOrders: number;
+	nameDistrict: string;
+	secondaryInfo: ISecondaryGroup;
+	id: string;
 }

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaClipboard, FaCheck } from "react-icons/fa"; // Ícones de feedback
 import { Button } from "./ui/button";
+import { ClipboardIcon } from "lucide-react";
 
 interface CopyToClipboardButtonProps {
 	textToCopy: string; // O texto que será copiado
@@ -17,8 +18,8 @@ const CopyToClipboardButton: React.FC<CopyToClipboardButtonProps> = ({ textToCop
 	};
 
 	return (
-		<Button onClick={handleCopy} className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded flex items-center gap-2">
-			{copied ? <FaCheck /> : <FaClipboard />}
+		<Button onClick={handleCopy} variant="outline" className="flex items-center gap-2">
+			{copied ? <FaCheck /> : <ClipboardIcon size={20} />}
 			{copied ? "Copiado!" : "Copiar link de cadastro"}
 		</Button>
 	);

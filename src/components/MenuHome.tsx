@@ -26,6 +26,7 @@ import {
 	FaChartBar,
 	FaClipboardList,
 } from "react-icons/fa";
+import { MdHomeRepairService } from "react-icons/md";
 import { RiTeamLine } from "react-icons/ri";
 
 import { Card } from "@/components/ui/card";
@@ -291,6 +292,31 @@ const MenuHome = () => {
 									>
 										<FaClipboardList className="h-4 w-4 md:h-5 md:w-5" />
 										<span>Cargos</span>
+									</Link>
+								</div>
+							)}
+						</div>
+
+						<div>
+							<Button
+								onClick={() => toggleDropdown("relatorios")}
+								className="flex w-full justify-between items-center pl-1 gap-2 py-2 text-[#000] transition-all"
+								variant="link"
+							>
+								<div className="flex items-center gap-2">
+									<FaClipboardList className="h-5 w-5" />
+									<span>Relatórios</span>
+								</div>
+								{openDropdown === "relatorios" ? <FaChevronUp className="h-5 w-5" /> : <FaChevronDown className="h-5 w-5" />}
+							</Button>
+
+							{openDropdown === "relatorios" && (
+								<div className="flex flex-col ml-1">
+									<Link href="/orders/report">
+										<Button variant="link" className="flex items-center gap-2 py-2">
+											<MdHomeRepairService className="h-5 w-5" />
+											<span>Ordens de Serviço</span>
+										</Button>
 									</Link>
 								</div>
 							)}

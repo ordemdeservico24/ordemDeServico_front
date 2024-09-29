@@ -60,3 +60,11 @@ export interface IOrderStatus {
 	tertiaryGroupId: string;
 	companyId: string;
 }
+
+export interface IOrderReport {
+	label: string;
+	data: {
+		number: number;
+		orders: IOrder[];
+	};
+}

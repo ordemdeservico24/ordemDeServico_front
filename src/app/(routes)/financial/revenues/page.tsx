@@ -40,6 +40,34 @@ export default function RevenuesPage() {
     fetchRevenues();
   }, [token]);
 
+  const handleGenerateReceipt = async (itemId: string) => {
+    try {
+      const response = await fetch(`https://ordemdeservicosdev.onrender.com/api/finance/revenues/receipt/${itemId}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to generate receipt");
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `recibo-${itemId}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error generating receipt:", error);
+      setError("Erro ao gerar recibo.");
+    }
+  };
+
   if (error) {
     return (
       <Container className="overflow-x-auto">
@@ -66,31 +94,37 @@ export default function RevenuesPage() {
                 </div>
               </CardHeader>
               <div className="overflow-x-auto">
-
-              
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableCell>Nome</TableCell>
-                    <TableCell>Descrição</TableCell>
-                    <TableCell>Quantidade</TableCell>
-                    <TableCell>Valor</TableCell>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableCell>Nome</TableCell>
+                      <TableCell>Descrição</TableCell>
+                      <TableCell>Quantidade</TableCell>
+                      <TableCell>Valor</TableCell>
                       <TableCell>Data de Criação</TableCell>
                       <TableCell>Gerar recibo</TableCell>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {revenues?.items.map((item) => (
-                    <TableRow key={item.id}>
-                      <TableCell>{item.name}</TableCell>
-                      <TableCell>{item.description || '-'}</TableCell>
-                      <TableCell>{item.quantity}</TableCell>
-                      <TableCell>R$ {item.value.toFixed(2)}</TableCell>
-                      <TableCell>{new Date(item.createdAt).toLocaleDateString()}</TableCell>
-                      <TableCell><Button variant="default" className="bg-blue-500 hover:bg-blue-600">Gerar recibo</Button></TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
+                  </TableHeader>
+                  <TableBody>
+                    {revenues?.items.map((item) => (
+                      <TableRow key={item.id}>
+                        <TableCell>{item.name}</TableCell>
+                        <TableCell>{item.description || '-'}</TableCell>
+                        <TableCell>{item.quantity}</TableCell>
+                        <TableCell>R$ {item.value.toFixed(2)}</TableCell>
+                        <TableCell>{new Date(item.createdAt).toLocaleDateString()}</TableCell>
+                        <TableCell>
+                          <Button 
+                            variant="default" 
+                            className="bg-blue-500 hover:bg-blue-600" 
+                            onClick={() => handleGenerateReceipt(item.id)}
+                          >
+                            Gerar recibo
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
                 </Table>
               </div>
             </Card>

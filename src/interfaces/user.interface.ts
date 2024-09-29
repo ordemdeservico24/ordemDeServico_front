@@ -13,6 +13,7 @@ export interface IUser {
 	isTeamMember: boolean;
 	isEmployee: boolean;
 	salary: number | null;
+	startCompanyDate?: string;
 	createdAt?: string;
 	updatedAt?: string;
 }

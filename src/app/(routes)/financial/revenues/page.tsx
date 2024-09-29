@@ -7,6 +7,10 @@ import { Table, TableHeader, TableBody, TableRow, TableCell } from "@/components
 import { getCookie } from "cookies-next";
 import { IRevenue } from "@/interfaces/financial.interface";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { withMask } from 'use-mask-input';
 
 export default function RevenuesPage() {
   const [revenues, setRevenues] = useState<IRevenue | null>(null);
@@ -68,6 +72,44 @@ export default function RevenuesPage() {
     }
   };
 
+  const handleCreateItem = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+    const newItem = {
+      name: formData.get("name") as string,
+      description: formData.get("description") as string,
+      quantity: Number(formData.get("quantity")),
+      value: Number(formData.get("value")),
+      buyerName: formData.get("buyerName") as string,
+      cpf: formData.get("cpf") as string,
+      cnpj: formData.get("cnpj") as string,
+      phone: formData.get("phone") as string,
+    };
+
+    try {
+      const response = await fetch("https://ordemdeservicosdev.onrender.com/api/finance/revenues/create-item", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(newItem),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create item");
+      }
+
+      const data = await response.json();
+
+      setRevenues((prev) => (prev ? { ...prev, items: [...prev.items, data] } : prev));
+    } catch (error) {
+      console.error("Error creating item:", error);
+      setError("Erro ao criar item.");
+    }
+  };
+
   if (error) {
     return (
       <Container className="overflow-x-auto">
@@ -85,12 +127,39 @@ export default function RevenuesPage() {
           <TabsContent value="all">
             <Card>
               <CardHeader>
-                <div className="flex justify-between items-center">       
+                <div className="flex justify-between items-center">
                   <div>
                     <CardTitle className="text-[#3b82f6] text-2xl font-bold">Financeiro Receitas</CardTitle>
                     <CardDescription>Cheque todas as informações relacionadas ao financeiro de receitas.</CardDescription>
                   </div>
-                  <h1>Total receitas: R$ {revenues?.totalRevenue.toFixed(2)}</h1>
+                  <div>
+                    <h1>Total receitas: R$ {revenues?.totalRevenue.toFixed(2)}</h1>
+                    <Dialog>
+                    <DialogTrigger asChild>
+                    <Button variant="default" className="bg-blue-500 hover:bg-blue-600">Criar item</Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Criar Item na Receita</DialogTitle>
+                      </DialogHeader>
+                      <form onSubmit={handleCreateItem} className="space-y-4">
+                          <Input name="name" required placeholder="Nome" />
+                          <Textarea name="description" required placeholder="Descricão" />
+                          <Input name="quantity" type="number" required placeholder="Quantidade" defaultValue={1} />
+                          <Input name="value" type="number" placeholder="Valor" required />
+                          <Input name="buyerName" required placeholder="Nome do Comprador" />
+                          <Input name="cpf" placeholder="CPF" required ref={withMask('999.999.999-99')} />
+                          <Input name="cnpj" placeholder="CNPJ" required ref={withMask('99.999.999/9999-99')} />
+                          <Input name="phone" placeholder="Telefone" required ref={withMask('(99) 99999-9999')} />
+                        <Button type="submit" variant="default" className="bg-blue-500 hover:bg-blue-600">
+                          Salvar Item
+                        </Button>
+                      </form>
+                    </DialogContent>
+                    </Dialog>
+                  </div>
+                  
+                  
                 </div>
               </CardHeader>
               <div className="overflow-x-auto">
@@ -111,7 +180,7 @@ export default function RevenuesPage() {
                         <TableCell>{item.name}</TableCell>
                         <TableCell>{item.description || '-'}</TableCell>
                         <TableCell>{item.quantity}</TableCell>
-                        <TableCell>R$ {item.value.toFixed(2)}</TableCell>
+                        <TableCell>R$ {item.value ? item.value.toFixed(2) : '0.00'}</TableCell>
                         <TableCell>{new Date(item.createdAt).toLocaleDateString()}</TableCell>
                         <TableCell>
                           <Button 

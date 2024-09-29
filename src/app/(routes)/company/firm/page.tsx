@@ -6,7 +6,6 @@ import { ICompany } from "@/interfaces/company.interface";
 import Image from "next/image";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import CopyToClipboard from "@/components/copyToClipboard";
 
 export default function FirmPage() {
 	const [token, setToken] = useState<string | null>(null);
@@ -72,7 +71,6 @@ export default function FirmPage() {
 									<p className="text-gray-700">
 										<strong className="font-medium">Nome da Empresa:</strong> {firmData.companyName}
 									</p>
-									<CopyToClipboard textToCopy="teste" />
 									{firmData.companyPhoto && (
 										<Image
 											src={firmData.companyPhoto}

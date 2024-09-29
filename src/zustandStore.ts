@@ -11,7 +11,7 @@ export interface Role {
 
 interface User {
 	name: string;
-	userId: string;
+	userId?: string;
 	profilePicture: string;
 	token: string;
 	role: Role[];
@@ -20,7 +20,7 @@ interface User {
 interface StoreState {
 	token: string;
 	name: string;
-	userId: string;
+	userId?: string;
 	profilePicture: string;
 	role: Role[];
 	setToken: (token: string) => void;

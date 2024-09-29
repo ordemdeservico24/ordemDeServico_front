@@ -12,10 +12,12 @@ import { ITertiaryInfoPage } from "@/interfaces/company.interface";
 import { Input } from "@/components/ui/input";
 import { BarChart3, Clipboard, MapPin, Share2, Users } from "lucide-react";
 import CopyToClipboardButton from "@/components/copyToClipboard";
+import { useRouter } from "next/navigation";
 
 export default function Page({ params }: { params: { id: string } }) {
 	const [tertiary, setTertiary] = useState<ITertiaryInfoPage>();
 	const token = getCookie("access_token");
+	const router = useRouter();
 
 	useEffect(() => {
 		fetch(`https://ordemdeservicosdev.onrender.com/api/company/get-tertiary/${params.id}`, {
@@ -130,10 +132,18 @@ export default function Page({ params }: { params: { id: string } }) {
 						</CardHeader>
 						<CardContent>
 							<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-								<Button variant="outline">Ordens de Serviço</Button>
-								<Button variant="outline">Equipes</Button>
-								<Button variant="outline">Usuários</Button>
-								<Button variant="outline">Estoque</Button>
+								<Button variant="outline" onClick={() => router.push("/orders")}>
+									Ordens de Serviço
+								</Button>
+								<Button variant="outline" onClick={() => router.push("/teams")}>
+									Equipes
+								</Button>
+								<Button variant="outline" onClick={() => router.push("/users")}>
+									Usuários
+								</Button>
+								<Button variant="outline" onClick={() => router.push("/stock")}>
+									Estoque
+								</Button>
 							</div>
 						</CardContent>
 					</Card>

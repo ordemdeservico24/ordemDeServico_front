@@ -33,6 +33,7 @@ import IconWrapper from "./IconWrapper";
 import { hasPermission } from "@/utils/hasPermissions";
 import { getCookie } from "cookies-next";
 import { ICompany } from "@/interfaces/company.interface";
+import { MdHomeRepairService } from "react-icons/md";
 
 interface MenuProps {
 	isOpen: boolean;
@@ -288,6 +289,33 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 						</Link>
 					</div>
 				)}
+
+				<div>
+					<button
+						onClick={() => toggleDropdown("relatorios")}
+						className="flex items-center justify-between px-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9] w-full"
+					>
+						<div className="flex items-center gap-2">
+							<FaClipboardList className="h-5 w-5" />
+							<span>Relatórios</span>
+						</div>
+						<FaChevronDown
+							className={`h-4 w-4 md:h-5 md:w-5 transition-transform ${openDropdown === "relatorios" ? "rotate-180" : "rotate-0"}`}
+						/>
+					</button>
+
+					{openDropdown === "relatorios" && (
+						<div className="flex flex-col ml-4">
+							<Link
+								href="/orders/report"
+								className="flex items-center rounded-lg pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]"
+							>
+								<MdHomeRepairService className="h-4 w-4 md:h-5 md:w-5" />
+								<span>Ordens de Serviço</span>
+							</Link>
+						</div>
+					)}
+				</div>
 
 				<Link
 					href="/"

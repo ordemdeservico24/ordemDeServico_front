@@ -9,9 +9,11 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { getCookie } from "cookies-next";
 import { FinancialCategory } from "@/interfaces/financial.interface";
 import { Table, TableHeader, TableBody, TableRow, TableCell } from "@/components/ui/table";
+
 export default function CategoriesPage() {
   const [categories, setCategories] = useState<FinancialCategory[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [newCategory, setNewCategory] = useState({ name: '', description: '' });
   const router = useRouter();
   const token = getCookie('access_token');
 
@@ -40,6 +42,30 @@ export default function CategoriesPage() {
 
     fetchCategories();
   }, [token]);
+
+  const handleAddCategory = async () => {
+    try {
+      const response = await fetch("https://ordemdeservicosdev.onrender.com/api/finance/create-category", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(newCategory), 
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create category");
+      }
+
+      const createdCategory = await response.json();
+      setCategories((prevCategories) => [...prevCategories, createdCategory]); 
+      setNewCategory({ name: '', description: '' });
+    } catch (error) {
+      console.error("Error creating category:", error);
+      setError("Erro ao criar categoria.");
+    }
+  };
 
   if (error) {
     return (
@@ -74,37 +100,46 @@ export default function CategoriesPage() {
                           Adicione as informações para criar uma categoria!!
                         </DialogDescription>
                       </DialogHeader>
+                      <div className="grid gap-4">
+                        <input 
+                          type="text" 
+                          placeholder="Nome da Categoria" 
+                          value={newCategory.name} 
+                          onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })} 
+                          className="border rounded p-2"
+                        />
+                        <textarea 
+                          placeholder="Descrição" 
+                          value={newCategory.description} 
+                          onChange={(e) => setNewCategory({ ...newCategory, description: e.target.value })} 
+                          className="border rounded p-2"
+                        />
+                        <Button onClick={handleAddCategory} className="bg-blue-500 hover:bg-blue-600">Criar Categoria</Button>
+                      </div>
                     </DialogContent>
                   </Dialog>
                 </div>
               </CardHeader>
               <div className="overflow-x-auto">
-<Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableCell>Nome</TableCell>
-                    <TableCell>Descrição</TableCell>
-                    <TableCell>Data de Criação</TableCell>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {categories.map((category) => (
-                    <TableRow key={category.id}  style={{ cursor: 'pointer' }} onClick={() => router.push(`/financial/categories/${category.id}`)}>
-                    <TableCell>
-                      {category.name}
-                    </TableCell>
-                    <TableCell>
-                      {category.description || '-'}
-                    </TableCell>
-                    <TableCell>
-                      {new Date(category.createdAt).toLocaleDateString()}
-                    </TableCell>
-                  </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableCell>Nome</TableCell>
+                      <TableCell>Descrição</TableCell>
+                      <TableCell>Data de Criação</TableCell>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {categories.map((category) => (
+                      <TableRow key={category.id} style={{ cursor: 'pointer' }} onClick={() => router.push(`/financial/categories/${category.id}`)}>
+                        <TableCell>{category.name}</TableCell>
+                        <TableCell>{category.description || '-'}</TableCell>
+                        <TableCell>{new Date(category.createdAt).toLocaleDateString()}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               </div>
-              
             </Card>
           </TabsContent>
         </Tabs>

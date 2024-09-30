@@ -209,7 +209,7 @@ export default function CategoryDetailPage() {
                 <TableRow key={item.id}>
                   <TableCell>{item.name}</TableCell>
                   <TableCell>{item.description || '-'}</TableCell>
-                  <TableCell>R$ {item.amountSpent.toFixed(2)}</TableCell>
+                  <TableCell>R$ {item.amountSpent ? item.amountSpent.toFixed(2) : '0.00'}</TableCell>
                   <TableCell>
                     {item.itemPhoto ? (
                       <img src={item.itemPhoto} alt={item.name} className="max-w-xs" />

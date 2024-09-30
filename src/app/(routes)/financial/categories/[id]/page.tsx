@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Table, TableHeader, TableBody, TableRow, TableCell } from "@/components/ui/table";
 import AddItemForm from "@/components/AddItem";
 import { toast } from "react-toastify";
+import Image from "next/image";
 export default function CategoryDetailPage() {
   const [categoryItem, setCategoryItem] = useState<FinancialCategoryItem | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -60,26 +61,30 @@ export default function CategoryDetailPage() {
     fetchCategoryItem();
   }, [id, token]);
 
-  const handleAddItem = async (item: Partial<FinancialItem>) => {
-    const payload: Partial<FinancialItem> = {
-      name: item.name,
-      amountSpent: item.amountSpent,
-      isRecurrent: item.isRecurrent || false,
-      installments: item.isRecurrent ? item.installments : null,
-      dueDate: item.isRecurrent ? item.dueDate : null,
-    };
-  
+  const handleAddItem = async (item: Partial<FinancialItem>, itemPhoto: File | null) => {
+    const formData = new FormData();
+
+    formData.append("name", item.name || "");
+    formData.append("amountSpent", item.amountSpent?.toString() || "0");
+    formData.append("isRecurrent", item.isRecurrent ? "true" : "false");
+    if (item.isRecurrent) {
+      formData.append("installments", item.installments?.toString() || "");
+      formData.append("dueDate", item.dueDate || "");
+    }
+    if (itemPhoto) {
+      formData.append("itemPhoto", itemPhoto);
+    }
+
     setIsLoading(true);
     setError(null);
-  
+
     toast.promise(
       fetch(`https://ordemdeservicosdev.onrender.com/api/finance/create-item/${id}`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(payload),
+        body: formData,
       })
         .then((response) => {
           if (!response.ok) {
@@ -103,7 +108,7 @@ export default function CategoryDetailPage() {
         error: "Erro ao adicionar item.",
       }
     );
-  
+
     setIsLoading(false);
   };
 
@@ -185,13 +190,13 @@ export default function CategoryDetailPage() {
               </DialogDescription>
             </DialogHeader>
             
-            <AddItemForm onAdd={handleAddItem} isLoading={isLoading} />
-          </DialogContent>
+                  <AddItemForm onAdd={handleAddItem} isLoading={isLoading} />
+                </DialogContent>
                 </Dialog>
             </div>
           </CardHeader>
           <div className="overflow-x-auto">
-<Table>
+          <Table>
             <TableHeader>
               <TableRow>
                 <TableCell>Nome</TableCell>
@@ -212,8 +217,28 @@ export default function CategoryDetailPage() {
                   <TableCell>R$ {item.amountSpent ? item.amountSpent.toFixed(2) : '0.00'}</TableCell>
                   <TableCell>
                     {item.itemPhoto ? (
-                      <img src={item.itemPhoto} alt={item.name} className="max-w-xs" />
-                    ) : "Sem foto"}
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <p className="cursor-pointer underline">Ver foto</p>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[350px]">
+                          <DialogHeader>
+                            <DialogTitle>Foto do Item: {item.name}</DialogTitle>
+                          </DialogHeader>
+                          <div className="flex justify-center">
+                            <Image
+                              src={item.itemPhoto}
+                              alt={item.name}
+                              width={300} 
+                              height={300}
+                              className="max-w-full h-auto"
+                            />
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                    ) : (
+                      "Sem foto"
+                    )}
                   </TableCell>
                   <TableCell>{new Date(item.createdAt).toLocaleDateString()}</TableCell>
                   <TableCell>{item.isRecurrent ? "Sim" : "Não"}</TableCell>

@@ -107,9 +107,14 @@ export default function Home() {
 							</CardHeader>
 							<CardContent>
 								<ul className="list-disc pl-5 space-y-2">
-									<li>Você pode personalizar sua visualização do painel nas configurações do usuário.</li>
-									<li>Use a tecla Tab para navegar rapidamente entre os campos de formulários.</li>
-									<li>Ctrl + / (ou Cmd + / no Mac) abre uma lista de atalhos de teclado disponíveis.</li>
+									<li>
+										Membros de equipe só podem ver a sua própria equipe, diferente dos líderes e gestores que podem ver outras.
+									</li>
+									<li>Todos os usuários são atrelados a um distrito, e no caso será ao distrito em que ele fez o cadastro.</li>
+									<li>
+										O sistema é dividido em cargos, e cada cargo possui permissões específicas, onde posteriormente pode ser
+										atribuído a um usuário.
+									</li>
 								</ul>
 							</CardContent>
 						</Card>

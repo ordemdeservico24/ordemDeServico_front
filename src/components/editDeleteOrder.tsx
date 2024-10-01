@@ -140,7 +140,13 @@ export const EditDeleteOrder: React.FC<OrderID> = ({ orderId, subjects, orderSta
 				}),
 			{
 				pending: "Editando ordem",
-				success: "Ordem editada com sucesso",
+				success: {
+					render: "Ordem editada com sucesso",
+					onClose: () => {
+						window.location.reload();
+					},
+					autoClose: 1500,
+				},
 				error: "Ocorreu um erro",
 			}
 		);

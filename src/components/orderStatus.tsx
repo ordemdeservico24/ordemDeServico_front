@@ -38,7 +38,13 @@ export const OrderStatus: React.FC<OrderStatusProps> = ({ currentStatus, orderId
 				}),
 			{
 				pending: "Atualizando status",
-				success: "Status atualizado com sucesso",
+				success: {
+					render: "Status atualizado com sucesso",
+					onClose: () => {
+						window.location.reload();
+					},
+					autoClose: 1500,
+				},
 				error: "Ocorreu um erro",
 			}
 		);

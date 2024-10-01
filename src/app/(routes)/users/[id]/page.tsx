@@ -96,7 +96,7 @@ export default function UserPage({ params }: { params: { id: string } }) {
 					onClose: () => {
 						window.location.reload();
 					},
-					autoClose: 2000,
+					autoClose: 1500,
 				},
 				error: "Ocorreu um erro ao atribuir cargo",
 			}
@@ -142,7 +142,7 @@ export default function UserPage({ params }: { params: { id: string } }) {
 					onClose: () => {
 						window.location.reload();
 					},
-					autoClose: 2000,
+					autoClose: 1500,
 				},
 				error: "Ocorreu um erro ao adicionar salário",
 			}

@@ -43,7 +43,7 @@ const MenuHome = () => {
 	const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 	const [company, setCompany] = useState<ICompany>();
 	const [error, setError] = useState<string | null>(null);
-	const { role = [], logout } = useStore();
+	const { role = [], logout, teamId } = useStore();
 	const token = getCookie("access_token");
 
 	const toggleDropdown = (dropdown: string) => {
@@ -88,7 +88,7 @@ const MenuHome = () => {
 						<Link href="/home">
 							<Button variant="link" className="flex items-center pl-1 gap-2 py-2">
 								<FaHome className="h-5 w-5" />
-								<span>Dashboard</span>
+								<span>Início</span>
 							</Button>
 						</Link>
 
@@ -236,12 +236,16 @@ const MenuHome = () => {
 
 								{openDropdown === "equipe" && (
 									<div className="flex flex-col ml-2">
-										<Link href="#">
-											<Button variant="link" className="flex items-center gap-2 py-2">
-												<FaUsers className="h-5 w-5" />
-												<span>Minha Equipe</span>
-											</Button>
-										</Link>
+										{teamId ? (
+											<Link href={`/teams/${teamId}`}>
+												<Button variant="link" className="flex items-center gap-2 py-2">
+													<FaUsers className="h-5 w-5" />
+													<span>Minha Equipe</span>
+												</Button>
+											</Link>
+										) : (
+											""
+										)}
 										<Link href="/teams">
 											<Button variant="link" className="flex items-center gap-2 py-2">
 												<FaThLarge className="h-5 w-5" />

@@ -35,13 +35,14 @@ export default function Page() {
 	const setToken = useStore((state) => state.setToken);
 	const setName = useStore((state) => state.setName);
 	const setUserId = useStore((state) => state.setUserId);
+	const setTeamId = useStore((state) => state.setTeamId);
 	const setRole = useStore((state) => state.setRole);
 	const onSubmit = async (data: any) => {
 		try {
 			const response = await axios.post("https://ordemdeservicosdev.onrender.com/api/user/login", data);
 			console.log("Login successful:", response.data);
 
-			const { token, userName, role, userId } = response.data;
+			const { token, userName, role, userId, teamId } = response.data;
 
 			if (token) {
 				setToken(token);
@@ -51,6 +52,9 @@ export default function Page() {
 			}
 			if (userId) {
 				setUserId(userId);
+			}
+			if (teamId) {
+				setTeamId(teamId);
 			}
 			if (role) {
 				setRole(role);

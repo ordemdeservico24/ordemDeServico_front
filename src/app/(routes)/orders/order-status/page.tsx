@@ -89,7 +89,7 @@ export default function Page() {
 					onClose: () => {
 						window.location.reload();
 					},
-					autoClose: 2000,
+					autoClose: 1500,
 				},
 				error: "Ocorreu um erro",
 			}

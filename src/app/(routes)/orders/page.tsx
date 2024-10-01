@@ -4,7 +4,7 @@ import { EditDeleteOrder } from "@/components/editDeleteOrder";
 import { OrderStatus } from "@/components/orderStatus";
 import { IOrderGet, IOrderStatus } from "@/interfaces/order.interface";
 import Link from "next/link";
-import React, { useEffect, FormEvent, useState } from "react";
+import React, { useEffect, FormEvent, useState, useCallback } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -19,6 +19,9 @@ import { z } from "zod";
 import { useStore } from "@/zustandStore";
 import { hasPermission } from "@/utils/hasPermissions";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuCheckboxItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Filter } from "lucide-react";
+import { DropdownMenuRadioGroup, DropdownMenuRadioItem } from "@radix-ui/react-dropdown-menu";
 
 export default function Page() {
 	const orderSchema = z.object({
@@ -39,6 +42,7 @@ export default function Page() {
 	const [subjects, setSubjects] = useState<ISubject[]>();
 	const [orderStatus, setOrderStatus] = useState<IOrderStatus[]>();
 	const [selectedStatus, setSelectedStatus] = useState<string>("");
+	const [selectedFilter, setSelectedFilter] = useState<string | undefined>(undefined);
 	const [error, setError] = useState<string | null>(null);
 	const token = getCookie("access_token");
 	const { role = [] } = useStore();
@@ -87,20 +91,29 @@ export default function Page() {
 		}
 		return notes;
 	};
+
+	const handleFilterChange = useCallback((status: string) => {
+		setSelectedFilter((prevStatus) => (prevStatus === status ? undefined : status));
+	}, []);
+
 	const fetchOrders = async () => {
 		try {
 			setIsLoading(true);
 			setError(null);
 			const limit = 9;
 			const offset = limit * (currentPage - 1);
+			const filterParam = selectedFilter ? `&status=${selectedFilter}` : "";
 
-			const response = await fetch(`https://ordemdeservicosdev.onrender.com/api/order/get-all-orders?limit=${limit}&offset=${offset}`, {
-				method: "GET",
-				headers: {
-					"Content-type": "application/json",
-					Authorization: `Bearer ${token}`,
-				},
-			});
+			const response = await fetch(
+				`https://ordemdeservicosdev.onrender.com/api/order/get-all-orders?limit=${limit}&offset=${offset}${filterParam}`,
+				{
+					method: "GET",
+					headers: {
+						"Content-type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
 
 			if (!response.ok) {
 				throw new Error(`HTTP error! status: ${response.status}`);
@@ -183,7 +196,7 @@ export default function Page() {
 					onClose: () => {
 						window.location.reload();
 					},
-					autoClose: 2000,
+					autoClose: 1500,
 				},
 				error: "Ocorreu um erro",
 			}
@@ -196,7 +209,7 @@ export default function Page() {
 
 	useEffect(() => {
 		fetchOrders();
-	}, [currentPage, token]);
+	}, [currentPage, token, selectedFilter]);
 
 	return (
 		<Container>
@@ -269,6 +282,27 @@ export default function Page() {
 											</DialogContent>
 										</Dialog>
 									)}
+									<DropdownMenu>
+										<DropdownMenuTrigger asChild>
+											<Button variant="outline">
+												<Filter className="mr-2 h-4 w-4" />
+												Filtrar
+											</Button>
+										</DropdownMenuTrigger>
+										<DropdownMenuContent>
+											<DropdownMenuRadioGroup value={selectedFilter || ""} onValueChange={handleFilterChange}>
+												{orderStatus?.map((status) => (
+													<DropdownMenuRadioItem
+														key={status.id}
+														value={status.id}
+														className="outline-none px-6 py-1 focus:bg-accent hover:cursor-pointer"
+													>
+														{status.orderStatusName}
+													</DropdownMenuRadioItem>
+												))}
+											</DropdownMenuRadioGroup>
+										</DropdownMenuContent>
+									</DropdownMenu>
 								</div>
 							</div>
 						</div>

@@ -12,6 +12,7 @@ export interface Role {
 interface User {
 	name: string;
 	userId?: string;
+	teamId?: string;
 	profilePicture: string;
 	token: string;
 	role: Role[];
@@ -21,11 +22,13 @@ interface StoreState {
 	token: string;
 	name: string;
 	userId?: string;
+	teamId?: string;
 	profilePicture: string;
 	role: Role[];
 	setToken: (token: string) => void;
 	setName: (name: string) => void;
 	setUserId: (userId: string) => void;
+	setTeamId: (teamId: string) => void;
 	setProfilePicture: (profilePicture: string) => void;
 	setRole: (role: Role[]) => void;
 	setUser: (user: User) => void;
@@ -39,6 +42,7 @@ export const useStore = create<StoreState>()(
 			token: "",
 			name: "",
 			userId: "",
+			teamId: "",
 			profilePicture: "",
 			role: [],
 
@@ -55,6 +59,11 @@ export const useStore = create<StoreState>()(
 			setUserId: (userId) => {
 				set({ userId });
 				localStorage.setItem("userId", userId);
+			},
+
+			setTeamId: (teamId) => {
+				set({ teamId });
+				localStorage.setItem("teamId", teamId);
 			},
 
 			setProfilePicture: (profilePicture) => {
@@ -109,6 +118,7 @@ export const useStore = create<StoreState>()(
 			partialize: (state) => ({
 				name: state.name,
 				userId: state.userId,
+				teamId: state.teamId,
 				profilePicture: state.profilePicture,
 				role: state.role,
 			}),

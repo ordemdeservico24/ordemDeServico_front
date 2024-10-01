@@ -44,7 +44,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 	const [company, setCompany] = useState<ICompany>();
 	const [error, setError] = useState<string | null>(null);
 	const token = getCookie("access_token");
-	const { role, logout } = useStore();
+	const { role, logout, teamId } = useStore();
 
 	useEffect(() => {
 		fetch("https://ordemdeservicosdev.onrender.com/api/company/get-company", {
@@ -93,7 +93,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 			<div className="flex flex-col mt-6">
 				<Link href="/home" className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]">
 					<FaHome className="h-4 w-4 md:h-5 md:w-5" />
-					<span>Dashboard</span>
+					<span>Início</span>
 				</Link>
 
 				{hasPermission(role, "admin_management") && (
@@ -234,10 +234,17 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 
 						{openDropdown === "equipe" && (
 							<div className="flex flex-col ml-4">
-								<Link href="#" className="flex items-center rounded-lg pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]">
-									<FaUsers className="h-4 w-4 md:h-5 md:w-5" />
-									<span>Minha Equipe</span>
-								</Link>
+								{teamId ? (
+									<Link
+										href={`/teams/${teamId}`}
+										className="flex items-center rounded-lg pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]"
+									>
+										<FaUsers className="h-4 w-4 md:h-5 md:w-5" />
+										<span>Minha Equipe</span>
+									</Link>
+								) : (
+									""
+								)}
 								<Link
 									href="/teams"
 									className="flex items-center rounded-lg pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]"

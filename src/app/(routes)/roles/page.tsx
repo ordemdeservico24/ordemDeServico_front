@@ -106,7 +106,7 @@ export default function Page() {
 					onClose: () => {
 						window.location.reload();
 					},
-					autoClose: 2000,
+					autoClose: 1500,
 				},
 				error: "Ocorreu um erro ao criar cargo",
 			}
@@ -165,7 +165,7 @@ export default function Page() {
 					onClose: () => {
 						window.location.reload();
 					},
-					autoClose: 2000,
+					autoClose: 1500,
 				},
 				error: "Ocorreu um erro ao deletar o cargo",
 			}

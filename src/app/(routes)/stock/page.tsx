@@ -88,16 +88,33 @@ export default function StoragePage() {
 			return e.currentTarget.querySelector(`[name="${name}"]`) as HTMLInputElement;
 		};
 
+		const totalMeasurementInput = getInput("totalMeasurement");
+		const totalMeasurementValue = totalMeasurementInput ? +totalMeasurementInput.value : undefined || 0;
+
 		const formData: {
 			productName: string;
 			quantity: number;
-			totalMeasurement?: string | number;
+			totalMeasurement?: number;
 			productValue: number;
 		} = {
 			productName: getInput("productName").value || "",
 			quantity: +getInput("quantity").value || 0,
 			productValue: +getInput("productValue").value || 0,
+			totalMeasurement: totalMeasurementValue > 0 ? totalMeasurementValue : undefined,
 		};
+
+		const body: any = {
+			productName: formData.productName,
+			unitOfMeasurement: selectedUnitMeasurement,
+			quantity: formData.quantity,
+			productValue: formData.productValue,
+			supplierId: selectedSupplier,
+		};
+
+		// Só adiciona totalMeasurement se ele não for undefined
+		if (formData.totalMeasurement !== undefined) {
+			body.totalMeasurement = formData.totalMeasurement;
+		}
 
 		const validation = stockItemSchema.safeParse(formData);
 
@@ -113,14 +130,7 @@ export default function StoragePage() {
 					"Content-type": "application/json",
 					Authorization: `Bearer ${token}`,
 				},
-				body: JSON.stringify({
-					productName: formData.productName,
-					unitOfMeasurement: selectedUnitMeasurement,
-					quantity: formData.quantity,
-					productValue: formData.productValue,
-					supplierId: selectedSupplier,
-					totalMeasurement: formData.totalMeasurement,
-				}),
+				body: JSON.stringify(body),
 			})
 				.then((res) => {
 					if (res.ok) {
@@ -140,7 +150,7 @@ export default function StoragePage() {
 					onClose: () => {
 						window.location.reload();
 					},
-					autoClose: 2000,
+					autoClose: 1500,
 				},
 				error: "Ocorreu um erro ao criar item",
 			}
@@ -194,7 +204,7 @@ export default function StoragePage() {
 					onClose: () => {
 						window.location.reload();
 					},
-					autoClose: 2000,
+					autoClose: 1500,
 				},
 				error: "Ocorreu um erro ao criar fornecedor",
 			}

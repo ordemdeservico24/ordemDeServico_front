@@ -2,35 +2,16 @@
 import { Container } from "@/components/container";
 import React, { FormEvent, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "react-toastify";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
-import {
-	Card,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getCookie } from "cookies-next";
 import { z } from "zod";
 import { IUser } from "@/interfaces/user.interface";
 import { ITeam, ITeamMember } from "@/interfaces/team.interfaces";
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useStore } from "@/zustandStore";
 import { hasPermission } from "@/utils/hasPermissions";
 import { FiTrash } from "react-icons/fi";
@@ -56,9 +37,7 @@ export default function Page() {
 		e.preventDefault();
 
 		const getInput = (name: string): HTMLSelectElement => {
-			return e.currentTarget.querySelector(
-				`[name="${name}"]`
-			) as HTMLSelectElement;
+			return e.currentTarget.querySelector(`[name="${name}"]`) as HTMLSelectElement;
 		};
 
 		const request = {
@@ -77,17 +56,14 @@ export default function Page() {
 		}
 
 		toast.promise(
-			fetch(
-				"https://ordemdeservicosdev.onrender.com/api/team/create-member",
-				{
-					method: "POST",
-					headers: {
-						"Content-type": "application/json",
-						Authorization: `Bearer ${token}`,
-					},
-					body: JSON.stringify(request),
-				}
-			)
+			fetch("https://ordemdeservicosdev.onrender.com/api/team/create-member", {
+				method: "POST",
+				headers: {
+					"Content-type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify(request),
+			})
 				.then((res) => {
 					if (res.ok) {
 						return res.json();
@@ -101,7 +77,13 @@ export default function Page() {
 				}),
 			{
 				pending: "Criando membro de equipe",
-				success: "Membro de equipe criado com sucesso!",
+				success: {
+					render: "Membro de equipe criado com sucesso!",
+					onClose: () => {
+						window.location.reload();
+					},
+					autoClose: 1500,
+				},
 				error: "Ocorreu um erro ao criar membro de equipe",
 			}
 		);
@@ -109,16 +91,13 @@ export default function Page() {
 
 	useEffect(() => {
 		if (hasPermission(role, ["teams_management", "teamleader", "teammember"], "read")) {
-			fetch(
-				"https://ordemdeservicosdev.onrender.com/api/team/get-all-members",
-				{
-					method: "GET",
-					headers: {
-						"Content-type": "application/json",
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			)
+			fetch("https://ordemdeservicosdev.onrender.com/api/team/get-all-members", {
+				method: "GET",
+				headers: {
+					"Content-type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+			})
 				.then((res) => res.json())
 				.then((data) => {
 					console.log(data);
@@ -128,16 +107,13 @@ export default function Page() {
 	}, [token]);
 
 	useEffect(() => {
-		fetch(
-			"https://ordemdeservicosdev.onrender.com/api/team/get-all-teams",
-			{
-				method: "GET",
-				headers: {
-					"Content-type": "application/json",
-					Authorization: `Bearer ${token}`,
-				},
-			}
-		)
+		fetch("https://ordemdeservicosdev.onrender.com/api/team/get-all-teams", {
+			method: "GET",
+			headers: {
+				"Content-type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+		})
 			.then((res) => res.json())
 			.then((data) => {
 				setTeams(data);
@@ -145,19 +121,17 @@ export default function Page() {
 	}, [token]);
 
 	useEffect(() => {
-		fetch(
-			"https://ordemdeservicosdev.onrender.com/api/user/get-all-users",
-			{
-				method: "GET",
-				headers: {
-					"Content-type": "application/json",
-					Authorization: `Bearer ${token}`,
-				},
-			}
-		)
+		// isso vai bugar lá na frente
+		fetch(`https://ordemdeservicosdev.onrender.com/api/user/get-all-users?limit=${100}`, {
+			method: "GET",
+			headers: {
+				"Content-type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+		})
 			.then((res) => res.json())
 			.then((data) => {
-				setUsers(data);
+				setUsers(data.users);
 			})
 			.catch((error) => {
 				console.error("Fetch error:", error);
@@ -165,32 +139,25 @@ export default function Page() {
 			});
 	}, [token]);
 
-	const filteredUsers = Array.isArray(users)
-		? users.filter((user) => !user.isTeamMember && !user.isTeamLeader)
-		: [];
+	const filteredUsers = Array.isArray(users) ? users.filter((user) => !user.isTeamMember && !user.isTeamLeader) : [];
 
 	const handleDeleteMember = (id: string) => {
 		if (!hasPermission(role, ["teams_management", "teamleader"], "delete")) {
 			toast.error("Você não tem permissão para excluir membros de equipe.");
 			return;
 		}
-	
+
 		toast.promise(
-			fetch(
-				`https://ordemdeservicosdev.onrender.com/api/team/delete-member/${id}`,
-				{
-					method: "DELETE",
-					headers: {
-						"Content-type": "application/json",
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			)
+			fetch(`https://ordemdeservicosdev.onrender.com/api/team/delete-member/${id}`, {
+				method: "DELETE",
+				headers: {
+					"Content-type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+			})
 				.then((res) => {
 					if (res.ok) {
-						setMembers((prevMembers) =>
-							prevMembers.filter((member) => member.id !== id)
-						);
+						setMembers((prevMembers) => prevMembers.filter((member) => member.id !== id));
 						return res.json();
 					} else {
 						throw new Error("Erro ao excluir o membro");
@@ -201,7 +168,13 @@ export default function Page() {
 				}),
 			{
 				pending: "Excluindo membro da equipe...",
-				success: "Membro da equipe excluído com sucesso!",
+				success: {
+					render: "Membro da equipe excluído com sucesso!",
+					onClose: () => {
+						window.location.reload();
+					},
+					autoClose: 1500,
+				},
 				error: "Ocorreu um erro ao excluir o membro da equipe.",
 			}
 		);
@@ -215,33 +188,20 @@ export default function Page() {
 						<TabsContent value="all">
 							<Card x-chunk="dashboard-06-chunk-0">
 								<CardHeader>
-									<CardTitle className="text-[#3b82f6] text-2xl font-bold">
-										Membros
-									</CardTitle>
-									<CardDescription>
-										Cheque todas as informações relacionadas aos
-										membros apresentados.
-									</CardDescription>
+									<CardTitle className="text-[#3b82f6] text-2xl font-bold">Membros</CardTitle>
+									<CardDescription>Cheque todas as informações relacionadas aos membros apresentados.</CardDescription>
 									<div className="flex gap-3 items-center justify-between">
-										{hasPermission(role, ['teams_management', 'teamleader'], 'create') && (
+										{hasPermission(role, ["teams_management", "teamleader"], "create") && (
 											<Dialog>
 												<DialogTrigger asChild>
-													<Button
-														variant="default"
-														className="bg-blue-500 hover:bg-blue-600"
-													>
+													<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
 														Criar
 													</Button>
 												</DialogTrigger>
 												<DialogContent className="sm:max-w-[425px]">
 													<DialogHeader>
-														<DialogTitle>
-															Adicionar membro
-														</DialogTitle>
-														<DialogDescription>
-															Selecione o usuário e a
-															equipe para criar um membro.
-														</DialogDescription>
+														<DialogTitle>Adicionar membro</DialogTitle>
+														<DialogDescription>Selecione o usuário e a equipe para criar um membro.</DialogDescription>
 													</DialogHeader>
 													<form
 														action="#"
@@ -253,43 +213,23 @@ export default function Page() {
 																name="id"
 																className="outline-none border focus:border-[#2a2a2a] rounded px-2 py-1 w-full"
 															>
-																<option value="">
-																	Selecione um usuário
-																</option>
-																{filteredUsers.map(
-																	(user, index) => (
-																		<option
-																			value={
-																				user.id
-																			}
-																			key={index}
-																		>
-																			{user.name}
-																		</option>
-																	)
-																)}
+																<option value="">Selecione um usuário</option>
+																{filteredUsers.map((user, index) => (
+																	<option value={user.id} key={index}>
+																		{user.name}
+																	</option>
+																))}
 															</select>
 															<select
 																name="teamId"
 																className="outline-none border focus:border-[#2a2a2a] rounded px-2 py-1 w-full"
 															>
-																<option value="">
-																	Selecione uma equipe
-																</option>
-																{teams.map(
-																	(team, index) => (
-																		<option
-																			value={
-																				team.id
-																			}
-																			key={index}
-																		>
-																			{
-																				team.teamName
-																			}
-																		</option>
-																	)
-																)}
+																<option value="">Selecione uma equipe</option>
+																{teams.map((team, index) => (
+																	<option value={team.id} key={index}>
+																		{team.teamName}
+																	</option>
+																))}
 															</select>
 															<Button
 																className="text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
@@ -308,38 +248,19 @@ export default function Page() {
 									<Table className="w-full bg-white shadow-md rounded-lg overflow-x-auto">
 										<TableHeader>
 											<TableRow>
-												<TableHead className="font-bold">
-													Nome
-												</TableHead>
-												<TableHead className="font-bold">
-													E-mail
-												</TableHead>
-												<TableHead className="font-bold">
-													Telefone
-												</TableHead>
-												<TableHead className="font-bold">
-													Profissão
-												</TableHead>
+												<TableHead className="font-bold">Nome</TableHead>
+												<TableHead className="font-bold">E-mail</TableHead>
+												<TableHead className="font-bold">Telefone</TableHead>
+												<TableHead className="font-bold">Profissão</TableHead>
 											</TableRow>
 										</TableHeader>
 										<TableBody>
 											{members.map((member, index) => (
-												<TableRow
-													key={index}
-													className="hover:bg-gray-100 cursor-pointer"
-												>
-													<TableCell>
-														{member.user.name}
-													</TableCell>
-													<TableCell>
-														{member.user.email}
-													</TableCell>
-													<TableCell>
-														{member.user.phone}
-													</TableCell>
-													<TableCell>
-														{member.user.role.roleName}
-													</TableCell>
+												<TableRow key={index} className="hover:bg-gray-100 cursor-pointer">
+													<TableCell>{member.user.name}</TableCell>
+													<TableCell>{member.user.email}</TableCell>
+													<TableCell>{member.user.phone}</TableCell>
+													<TableCell>{member.user.role.roleName}</TableCell>
 													{hasPermission(role, "teams_management", "delete") && (
 														<TableCell>
 															<Dialog>
@@ -352,18 +273,15 @@ export default function Page() {
 																	<DialogHeader>
 																		<DialogTitle>Excluir Líder</DialogTitle>
 																		<DialogDescription>
-																			Tem certeza que deseja excluir o líder <b>{member.user.name}</b>?
-																			Esta ação não poderá ser desfeita.
+																			Tem certeza que deseja excluir o líder <b>{member.user.name}</b>? Esta
+																			ação não poderá ser desfeita.
 																		</DialogDescription>
 																	</DialogHeader>
 																	<div className="flex justify-end space-x-4">
 																		<Button variant="outline" onClick={() => console.log("Cancelado")}>
 																			Cancelar
 																		</Button>
-																		<Button
-																			variant="destructive"
-																			onClick={() => handleDeleteMember(member.id)}
-																		>
+																		<Button variant="destructive" onClick={() => handleDeleteMember(member.id)}>
 																			Confirmar Exclusão
 																		</Button>
 																	</div>

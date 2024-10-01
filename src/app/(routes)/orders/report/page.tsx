@@ -53,48 +53,45 @@ export default function Page() {
 		<Container>
 			<main className="flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">
 				<div className="max-w-7xl mx-auto space-y-6">
-					<h1 className="text-3xl font-bold">Relatório de Ordens de Serviço</h1>
+					<h1 className="text-2xl font-bold">Relatório de Ordens de Serviço</h1>
 
 					<div className="flex w-full flex-col lg:flex-row gap-6">
-						{/* Orders Created Statistics */}
-						<Card className="w-full">
+						<Card className="w-full flex flex-col justify-between">
 							<CardHeader>
-								<CardTitle className="flex items-center gap-2">
-									<Calendar className="h-5 w-5" />
+								<CardTitle className="flex gap-2 text-base md:text-xl">
+									<Calendar className="h-6 w-6" />
 									{orderData[0].label}
 								</CardTitle>
 							</CardHeader>
 							<CardContent>
-								<p className="text-4xl font-bold">{orderData[0].data.number}</p>
+								<p className="text-3xl font-bold">{orderData[0].data.number}</p>
 							</CardContent>
 						</Card>
 
 						<Card className="w-full">
 							<CardHeader>
-								<CardTitle className="flex items-center gap-2">
-									<Clock className="h-5 w-5" />
+								<CardTitle className="flex gap-2 text-base md:text-xl">
+									<Clock className="h-8 w-8" />
 									{orderData[1].label}
 								</CardTitle>
 							</CardHeader>
 							<CardContent>
-								<p className="text-4xl font-bold">{orderData[1].data.number}</p>
+								<p className="text-3xl font-bold">{orderData[1].data.number}</p>
 							</CardContent>
 						</Card>
 
 						<Card className="w-full">
 							<CardHeader>
-								<CardTitle className="flex items-center gap-2">
-									<BarChart3 className="h-5 w-5" />
+								<CardTitle className="flex gap-2 text-base md:text-xl">
+									<BarChart3 className="h-8 w-8" />
 									{orderData[2].label}
 								</CardTitle>
 							</CardHeader>
 							<CardContent>
-								<p className="text-4xl font-bold">{orderData[2].data.number}</p>
+								<p className="text-3xl font-bold">{orderData[2].data.number}</p>
 							</CardContent>
 						</Card>
 					</div>
-
-					{/* Orders by Status */}
 					<Card>
 						<CardHeader>
 							<CardTitle>Ordens por Status</CardTitle>
@@ -103,8 +100,8 @@ export default function Page() {
 							<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 								<Card>
 									<CardHeader>
-										<CardTitle className="flex items-center gap-2 text-base">
-											<AlertCircle className="h-5 w-5 text-red-500" />
+										<CardTitle className="flex gap-2 text-base">
+											<AlertCircle className="h-7 w-7 text-red-500" />
 											{orderData[3].label}
 										</CardTitle>
 									</CardHeader>
@@ -115,8 +112,8 @@ export default function Page() {
 
 								<Card>
 									<CardHeader>
-										<CardTitle className="flex items-center gap-2 text-base">
-											<Loader2 className="h-5 w-5 text-blue-500" />
+										<CardTitle className="flex gap-2 text-base">
+											<Loader2 className="h-7 w-7 text-blue-500" />
 											{orderData[4].label}
 										</CardTitle>
 									</CardHeader>
@@ -127,8 +124,8 @@ export default function Page() {
 
 								<Card>
 									<CardHeader>
-										<CardTitle className="flex items-center gap-2 text-base">
-											<AlertCircle className="h-5 w-5 text-yellow-500" />
+										<CardTitle className="flex gap-2 text-base">
+											<AlertCircle className="h-7 w-7 text-yellow-500" />
 											{orderData[5].label}
 										</CardTitle>
 									</CardHeader>
@@ -139,8 +136,8 @@ export default function Page() {
 
 								<Card>
 									<CardHeader>
-										<CardTitle className="flex items-center gap-2 text-base">
-											<CheckCircle className="h-5 w-5 text-green-500" />
+										<CardTitle className="flex gap-2 text-base">
+											<CheckCircle className="h-7 w-7 text-green-500" />
 											{orderData[6].label}
 										</CardTitle>
 									</CardHeader>
@@ -151,8 +148,6 @@ export default function Page() {
 							</div>
 						</CardContent>
 					</Card>
-
-					{/* Orders Distribution Chart */}
 					<Card>
 						<CardHeader>
 							<CardTitle>Distribuição de Ordens</CardTitle>

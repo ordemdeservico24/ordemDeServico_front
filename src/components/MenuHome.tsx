@@ -37,6 +37,7 @@ import { useStore } from "../zustandStore";
 import { hasPermission } from "@/utils/hasPermissions";
 import { getCookie } from "cookies-next";
 import { ICompany } from "@/interfaces/company.interface";
+import { ChartColumnIncreasingIcon } from "lucide-react";
 
 const MenuHome = () => {
 	const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -313,12 +314,22 @@ const MenuHome = () => {
 
 							{openDropdown === "relatorios" && (
 								<div className="flex flex-col ml-1">
-									<Link href="/orders/report">
-										<Button variant="link" className="flex items-center gap-2 py-2">
-											<MdHomeRepairService className="h-5 w-5" />
-											<span>Ordens de Serviço</span>
-										</Button>
-									</Link>
+									{hasPermission(role, "orders_management") && (
+										<Link href="/orders/report">
+											<Button variant="link" className="flex items-center gap-2 py-2">
+												<MdHomeRepairService className="h-5 w-5" />
+												<span>Ordens de Serviço</span>
+											</Button>
+										</Link>
+									)}
+									{hasPermission(role, "admin_management") && (
+										<Link href="/financial/report">
+											<Button variant="link" className="flex items-center gap-2 py-2">
+												<ChartColumnIncreasingIcon className="h-5 w-5" />
+												<span>Financeiro</span>
+											</Button>
+										</Link>
+									)}
 								</div>
 							)}
 						</div>

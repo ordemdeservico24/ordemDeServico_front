@@ -27,7 +27,6 @@ import {
 	FaClipboardList,
 } from "react-icons/fa";
 import { MdHomeRepairService } from "react-icons/md";
-import { RiTeamLine } from "react-icons/ri";
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -38,7 +37,6 @@ import { useStore } from "../zustandStore";
 import { hasPermission } from "@/utils/hasPermissions";
 import { getCookie } from "cookies-next";
 import { ICompany } from "@/interfaces/company.interface";
-import { ChartColumnIncreasingIcon } from "lucide-react";
 
 const MenuHome = () => {
 	const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -284,60 +282,46 @@ const MenuHome = () => {
 							</Button>
 							{openDropdown === "usuarios" && (
 								<div className="flex flex-col ml-1">
-									<Link
-										href="/users"
-										className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]"
-									>
-										<FaUsers className="h-4 w-4 md:h-5 md:w-5" />
-										<span>Ver todos</span>
+									<Link href="/users">
+										<Button variant="link" className="flex items-center gap-2 py-2">
+											<FaUsers className="h-4 w-4 md:h-5 md:w-5" />
+											<span>Ver todos</span>
+										</Button>
 									</Link>
-									<Link
-										href="/roles"
-										className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]"
-									>
-										<FaClipboardList className="h-4 w-4 md:h-5 md:w-5" />
-										<span>Cargos</span>
+									<Link href="/roles">
+										<Button variant="link" className="flex items-center gap-2 py-2">
+											<FaClipboardList className="h-4 w-4 md:h-5 md:w-5" />
+											<span>Cargos</span>
+										</Button>
 									</Link>
 								</div>
 							)}
 						</div>
 
-						{hasPermission(role, ["orders_management", "admin_management"]) && (
-							<div>
-								<Button
-									onClick={() => toggleDropdown("relatorios")}
-									className="flex w-full justify-between items-center pl-1 gap-2 py-2 text-[#000] transition-all"
-									variant="link"
-								>
-									<div className="flex items-center gap-2">
-										<FaClipboardList className="h-5 w-5" />
-										<span>Relatórios</span>
-									</div>
-									{openDropdown === "relatorios" ? <FaChevronUp className="h-5 w-5" /> : <FaChevronDown className="h-5 w-5" />}
-								</Button>
+						<div>
+							<Button
+								onClick={() => toggleDropdown("relatorios")}
+								className="flex w-full justify-between items-center pl-1 gap-2 py-2 text-[#000] transition-all"
+								variant="link"
+							>
+								<div className="flex items-center gap-2">
+									<FaClipboardList className="h-5 w-5" />
+									<span>Relatórios</span>
+								</div>
+								{openDropdown === "relatorios" ? <FaChevronUp className="h-5 w-5" /> : <FaChevronDown className="h-5 w-5" />}
+							</Button>
 
-								{openDropdown === "relatorios" && (
-									<div className="flex flex-col ml-1">
-										{hasPermission(role, "orders_management") && (
-											<Link href="/orders/report">
-												<Button variant="link" className="flex items-center gap-2 py-2">
-													<MdHomeRepairService className="h-5 w-5" />
-													<span>Ordens de Serviço</span>
-												</Button>
-											</Link>
-										)}
-										{hasPermission(role, "admin_management") && (
-											<Link href="/financial/report">
-												<Button variant="link" className="flex items-center gap-2 py-2">
-													<ChartColumnIncreasingIcon className="h-5 w-5" />
-													<span>Financeiro</span>
-												</Button>
-											</Link>
-										)}
-									</div>
-								)}
-							</div>
-						)}
+							{openDropdown === "relatorios" && (
+								<div className="flex flex-col ml-1">
+									<Link href="/orders/report">
+										<Button variant="link" className="flex items-center gap-2 py-2">
+											<MdHomeRepairService className="h-5 w-5" />
+											<span>Ordens de Serviço</span>
+										</Button>
+									</Link>
+								</div>
+							)}
+						</div>
 					</div>
 				</div>
 				<div className="p-4 mt-auto">

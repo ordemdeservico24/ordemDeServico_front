@@ -20,8 +20,10 @@ const subjectSchema = z.object({
 export default function Page() {
 	const [subjects, setSubjects] = useState<ISubject[]>([]);
 	const token = getCookie("access_token");
+	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
+		setIsLoading(true);
 		fetch("https://ordemdeservicosdev.onrender.com/api/order/get-all-subjects", {
 			method: "GET",
 			headers: {
@@ -39,6 +41,8 @@ export default function Page() {
 			})
 			.catch((error) => {
 				console.error("Erro ao buscar os dados", error);
+			}).finally(() => {
+				setIsLoading(false);
 			});
 	}, [token]);
 
@@ -100,64 +104,84 @@ export default function Page() {
 	return (
 		<Container className="overflow-x-auto">
 			<main className="grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">
-				<Tabs defaultValue="all">
-					<TabsContent value="all">
-						<Card x-chunk="dashboard-06-chunk-0">
-							<CardHeader>
-								<CardTitle className="text-[#3b82f6] text-2xl font-bold">Categorias</CardTitle>
-								<CardDescription>Cheque todas as informações relacionado as categorias apresentadas.</CardDescription>
-								<div className="flex items-center gap-3 justify-between">
-									<Dialog>
-										<DialogTrigger asChild>
-											<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
-												Criar
-											</Button>
-										</DialogTrigger>
-										<DialogContent className="sm:max-w-[425px]">
-											<DialogHeader>
-												<DialogTitle>Criar categoria</DialogTitle>
-												<DialogDescription>Adicione uma nova categoria e seu prazo nos campos abaixo.</DialogDescription>
-											</DialogHeader>
-											<form action="#" onSubmit={onSubmit} className="flex flex-col justify-center items-center">
-												<div className="flex flex-col items-center max-w-96 w-full">
-													<Input type="text" name="name" placeholder="Nome da categoria" className="w-full my-2" />
-													<Input type="number" name="expirationDays" placeholder="Dias de prazo" className="w-full" />
-													<Button
-														className="font-medium rounded my-4 px-12 py-2 hover:-translate-y-1 transition-all w-full bg-blue-500 hover:bg-blue-600"
-														type="submit"
-													>
-														Criar
-													</Button>
-												</div>
-											</form>
-										</DialogContent>
-									</Dialog>
+				
+				{isLoading ? (
+					<div className="flex justify-center items-center">
+						<svg
+							className="h-8 w-8 animate-spin text-gray-600 mx-auto"
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+							strokeWidth={2}
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+							/>
+						</svg>
+					</div>
+				) : (
+					<Tabs defaultValue="all">
+						<TabsContent value="all">
+							<Card x-chunk="dashboard-06-chunk-0">
+								<CardHeader>
+									<CardTitle className="text-[#3b82f6] text-2xl font-bold">Categorias</CardTitle>
+									<CardDescription>Cheque todas as informações relacionado as categorias apresentadas.</CardDescription>
+									<div className="flex items-center gap-3 justify-between">
+										<Dialog>
+											<DialogTrigger asChild>
+												<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
+													Criar
+												</Button>
+											</DialogTrigger>
+											<DialogContent className="sm:max-w-[425px]">
+												<DialogHeader>
+													<DialogTitle>Criar categoria</DialogTitle>
+													<DialogDescription>Adicione uma nova categoria e seu prazo nos campos abaixo.</DialogDescription>
+												</DialogHeader>
+												<form action="#" onSubmit={onSubmit} className="flex flex-col justify-center items-center">
+													<div className="flex flex-col items-center max-w-96 w-full">
+														<Input type="text" name="name" placeholder="Nome da categoria" className="w-full my-2" />
+														<Input type="number" name="expirationDays" placeholder="Dias de prazo" className="w-full" />
+														<Button
+															className="font-medium rounded my-4 px-12 py-2 hover:-translate-y-1 transition-all w-full bg-blue-500 hover:bg-blue-600"
+															type="submit"
+														>
+															Criar
+														</Button>
+													</div>
+												</form>
+											</DialogContent>
+										</Dialog>
+									</div>
+								</CardHeader>
+								<div className="p-3">
+									<Table className="overflow-x-auto">
+										<TableHeader>
+											<TableRow>
+												<TableHead>Nome da categoria</TableHead>
+												<TableHead>Dias para resolução</TableHead>
+												<TableHead>Ordens atribuídas</TableHead>
+											</TableRow>
+										</TableHeader>
+										<TableBody>
+											{Array.isArray(subjects) &&
+												subjects.map((subject, index) => (
+													<TableRow key={index} className="cursor-pointer hover:bg-gray-100">
+														<TableCell>{subject.name}</TableCell>
+														<TableCell>{subject.expirationDays}</TableCell>
+														<TableCell>{subject.orders?.length}</TableCell>
+													</TableRow>
+												))}
+										</TableBody>
+									</Table>
 								</div>
-							</CardHeader>
-							<div className="p-3">
-								<Table className="overflow-x-auto">
-									<TableHeader>
-										<TableRow>
-											<TableHead>Nome da categoria</TableHead>
-											<TableHead>Dias para resolução</TableHead>
-											<TableHead>Ordens atribuídas</TableHead>
-										</TableRow>
-									</TableHeader>
-									<TableBody>
-										{Array.isArray(subjects) &&
-											subjects.map((subject, index) => (
-												<TableRow key={index} className="cursor-pointer hover:bg-gray-100">
-													<TableCell>{subject.name}</TableCell>
-													<TableCell>{subject.expirationDays}</TableCell>
-													<TableCell>{subject.orders?.length}</TableCell>
-												</TableRow>
-											))}
-									</TableBody>
-								</Table>
-							</div>
-						</Card>
-					</TabsContent>
-				</Tabs>
+							</Card>
+						</TabsContent>
+					</Tabs>
+				)}
 			</main>
 		</Container>
 	);

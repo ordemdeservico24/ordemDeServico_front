@@ -12,9 +12,11 @@ import { getCookie } from "cookies-next";
 export default function Page({ params }: { params: { id: string } }) {
 	const [order, setOrder] = useState<IOrderGet>();
 	const [orderStatus, setOrderStatus] = useState<IOrderStatus[]>();
+	const [isLoading, setIsLoading] = useState(true);
 	const token = getCookie("access_token");
 
 	useEffect(() => {
+		setIsLoading(true);
 		fetch(`https://ordemdeservicosdev.onrender.com/api/order/get-order/${params.id}`, {
 			method: "GET",
 			headers: {
@@ -48,12 +50,32 @@ export default function Page({ params }: { params: { id: string } }) {
 			.catch((error) => {
 				console.error("Erro ao buscar os dados", error);
 			});
+		setIsLoading(false);
 	}, [params.id, token]);
 
 	return (
 		<Container>
 			<main className="flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">
-				{order ? (
+				{isLoading ? (
+					<div className="flex justify-center items-center">
+					<svg
+						className="h-8 w-8 animate-spin text-gray-600 mx-auto"
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke="currentColor"
+						strokeWidth={2}
+					>
+						<path
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+						/>
+					</svg>
+				</div>
+			) : (
+					<>
+						{order ? (
 					<Card className="shadow-lg p-6 rounded-lg">
 						<CardHeader className="border-b pb-4">
 							<Link
@@ -117,6 +139,9 @@ export default function Page({ params }: { params: { id: string } }) {
 				) : (
 					<h1>Não há ordem de serviço com este id</h1>
 				)}
+					</>
+				)}
+				
 			</main>
 		</Container>
 	);

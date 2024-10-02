@@ -10,8 +10,10 @@ import { getCookie } from "cookies-next";
 export default function Page({ params }: { params: { id: string } }) {
 	const [team, setTeam] = useState<ITeam>();
 	const token = getCookie("access_token");
+	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
+		setIsLoading(true);
 		fetch(`https://ordemdeservicosdev.onrender.com/api/team/get-team/${params.id}`, {
 			method: "GET",
 			headers: {
@@ -26,6 +28,8 @@ export default function Page({ params }: { params: { id: string } }) {
 			.then(({ status, data }) => {
 				console.log(status, data);
 				setTeam(data);
+			}).finally(() => {
+				setIsLoading(false);
 			});
 	}, [params.id, token]);
 	const truncateNotes = (notes: string, maxLength: number) => {
@@ -43,62 +47,81 @@ export default function Page({ params }: { params: { id: string } }) {
 	return (
 		<Container>
 			<main className="grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">
-				<Tabs defaultValue="all">
-					<TabsContent value="all">
-						<Card x-chunk="dashboard-06-chunk-0">
-							<CardHeader>
-								<CardTitle className="text-[#3b82f6] text-2xl font-bold">Ordens Atribuídas</CardTitle>
-								<CardDescription>Cheque todas as informações relacionado aos líderes apresentados.</CardDescription>
-							</CardHeader>
+				{isLoading ? (
+					<div className="flex justify-center items-center">
+						<svg
+							className="h-8 w-8 animate-spin text-gray-600 mx-auto"
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+							strokeWidth={2}
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+							/>
+						</svg>
+					</div>
+				) : (
+					<Tabs defaultValue="all">
+						<TabsContent value="all">
+							<Card x-chunk="dashboard-06-chunk-0">
+								<CardHeader>
+									<CardTitle className="text-[#3b82f6] text-2xl font-bold">Ordens Atribuídas</CardTitle>
+									<CardDescription>Cheque todas as informações relacionado aos líderes apresentados.</CardDescription>
+								</CardHeader>
 
-							<div className="flex px-4 gap-2 sm:gap-4 flex-wrap">
-								{team?.orders.map((order, index) => (
-									<Link
-										className="bg-primary text-white bg-[#3b82f6] p-4 rounded flex flex-col justify-between gap-2 w-[250px] sm:max-w-sm"
-										key={index}
-										href={`/orders/order/${order.id}`}
-									>
-										<div className="flex flex-col gap-2">
-											<p className="font-semibold text-sm sm:text-base">{order.subject.name}</p>
-											<p className="text-xs sm:text-sm">{truncateNotes(order.notes, 100)}</p>
-										</div>
-										<p className="border-t border-white text-xs sm:text-sm pt-2 text-right">
-											{formattedDates(order.openningDate)}
-										</p>
-									</Link>
-								))}
-							</div>
+								<div className="flex px-4 gap-2 sm:gap-4 flex-wrap">
+									{team?.orders.map((order, index) => (
+										<Link
+											className="bg-primary text-white bg-[#3b82f6] p-4 rounded flex flex-col justify-between gap-2 w-[250px] sm:max-w-sm"
+											key={index}
+											href={`/orders/order/${order.id}`}
+										>
+											<div className="flex flex-col gap-2">
+												<p className="font-semibold text-sm sm:text-base">{order.subject.name}</p>
+												<p className="text-xs sm:text-sm">{truncateNotes(order.notes, 100)}</p>
+											</div>
+											<p className="border-t border-white text-xs sm:text-sm pt-2 text-right">
+												{formattedDates(order.openningDate)}
+											</p>
+										</Link>
+									))}
+								</div>
 
-							<div className="p-4">
-								<p>Membros na equipe: ({team?.members.length})</p>
-								<Table className="overflow-x-auto min-w-full bg-white rounded-xl divide-y divide-gray-200">
-									<TableHeader>
-										<TableRow>
-											<TableHead>Nome</TableHead>
-											<TableHead>Profissão</TableHead>
-											<TableHead>Telefone</TableHead>
-										</TableRow>
-									</TableHeader>
-									<TableBody>
-										{team?.members.map((member, index) => (
-											<TableRow key={index} className="cursor-pointer hover:bg-gray-100">
-												<TableCell>
-													<p>{member.user.name}</p>
-												</TableCell>
-												<TableCell>
-													<p>{member.user.role.roleName}</p>
-												</TableCell>
-												<TableCell>
-													<p>{member.user.phone}</p>
-												</TableCell>
+								<div className="p-4">
+									<p>Membros na equipe: ({team?.members.length})</p>
+									<Table className="overflow-x-auto min-w-full bg-white rounded-xl divide-y divide-gray-200">
+										<TableHeader>
+											<TableRow>
+												<TableHead>Nome</TableHead>
+												<TableHead>Profissão</TableHead>
+												<TableHead>Telefone</TableHead>
 											</TableRow>
-										))}
-									</TableBody>
-								</Table>
-							</div>
-						</Card>
-					</TabsContent>
-				</Tabs>
+										</TableHeader>
+										<TableBody>
+											{team?.members.map((member, index) => (
+												<TableRow key={index} className="cursor-pointer hover:bg-gray-100">
+													<TableCell>
+														<p>{member.user.name}</p>
+													</TableCell>
+													<TableCell>
+														<p>{member.user.role.roleName}</p>
+													</TableCell>
+													<TableCell>
+														<p>{member.user.phone}</p>
+													</TableCell>
+												</TableRow>
+											))}
+										</TableBody>
+									</Table>
+								</div>
+							</Card>
+						</TabsContent>
+					</Tabs>
+				)}
 			</main>
 		</Container>
 	);

@@ -1,7 +1,9 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useState, useEffect } from "react";
 import Header from "./header";
 import Menu from "./MenuLateral";
 import MenuHome from './MenuHome';
+import { getCookie } from "cookies-next";
+import { useRouter } from "next/navigation";
 
 interface ContainerProps {
   children: ReactNode;
@@ -13,7 +15,24 @@ export const Container: React.FC<ContainerProps> = ({
   className,
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+  const token = getCookie("access_token");
+  const router = useRouter();
+  
+  useEffect(() => {
+    if (!token) {
+      router.push("/");
+    }
+  }, [token]);
 
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+		return null;
+  }
+  
   return (
     <div className="relative">
       <Menu isOpen={isMenuOpen} />

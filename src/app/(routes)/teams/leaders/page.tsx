@@ -19,8 +19,10 @@ export default function Page() {
 	const [leaders, setLeaders] = useState<ITeamLeader[]>([]);
 	const token = getCookie("access_token");
 	const { role = [] } = useStore();
+	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
+		setIsLoading(true);
 		if (hasPermission(role, ["teams_management", "teamleader"], "read")) {
 			fetch("https://ordemdeservicosdev.onrender.com/api/team/get-all-leaders", {
 				method: "GET",
@@ -31,7 +33,8 @@ export default function Page() {
 			})
 				.then((res) => res.json())
 				.then((data) => setLeaders(data))
-				.catch((error) => console.error("Fetch error:", error));
+				.catch((error) => console.error("Fetch error:", error))
+			.finally(() => setIsLoading(false));
 		}
 	}, [token]);
 
@@ -73,7 +76,6 @@ export default function Page() {
 	};
 
 	useEffect(() => {
-		// isso vai bugar lá na frente
 		fetch(`https://ordemdeservicosdev.onrender.com/api/user/get-all-users?limit=${100}`, {
 			method: "GET",
 			headers: {
@@ -116,7 +118,26 @@ export default function Page() {
 	return (
 		<Container className="p-4">
 			<main className="grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">
-				{hasPermission(role, ["teams_management", "teamleader"], "read") && (
+			{isLoading ? (
+					<div className="flex justify-center items-center">
+						<svg
+							className="h-8 w-8 animate-spin text-gray-600 mx-auto"
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+							strokeWidth={2}
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+							/>
+						</svg>
+					</div>
+				) : (
+				<>
+					{hasPermission(role, ["teams_management", "teamleader"], "read") && (
 					<Tabs defaultValue="all">
 						<TabsContent value="all">
 							<Card x-chunk="dashboard-06-chunk-0">
@@ -226,6 +247,8 @@ export default function Page() {
 							</Card>
 						</TabsContent>
 					</Tabs>
+					)}
+					</>
 				)}
 			</main>
 		</Container>

@@ -47,6 +47,28 @@ export default function SecondaryGroupsPage() {
   return (
     <Container className="overflow-x-auto">
       <main className="grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">
+        {isLoading ? (
+        <div className="flex justify-center items-center">
+        <svg
+          className="h-8 w-8 animate-spin text-gray-600 mx-auto"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+          />
+        </svg>
+      </div>
+          ) : error ? (
+              <div className="text-center text-red-500 p-8">
+                <span>{error}</span>
+              </div>
+            ) : (
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -60,15 +82,9 @@ export default function SecondaryGroupsPage() {
             </div>
           </CardHeader>
           <div>
-            {isLoading ? (
-              <div className="text-center p-8">
-                <span>Carregando dados...</span>
-              </div>
-            ) : error ? (
-              <div className="text-center text-red-500 p-8">
-                <span>{error}</span>
-              </div>
-            ) : (
+            
+
+            
               <Table className="overflow-x-auto">
                 <TableHeader>
                   <TableRow>
@@ -89,9 +105,9 @@ export default function SecondaryGroupsPage() {
                   ))}
                 </TableBody>
               </Table>
-            )}
           </div>
-        </Card>
+          </Card>
+        )}
       </main>
     </Container>
   );

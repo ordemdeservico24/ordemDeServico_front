@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { withMask } from "use-mask-input";
 import MoneyFormatter from "@/components/formatMoneyValues";
+import { toast } from "react-toastify";
 
 export default function RevenuesPage() {
 	const [revenues, setRevenues] = useState<IRevenue | null>(null);
@@ -89,22 +90,43 @@ export default function RevenuesPage() {
 		};
 
 		try {
-			const response = await fetch("https://ordemdeservicosdev.onrender.com/api/finance/revenues/create-item", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${token}`,
-				},
-				body: JSON.stringify(newItem),
-			});
+			toast.promise(
+				fetch("https://ordemdeservicosdev.onrender.com/api/finance/revenues/create-item", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+					body: JSON.stringify(newItem),
+				})
+					.then((res) => {
+						if (res.ok) {
+							return res.json();
+						}
+						throw new Error("Erro ao criar item em receitas.");
+					})
+					.then((data) => {
+						setRevenues((prev) => (prev ? { ...prev, items: [...prev.items, data] } : prev));
+					})
+					.catch((error) => {
+						console.log(error);
+					}),
+				{
+					pending: "Criando item",
+					success: {
+						render: "Item criado com sucesso",
+						onClose: () => {
+							window.location.reload();
+						},
+						autoClose: 1500,
+					},
+					error: "Ocorreu um erro",
+				}
+			);
 
-			if (!response.ok) {
-				throw new Error("Failed to create item");
-			}
+			// const data = await response.json();
 
-			const data = await response.json();
-
-			setRevenues((prev) => (prev ? { ...prev, items: [...prev.items, data] } : prev));
+			// setRevenues((prev) => (prev ? { ...prev, items: [...prev.items, data] } : prev));
 		} catch (error) {
 			console.error("Error creating item:", error);
 			setError("Erro ao criar item.");
@@ -149,9 +171,9 @@ export default function RevenuesPage() {
 												</DialogHeader>
 												<form onSubmit={handleCreateItem} className="space-y-4">
 													<Input name="name" required placeholder="Nome" />
-													<Textarea name="description" required placeholder="Descricão" />
-													<Input name="quantity" type="number" required placeholder="Quantidade" defaultValue={1} />
-													<Input name="value" type="number" placeholder="Valor" required />
+													<Textarea name="description" placeholder="Descricão" />
+													<Input name="quantity" type="number" required placeholder="Quantidade" />
+													<Input name="value" type="number" step="0.01" placeholder="Valor" required />
 													<Input name="buyerName" required placeholder="Nome do Comprador" />
 													<Input name="cpf" placeholder="CPF" required ref={withMask("999.999.999-99")} />
 													<Input name="cnpj" placeholder="CNPJ" required ref={withMask("99.999.999/9999-99")} />

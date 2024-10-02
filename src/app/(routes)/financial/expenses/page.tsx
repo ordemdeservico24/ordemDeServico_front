@@ -11,10 +11,11 @@ export default function ExpensesPage() {
 	const [categories, setCategories] = useState<any[]>([]);
 	const [totalExpenses, setTotalExpenses] = useState<number>(0);
 	const [error, setError] = useState<string | null>(null);
-
+	const [isLoading, setIsLoading] = useState(true);
 	const token = getCookie("access_token");
 
 	useEffect(() => {
+		setIsLoading(true);
 		const fetchExpenses = async () => {
 			try {
 				const response = await fetch("https://ordemdeservicosdev.onrender.com/api/finance/expenses", {
@@ -35,64 +36,80 @@ export default function ExpensesPage() {
 			} catch (error) {
 				console.error("Error fetching expenses:", error);
 				setError("Erro ao carregar despesas.");
+			} finally {
+				setIsLoading(false);
 			}
 		};
 
 		fetchExpenses();
 	}, [token]);
 
-	if (error) {
-		return (
-			<Container className="overflow-x-auto">
-				<main className="grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">
-					<p>{error}</p>
-				</main>
-			</Container>
-		);
-	}
-
 	return (
 		<Container className="overflow-x-auto">
 			<main className="grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">
-				<Tabs defaultValue="all">
-					<TabsContent value="all">
-						<Card>
-							<CardHeader>
-								<div className="flex justify-between items-center">
-									<div>
-										<CardTitle className="text-[#3b82f6] text-2xl font-bold">Financeiro Despesas</CardTitle>
-										<CardDescription>Cheque todas as informações relacionadas ao financeiro.</CardDescription>
+				{isLoading ? (
+					<div className="flex justify-center items-center">
+						<svg
+							className="h-8 w-8 animate-spin text-gray-600 mx-auto"
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+							strokeWidth={2}
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+							/>
+						</svg>
+					</div>
+				) : error ? (
+					<div className="text-center text-red-500 p-8">
+						<span>{error}</span>
+					</div>
+				) : (
+				
+					<Tabs defaultValue="all">
+						<TabsContent value="all">
+							<Card>
+								<CardHeader>
+									<div className="flex justify-between items-center">
+										<div>
+											<CardTitle className="text-[#3b82f6] text-2xl font-bold">Financeiro Despesas</CardTitle>
+											<CardDescription>Cheque todas as informações relacionadas ao financeiro.</CardDescription>
+										</div>
+										<h1>
+											Total despesas: <MoneyFormatter value={totalExpenses} />{" "}
+										</h1>
 									</div>
-									<h1>
-										Total despesas: <MoneyFormatter value={totalExpenses} />{" "}
-									</h1>
-								</div>
-							</CardHeader>
-							<div className="overflow-x-auto">
-								<Table>
-									<TableHeader>
-										<TableRow>
-											<TableCell>Categoria</TableCell>
-											<TableCell>Descrição</TableCell>
-											<TableCell>Quantidade de Itens</TableCell>
-											<TableCell>Data de Criação</TableCell>
-										</TableRow>
-									</TableHeader>
-									<TableBody>
-										{categories.map((category) => (
-											<TableRow key={category.id}>
-												<TableCell>{category.name}</TableCell>
-												<TableCell>{category.description}</TableCell>
-												<TableCell>{category.items}</TableCell>
-												<TableCell>{new Date(category.createdAt).toLocaleDateString()}</TableCell>
+								</CardHeader>
+								<div className="overflow-x-auto">
+									<Table>
+										<TableHeader>
+											<TableRow>
+												<TableCell>Categoria</TableCell>
+												<TableCell>Descrição</TableCell>
+												<TableCell>Quantidade de Itens</TableCell>
+												<TableCell>Data de Criação</TableCell>
 											</TableRow>
-										))}
-									</TableBody>
-								</Table>
-							</div>
-						</Card>
-					</TabsContent>
-				</Tabs>
+										</TableHeader>
+										<TableBody>
+											{categories.map((category) => (
+												<TableRow key={category.id}>
+													<TableCell>{category.name}</TableCell>
+													<TableCell>{category.description}</TableCell>
+													<TableCell>{category.items}</TableCell>
+													<TableCell>{new Date(category.createdAt).toLocaleDateString()}</TableCell>
+												</TableRow>
+											))}
+										</TableBody>
+									</Table>
+								</div>
+							</Card>
+						</TabsContent>
+					</Tabs>
+				)}
 			</main>
 		</Container>
 	);

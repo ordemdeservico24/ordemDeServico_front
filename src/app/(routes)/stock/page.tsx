@@ -38,6 +38,7 @@ export default function StoragePage() {
 	const token = getCookie("access_token");
 
 	useEffect(() => {
+		setIsLoading(true);
 		fetch("https://ordemdeservicosdev.onrender.com/api/storage/get-all-items", {
 			method: "GET",
 			headers: {
@@ -71,6 +72,7 @@ export default function StoragePage() {
 				console.error("Erro ao buscar os dados", error);
 				setError("Erro ao carregar dados dos fornecedores.");
 			});
+		setIsLoading(false);
 	}, [token]);
 
 	const handleSelectSupplierChange = (value: string) => {
@@ -111,7 +113,6 @@ export default function StoragePage() {
 			supplierId: selectedSupplier,
 		};
 
-		// Só adiciona totalMeasurement se ele não for undefined
 		if (formData.totalMeasurement !== undefined) {
 			body.totalMeasurement = formData.totalMeasurement;
 		}
@@ -229,179 +230,199 @@ export default function StoragePage() {
 	return (
 		<Container className="overflow-x-auto">
 			<main className="grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">
-				<Tabs defaultValue="all">
-					<TabsContent value="all">
-						<Card>
-							<CardHeader>
-								<div className="flex items-center justify-between">
-									<div>
-										<CardTitle className="text-[#3b82f6] text-2xl font-bold">Estoque</CardTitle>
-										<CardDescription>Cheque todas as informações relacionadas ao estoque.</CardDescription>
-									</div>
+				{isLoading ? (
+					<div className="flex justify-center items-center">
+						<svg
+							className="h-8 w-8 animate-spin text-gray-600 mx-auto"
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+							strokeWidth={2}
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+							/>
+						</svg>
+					</div>
+				) : (
+				
+					<Tabs defaultValue="all">
+						<TabsContent value="all">
+							<Card>
+								<CardHeader>
+									<div className="flex items-center justify-between">
+										<div>
+											<CardTitle className="text-[#3b82f6] text-2xl font-bold">Estoque</CardTitle>
+											<CardDescription>Cheque todas as informações relacionadas ao estoque.</CardDescription>
+										</div>
 
-									<div className="flex items-center gap-3">
-										<Dialog>
-											<DialogTrigger asChild>
-												<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
-													Adicionar Item
-												</Button>
-											</DialogTrigger>
-											<DialogContent className="sm:max-w-[425px]">
-												<DialogHeader>
-													<DialogTitle>Adicionar Item ao Estoque</DialogTitle>
-													<DialogDescription>
-														Preencha os campos abaixo para adicionar um novo item ao estoque.
-													</DialogDescription>
-												</DialogHeader>
-												<form onSubmit={onSubmitItem} className="flex flex-col justify-center items-center">
-													<div className="flex flex-col items-center max-w-96 w-full space-y-4">
-														<Input
-															type="text"
-															name="productName"
-															placeholder="Nome do produto"
-															required
-															className="w-full"
-														/>
-														<Input type="number" name="quantity" placeholder="Quantidade" required className="w-full" />
-														<Select onValueChange={handleSelectUnitChange} value={selectedUnitMeasurement}>
-															<SelectTrigger className="outline-none border border-[#2a2a2a] rounded px-2 py-1">
-																<SelectValue placeholder="Selecione uma Unidade de Medida" />
-															</SelectTrigger>
-															<SelectContent>
-																<SelectItem value="unit">Unidade</SelectItem>
-																<SelectItem value="meter">Metros</SelectItem>
-																<SelectItem value="liter">Litros</SelectItem>
-															</SelectContent>
-														</Select>
-														{selectedUnitMeasurement === "meter" || selectedUnitMeasurement === "liter" ? (
+										<div className="flex items-center gap-3">
+											<Dialog>
+												<DialogTrigger asChild>
+													<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
+														Adicionar Item
+													</Button>
+												</DialogTrigger>
+												<DialogContent className="sm:max-w-[425px]">
+													<DialogHeader>
+														<DialogTitle>Adicionar Item ao Estoque</DialogTitle>
+														<DialogDescription>
+															Preencha os campos abaixo para adicionar um novo item ao estoque.
+														</DialogDescription>
+													</DialogHeader>
+													<form onSubmit={onSubmitItem} className="flex flex-col justify-center items-center">
+														<div className="flex flex-col items-center max-w-96 w-full space-y-4">
 															<Input
-																type="number"
-																name="totalMeasurement"
-																step="0.01"
-																placeholder="Total de Medida"
+																type="text"
+																name="productName"
+																placeholder="Nome do produto"
 																required
 																className="w-full"
 															/>
-														) : (
-															""
-														)}
-														<Input
-															type="number"
-															name="productValue"
-															step="0.01"
-															placeholder="Valor"
-															required
-															className="w-full"
-														/>
-														<Select onValueChange={handleSelectSupplierChange} value={selectedSupplier}>
-															<SelectTrigger className="outline-none border border-[#2a2a2a] rounded px-2 py-1">
-																<SelectValue placeholder="Selecione um Fornecedor" />
-															</SelectTrigger>
-															<SelectContent>
-																{suppliers.map((supplier) => (
-																	<SelectItem key={supplier.id} value={supplier.id}>
-																		{supplier.supplierName}
-																	</SelectItem>
-																))}
-															</SelectContent>
-														</Select>
-														<Button
-															className="font-medium rounded my-4 px-12 py-2 hover:-translate-y-1 transition-all w-full bg-blue-500 hover:bg-blue-600"
-															type="submit"
-														>
-															Adicionar Item
-														</Button>
-													</div>
-												</form>
-											</DialogContent>
-										</Dialog>
+															<Input type="number" name="quantity" placeholder="Quantidade" required className="w-full" />
+															<Select onValueChange={handleSelectUnitChange} value={selectedUnitMeasurement}>
+																<SelectTrigger className="outline-none border border-[#2a2a2a] rounded px-2 py-1">
+																	<SelectValue placeholder="Selecione uma Unidade de Medida" />
+																</SelectTrigger>
+																<SelectContent>
+																	<SelectItem value="unit">Unidade</SelectItem>
+																	<SelectItem value="meter">Metros</SelectItem>
+																	<SelectItem value="liter">Litros</SelectItem>
+																</SelectContent>
+															</Select>
+															{selectedUnitMeasurement === "meter" || selectedUnitMeasurement === "liter" ? (
+																<Input
+																	type="number"
+																	name="totalMeasurement"
+																	step="0.01"
+																	placeholder="Total de Medida"
+																	required
+																	className="w-full"
+																/>
+															) : (
+																""
+															)}
+															<Input
+																type="number"
+																name="productValue"
+																step="0.01"
+																placeholder="Valor"
+																required
+																className="w-full"
+															/>
+															<Select onValueChange={handleSelectSupplierChange} value={selectedSupplier}>
+																<SelectTrigger className="outline-none border border-[#2a2a2a] rounded px-2 py-1">
+																	<SelectValue placeholder="Selecione um Fornecedor" />
+																</SelectTrigger>
+																<SelectContent>
+																	{suppliers.map((supplier) => (
+																		<SelectItem key={supplier.id} value={supplier.id}>
+																			{supplier.supplierName}
+																		</SelectItem>
+																	))}
+																</SelectContent>
+															</Select>
+															<Button
+																className="font-medium rounded my-4 px-12 py-2 hover:-translate-y-1 transition-all w-full bg-blue-500 hover:bg-blue-600"
+																type="submit"
+															>
+																Adicionar Item
+															</Button>
+														</div>
+													</form>
+												</DialogContent>
+											</Dialog>
 
-										<Dialog>
-											<DialogTrigger asChild>
-												<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
-													Adicionar Fornecedor
-												</Button>
-											</DialogTrigger>
-											<DialogContent className="sm:max-w-[425px]">
-												<DialogHeader>
-													<DialogTitle>Adicionar Fornecedor</DialogTitle>
-													<DialogDescription>
-														Preencha os campos abaixo para adicionar um novo fornecedor.
-													</DialogDescription>
-												</DialogHeader>
-												<form onSubmit={onSubmitSupplier} className="flex flex-col justify-center items-center">
-													<div className="flex flex-col items-center max-w-96 w-full space-y-4">
-														<Input type="text" name="name" placeholder="Nome do fornecedor" required className="w-full" />
-														<Input type="email" name="email" placeholder="E-mail" required className="w-full" />
-														<Input type="tel" name="phone" placeholder="Telefone" required className="w-full" />
-														<Button
-															className="font-medium rounded my-4 px-12 py-2 hover:-translate-y-1 transition-all w-full bg-blue-500 hover:bg-blue-600"
-															type="submit"
-														>
-															Adicionar Fornecedor
-														</Button>
-													</div>
-												</form>
-											</DialogContent>
-										</Dialog>
+											<Dialog>
+												<DialogTrigger asChild>
+													<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
+														Adicionar Fornecedor
+													</Button>
+												</DialogTrigger>
+												<DialogContent className="sm:max-w-[425px]">
+													<DialogHeader>
+														<DialogTitle>Adicionar Fornecedor</DialogTitle>
+														<DialogDescription>
+															Preencha os campos abaixo para adicionar um novo fornecedor.
+														</DialogDescription>
+													</DialogHeader>
+													<form onSubmit={onSubmitSupplier} className="flex flex-col justify-center items-center">
+														<div className="flex flex-col items-center max-w-96 w-full space-y-4">
+															<Input type="text" name="name" placeholder="Nome do fornecedor" required className="w-full" />
+															<Input type="email" name="email" placeholder="E-mail" required className="w-full" />
+															<Input type="tel" name="phone" placeholder="Telefone" required className="w-full" />
+															<Button
+																className="font-medium rounded my-4 px-12 py-2 hover:-translate-y-1 transition-all w-full bg-blue-500 hover:bg-blue-600"
+																type="submit"
+															>
+																Adicionar Fornecedor
+															</Button>
+														</div>
+													</form>
+												</DialogContent>
+											</Dialog>
+										</div>
 									</div>
+								</CardHeader>
+								<div>
+									<Table className="overflow-x-auto">
+										<TableHeader>
+											<TableRow>
+												<TableCell>Nome do Produto</TableCell>
+												<TableCell>Quantidade</TableCell>
+												<TableCell>Total em Medida</TableCell>
+												<TableCell>Valor</TableCell>
+												<TableCell>Fornecedor</TableCell>
+											</TableRow>
+										</TableHeader>
+										<TableBody>
+											{items.map((item) => (
+												<TableRow key={item.id}>
+													<TableCell>{item.productName}</TableCell>
+													<TableCell>{item.quantity}</TableCell>
+													<TableCell>{formatTotalMeasurement(item)}</TableCell>
+													<TableCell>
+														<MoneyFormatter value={item.productValue || 0} currency="BRL" />
+													</TableCell>
+													<TableCell>{item.supplier?.supplierName}</TableCell>
+												</TableRow>
+											))}
+										</TableBody>
+									</Table>
 								</div>
-							</CardHeader>
-							<div>
-								<Table className="overflow-x-auto">
+							</Card>
+						</TabsContent>
+
+						<TabsContent value="suppliers">
+							<Card>
+								<CardHeader>
+									<CardTitle>Fornecedores</CardTitle>
+								</CardHeader>
+								<Table>
 									<TableHeader>
 										<TableRow>
-											<TableCell>Nome do Produto</TableCell>
-											<TableCell>Quantidade</TableCell>
-											<TableCell>Total em Medida</TableCell>
-											<TableCell>Valor</TableCell>
-											<TableCell>Fornecedor</TableCell>
+											<TableCell>Nome do Fornecedor</TableCell>
+											<TableCell>Email</TableCell>
+											<TableCell>Telefone</TableCell>
 										</TableRow>
 									</TableHeader>
 									<TableBody>
-										{items.map((item) => (
-											<TableRow key={item.id}>
-												<TableCell>{item.productName}</TableCell>
-												<TableCell>{item.quantity}</TableCell>
-												<TableCell>{formatTotalMeasurement(item)}</TableCell>
-												<TableCell>
-													<MoneyFormatter value={item.productValue || 0} currency="BRL" />
-												</TableCell>
-												<TableCell>{item.supplier?.supplierName}</TableCell>
+										{suppliers.map((supplier) => (
+											<TableRow key={supplier.id}>
+												<TableCell>{supplier.supplierName}</TableCell>
+												<TableCell>{supplier.email}</TableCell>
+												<TableCell>{supplier.phone}</TableCell>
 											</TableRow>
 										))}
 									</TableBody>
 								</Table>
-							</div>
-						</Card>
-					</TabsContent>
-
-					<TabsContent value="suppliers">
-						<Card>
-							<CardHeader>
-								<CardTitle>Fornecedores</CardTitle>
-							</CardHeader>
-							<Table>
-								<TableHeader>
-									<TableRow>
-										<TableCell>Nome do Fornecedor</TableCell>
-										<TableCell>Email</TableCell>
-										<TableCell>Telefone</TableCell>
-									</TableRow>
-								</TableHeader>
-								<TableBody>
-									{suppliers.map((supplier) => (
-										<TableRow key={supplier.id}>
-											<TableCell>{supplier.supplierName}</TableCell>
-											<TableCell>{supplier.email}</TableCell>
-											<TableCell>{supplier.phone}</TableCell>
-										</TableRow>
-									))}
-								</TableBody>
-							</Table>
-						</Card>
-					</TabsContent>
-				</Tabs>
+							</Card>
+						</TabsContent>
+					</Tabs>
+				)}
 			</main>
 		</Container>
 	);

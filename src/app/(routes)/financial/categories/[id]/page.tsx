@@ -16,7 +16,6 @@ import MoneyFormatter from "@/components/formatMoneyValues";
 export default function CategoryDetailPage() {
 	const [categoryItem, setCategoryItem] = useState<FinancialCategoryItem | null>(null);
 	const [error, setError] = useState<string | null>(null);
-
 	const params = useParams();
 	const { id } = params;
 
@@ -25,7 +24,9 @@ export default function CategoryDetailPage() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [isAddItemDialogOpen, setIsAddItemDialogOpen] = useState(false);
 
+	
 	useEffect(() => {
+		setIsLoading(true);
 		const fetchCategoryItem = async () => {
 			if (!id) {
 				console.error("ID da categoria não fornecido.");
@@ -56,6 +57,8 @@ export default function CategoryDetailPage() {
 			} catch (error) {
 				console.error("Erro ao buscar detalhes da categoria:", error);
 				setError("Erro ao carregar detalhes da categoria.");
+			} finally {
+				setIsLoading(false);
 			}
 		};
 
@@ -118,24 +121,35 @@ export default function CategoryDetailPage() {
 		setIsLoading(false);
 	};
 
-	if (error) {
+	if(!categoryItem) {
 		return (
 			<Container>
-				<main className="grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">
-					<p className="text-red-500">{error}</p>
+				<main className="flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">
+					{isLoading ? (
+						<div className="flex justify-center items-center">
+							<svg
+								className="h-8 w-8 animate-spin text-gray-600 mx-auto"
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+								strokeWidth={2}
+							>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+								/>
+							</svg>
+						</div>
+					) : (
+						<div className="flex justify-center items-center">
+							<p className="text-gray-600">Erro ao carregar dados da categoria.</p>
+						</div>
+					)}
 				</main>
 			</Container>
-		);
-	}
-
-	if (!categoryItem) {
-		return (
-			<Container>
-				<main className="grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">
-					<p>Carregando...</p>
-				</main>
-			</Container>
-		);
+		)
 	}
 
 	const totalAmountSpent = categoryItem.items.reduce((sum: number, item: FinancialItem) => sum + item.amountSpent, 0);
@@ -143,117 +157,142 @@ export default function CategoryDetailPage() {
 	return (
 		<Container>
 			<main className="flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">
-				<Card>
-					<CardHeader>
-						<div className="flex justify-between items-center">
-							<div>
-								<CardTitle className="text-[#3b82f6] text-2xl font-bold">{categoryItem.name}</CardTitle>
-								<CardDescription>{categoryItem.description || "Sem descrição disponível"}</CardDescription>
+				{isLoading ? (
+					<div className="flex justify-center items-center">
+						<svg
+							className="h-8 w-8 animate-spin text-gray-600 mx-auto"
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+							strokeWidth={2}
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+							/>
+						</svg>
+					</div>
+				) : error ? (
+					<div className="text-center text-red-500 p-8">
+						<span>{error}</span>
+					</div>
+					) : (
+						<>
+						<Card>
+							<CardHeader>
+								<div className="flex justify-between items-center">
+									<div>
+										<CardTitle className="text-[#3b82f6] text-2xl font-bold">{categoryItem.name}</CardTitle>
+										<CardDescription>{categoryItem.description || "Sem descrição disponível"}</CardDescription>
+									</div>
+									<Dialog>
+										<DialogTrigger asChild>
+											<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
+												Editar categoria
+											</Button>
+										</DialogTrigger>
+										<DialogContent className="sm:max-w-[425px]">
+											<DialogHeader>
+												<DialogTitle>Editar categoria</DialogTitle>
+												<DialogDescription>Modifique as informações da categoria aqui.</DialogDescription>
+											</DialogHeader>
+										</DialogContent>
+									</Dialog>
+								</div>
+							</CardHeader>
+							<div className="p-4">
+								<p>
+									<strong>Valor Total Gasto:</strong> <MoneyFormatter value={totalAmountSpent} />
+								</p>
+								<p>
+									<strong>Data de Criação:</strong> {new Date(categoryItem.createdAt).toLocaleDateString()}
+								</p>
+								<p>
+									<strong>Empresa:</strong> {categoryItem.company.companyName} (CNPJ: {categoryItem.company.cnpj})
+								</p>
 							</div>
-							<Dialog>
-								<DialogTrigger asChild>
-									<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
-										Editar categoria
-									</Button>
-								</DialogTrigger>
-								<DialogContent className="sm:max-w-[425px]">
-									<DialogHeader>
-										<DialogTitle>Editar categoria</DialogTitle>
-										<DialogDescription>Modifique as informações da categoria aqui.</DialogDescription>
-									</DialogHeader>
-								</DialogContent>
-							</Dialog>
-						</div>
-					</CardHeader>
-					<div className="p-4">
-						<p>
-							<strong>Valor Total Gasto:</strong> <MoneyFormatter value={totalAmountSpent} />
-						</p>
-						<p>
-							<strong>Data de Criação:</strong> {new Date(categoryItem.createdAt).toLocaleDateString()}
-						</p>
-						<p>
-							<strong>Empresa:</strong> {categoryItem.company.companyName} (CNPJ: {categoryItem.company.cnpj})
-						</p>
-					</div>
-				</Card>
+						</Card>
 
-				<Card className="mt-5">
-					<CardHeader>
-						<div className="w-full flex justify-between items-center">
-							<CardTitle className="text-xl font-bold">Itens da Categoria</CardTitle>
-							<Dialog open={isAddItemDialogOpen} onOpenChange={setIsAddItemDialogOpen}>
-								<DialogTrigger asChild>
-									<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
-										Adicionar Item
-									</Button>
-								</DialogTrigger>
-								<DialogContent className="sm:max-w-[600px]">
-									<DialogHeader>
-										<DialogTitle>Adicionar Item à Categoria</DialogTitle>
-										<DialogDescription>Preencha as informações do novo item.</DialogDescription>
-									</DialogHeader>
+						<Card className="mt-5">
+							<CardHeader>
+								<div className="w-full flex justify-between items-center">
+									<CardTitle className="text-xl font-bold">Itens da Categoria</CardTitle>
+									<Dialog open={isAddItemDialogOpen} onOpenChange={setIsAddItemDialogOpen}>
+										<DialogTrigger asChild>
+											<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
+												Adicionar Item
+											</Button>
+										</DialogTrigger>
+										<DialogContent className="sm:max-w-[600px]">
+											<DialogHeader>
+												<DialogTitle>Adicionar Item à Categoria</DialogTitle>
+												<DialogDescription>Preencha as informações do novo item.</DialogDescription>
+											</DialogHeader>
 
-									<AddItemForm onAdd={handleAddItem} isLoading={isLoading} />
-								</DialogContent>
-							</Dialog>
-						</div>
-					</CardHeader>
-					<div className="overflow-x-auto">
-						<Table>
-							<TableHeader>
-								<TableRow>
-									<TableCell>Nome</TableCell>
-									<TableCell>Descrição</TableCell>
-									<TableCell>Valor Gasto</TableCell>
-									<TableCell>Foto do Item</TableCell>
-									<TableCell>Data de Criação</TableCell>
-									<TableCell>Recorrente</TableCell>
-									<TableCell>Parcelas</TableCell>
-									<TableCell>Valor por Parcela</TableCell>
-								</TableRow>
-							</TableHeader>
-							<TableBody>
-								{categoryItem.items.map((item: FinancialItem) => (
-									<TableRow key={item.id}>
-										<TableCell>{item.name}</TableCell>
-										<TableCell>{item.description || "-"}</TableCell>
-										<TableCell>R$ {item.amountSpent ? <MoneyFormatter value={item.amountSpent} /> : "0.00"}</TableCell>
-										<TableCell>
-											{item.itemPhoto ? (
-												<Dialog>
-													<DialogTrigger asChild>
-														<p className="cursor-pointer underline">Ver foto</p>
-													</DialogTrigger>
-													<DialogContent className="sm:max-w-[350px]">
-														<DialogHeader>
-															<DialogTitle>Foto do Item: {item.name}</DialogTitle>
-														</DialogHeader>
-														<div className="flex justify-center">
-															<Image
-																src={item.itemPhoto}
-																alt={item.name}
-																width={300}
-																height={300}
-																className="max-w-full h-auto"
-															/>
-														</div>
-													</DialogContent>
-												</Dialog>
-											) : (
-												"Sem foto"
-											)}
-										</TableCell>
-										<TableCell>{new Date(item.createdAt).toLocaleDateString()}</TableCell>
-										<TableCell>{item.isRecurrent ? "Sim" : "Não"}</TableCell>
-										<TableCell>{item.installments || "-"}</TableCell>
-										<TableCell>{item.installmentValue ? <MoneyFormatter value={item.installmentValue} /> : "-"}</TableCell>
-									</TableRow>
-								))}
-							</TableBody>
-						</Table>
-					</div>
-				</Card>
+											<AddItemForm onAdd={handleAddItem} isLoading={isLoading} />
+										</DialogContent>
+									</Dialog>
+								</div>
+							</CardHeader>
+							<div className="overflow-x-auto">
+								<Table>
+									<TableHeader>
+										<TableRow>
+											<TableCell>Nome</TableCell>
+											<TableCell>Descrição</TableCell>
+											<TableCell>Valor Gasto</TableCell>
+											<TableCell>Foto do Item</TableCell>
+											<TableCell>Data de Criação</TableCell>
+											<TableCell>Recorrente</TableCell>
+											<TableCell>Parcelas</TableCell>
+											<TableCell>Valor por Parcela</TableCell>
+										</TableRow>
+									</TableHeader>
+									<TableBody>
+										{categoryItem.items.map((item: FinancialItem) => (
+											<TableRow key={item.id}>
+												<TableCell>{item.name}</TableCell>
+												<TableCell>{item.description || "-"}</TableCell>
+												<TableCell>R$ {item.amountSpent ? <MoneyFormatter value={item.amountSpent} /> : "0.00"}</TableCell>
+												<TableCell>
+													{item.itemPhoto ? (
+														<Dialog>
+															<DialogTrigger asChild>
+																<p className="cursor-pointer underline">Ver foto</p>
+															</DialogTrigger>
+															<DialogContent className="sm:max-w-[350px]">
+																<DialogHeader>
+																	<DialogTitle>Foto do Item: {item.name}</DialogTitle>
+																</DialogHeader>
+																<div className="flex justify-center">
+																	<Image
+																		src={item.itemPhoto}
+																		alt={item.name}
+																		width={300}
+																		height={300}
+																		className="max-w-full h-auto"
+																	/>
+																</div>
+															</DialogContent>
+														</Dialog>
+													) : (
+														"Sem foto"
+													)}
+												</TableCell>
+												<TableCell>{new Date(item.createdAt).toLocaleDateString()}</TableCell>
+												<TableCell>{item.isRecurrent ? "Sim" : "Não"}</TableCell>
+												<TableCell>{item.installments || "-"}</TableCell>
+												<TableCell>{item.installmentValue ? <MoneyFormatter value={item.installmentValue} /> : "-"}</TableCell>
+											</TableRow>
+										))}
+									</TableBody>
+								</Table>
+							</div>
+						</Card>
+					</>
+				)}
 			</main>
 		</Container>
 	);

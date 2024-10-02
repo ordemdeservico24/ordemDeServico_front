@@ -99,6 +99,28 @@ export default function Page() {
 	return (
 		<Container className="p-4">
 			<main className="grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">
+			{isLoading ? (
+					<div className="flex justify-center items-center">
+						<svg
+							className="h-8 w-8 animate-spin text-gray-600 mx-auto"
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+							strokeWidth={2}
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+							/>
+						</svg>
+					</div>
+					) : error ? (
+					<div className="text-center text-red-500 p-8">
+								<span>{error}</span>
+							</div>
+						) : (
 				<Tabs defaultValue="all">
 					<TabsContent value="all">
 						<Card x-chunk="dashboard-06-chunk-0">
@@ -205,7 +227,8 @@ export default function Page() {
 							</div>
 						</Card>
 					</TabsContent>
-				</Tabs>
+					</Tabs>
+						)}
 			</main>
 		</Container>
 	);

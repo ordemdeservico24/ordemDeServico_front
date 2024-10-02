@@ -22,8 +22,10 @@ export default function Page() {
 	const token = getCookie("access_token");
 	const { role = [] } = useStore();
 	const router = useRouter();
+	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
+		setIsLoading(true);
 		fetch("https://ordemdeservicosdev.onrender.com/api/team/get-all-teams", {
 			method: "GET",
 			headers: {
@@ -43,6 +45,8 @@ export default function Page() {
 			.catch((err) => {
 				console.error("Erro ao buscar os dados:", err);
 				setError("Erro ao carregar dados da equipe.");
+			}).finally(() => {
+				setIsLoading(false);
 			});
 	}, [token]);
 
@@ -112,6 +116,25 @@ export default function Page() {
 	return (
 		<Container className="overflow-x-auto">
 			<main className="grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">
+			{isLoading ? (
+					<div className="flex justify-center items-center">
+						<svg
+							className="h-8 w-8 animate-spin text-gray-600 mx-auto"
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+							strokeWidth={2}
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+							/>
+						</svg>
+					</div>
+				) : (
+				<>
 				{hasPermission(role, ["teams_management", "teamleader"], "read") && (
 					<Tabs defaultValue="all">
 						<TabsContent value="all">
@@ -219,6 +242,8 @@ export default function Page() {
 							</Card>
 						</TabsContent>
 					</Tabs>
+							)}
+						</>
 				)}
 			</main>
 		</Container>

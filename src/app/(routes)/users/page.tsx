@@ -16,6 +16,7 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import MoneyFormatter from "@/components/formatMoneyValues";
 import { FaEdit } from "react-icons/fa";
 import { Label } from "@/components/ui/label";
+import { User } from "lucide-react";
 
 export default function Page() {
 	const [users, setUsers] = useState<IUser[]>([]);
@@ -92,10 +93,11 @@ export default function Page() {
 		};
 
 		toast.promise(
-			fetch(`https://ordemdeservicosdev.onrender.com/api/user/create-user/id?type=employee`, {
+			fetch(`https://ordemdeservicosdev.onrender.com/api/user/create-user/bea03c80-6d96-4514-a15f-eae6c3df042a?type=employee`, {
 				method: "POST",
 				headers: {
 					Authorization: `Bearer ${token}`,
+					"Content-type": "application/json",
 				},
 				body: JSON.stringify(request),
 			})
@@ -188,25 +190,43 @@ export default function Page() {
 		};
 
 		const request: {
-			name: string;
+			name?: string;
 			email?: string;
-			phone: string;
+			phone?: string;
 			cpf?: string;
-			startCompanyDate: Date;
+			startCompanyDate?: string;
 		} = {
 			name: getInput("name").value || "",
 			phone: getInput("phone").value || "",
+			cpf: getInput("cpf").value || "",
+			startCompanyDate: getInput("startCompanyDate").value ? new Date(getInput("startCompanyDate").value).toISOString() : undefined,
 		};
 
+		if (user?.isUser) {
+			request.email = getInput("email").value || "";
+		}
+
+		Object.keys(request).forEach((key) => {
+			if (!request[key as keyof typeof request]) {
+				delete request[key as keyof typeof request];
+			}
+		});
+
 		toast.promise(
-			fetch(`https://ordemdeservicosdev.onrender.com/api/user/create-user/id?type=employee`, {
-				method: "POST",
+			fetch(`https://ordemdeservicosdev.onrender.com/api/user/edit-user/${user?.id}`, {
+				method: "PATCH",
 				headers: {
 					Authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
 				},
 				body: JSON.stringify(request),
 			})
-				.then((res) => {
+				.then(async (res) => {
+					if (res.status === 400) {
+						const data = await res.json();
+						toast.error(data.message);
+						throw new Error(data.message);
+					}
 					if (res.ok) {
 						return res.json();
 					}
@@ -216,19 +236,28 @@ export default function Page() {
 				})
 				.catch((error) => {
 					console.log(error);
+					throw error;
 				}),
 			{
-				pending: "Cadastrando funcionário...",
+				pending: "Editando...",
 				success: {
-					render: "Funcionário cadastrado com sucesso",
+					render: "Editado com sucesso",
 					onClose: () => {
 						window.location.reload();
 					},
 					autoClose: 1500,
 				},
-				error: "Ocorreu um erro ao cadastrar o funcionário",
+				error: "Ocorreu um erro ao editar",
 			}
 		);
+	};
+
+	const formatDate = (dateString: string) => {
+		const date = new Date(dateString);
+		const year = date.getFullYear();
+		const month = String(date.getMonth() + 1).padStart(2, "0"); // Mês é 0-indexado
+		const day = String(date.getDate()).padStart(2, "0");
+		return `${year}-${month}-${day}`;
 	};
 
 	useEffect(() => {
@@ -401,7 +430,15 @@ export default function Page() {
 												)}
 											</TableBody>
 										</Table>
-										<Dialog open={isEditing} onOpenChange={setIsEditing}>
+										<Dialog
+											open={isEditing}
+											onOpenChange={(isOpen) => {
+												setIsEditing(isOpen);
+												if (!isOpen) {
+													setUser(undefined);
+												}
+											}}
+										>
 											<DialogContent className="sm:max-w-[425px]">
 												<DialogHeader>
 													<DialogTitle>Editar Usuário</DialogTitle>
@@ -428,7 +465,11 @@ export default function Page() {
 														)}
 														<Input type="text" name="cpf" defaultValue={user.cpf} placeholder="Digite aqui o CPF" />
 														<Label htmlFor="startCompanyDate">Data de início na empresa:</Label>
-														<Input type="date" name="startCompanyDate" defaultValue={user.startCompanyDate} />
+														<Input
+															type="date"
+															name="startCompanyDate"
+															defaultValue={formatDate(user.startCompanyDate || "")}
+														/>
 														<DialogFooter>
 															<Button type="submit" className="bg-blue-500 hover:bg-blue-600">
 																Salvar

@@ -51,12 +51,25 @@ export default function RevenuesPage() {
 
 	const handleGenerateReceipt = async (itemId: string) => {
 		try {
-			const response = await fetch(`https://ordemdeservicosdev.onrender.com/api/finance/revenues/receipt/${itemId}`, {
-				method: "POST",
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-			});
+			const response = await toast.promise(
+				fetch(`https://ordemdeservicosdev.onrender.com/api/finance/revenues/receipt/${itemId}`, {
+					method: "POST",
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}),
+				{
+					pending: "Gerando recibo",
+					success: {
+						render: "Recibo gerado com sucesso!",
+						onClose: () => {
+							window.location.reload();
+						},
+						autoClose: 1500,
+					},
+					error: "Ocorreu um erro ao gerar o recibo",
+				}
+			);
 
 			if (!response.ok) {
 				throw new Error("Failed to generate receipt");

@@ -62,7 +62,8 @@ export default function UserPage({ params }: { params: { id: string } }) {
 				.catch((error) => {
 					console.error("Erro ao buscar usuários:", error);
 					setRoles([]);
-				}).finally(() => setIsLoading(false));
+				})
+				.finally(() => setIsLoading(false));
 	}, [params.id, token]);
 
 	const handleSelectChange = (value: string) => {
@@ -180,7 +181,9 @@ export default function UserPage({ params }: { params: { id: string } }) {
 										<Link href="/users">
 											<Button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded">Voltar</Button>
 										</Link>
-										<h1 className="text-2xl font-semibold">Usuário - {user.name}</h1>
+										<h1 className="text-2xl font-semibold">
+											{user.isUser ? "Usuário" : "Funcionário"} - {user.name}
+										</h1>
 									</CardHeader>
 									<CardContent className="p-6 space-y-6">
 										<div className="border-b border-gray-300 pb-4 mb-4">
@@ -193,16 +196,15 @@ export default function UserPage({ params }: { params: { id: string } }) {
 													<strong className="font-medium">Telefone:</strong> {user.phone}
 												</p>
 												<p className="text-gray-700">
-													<strong className="font-medium">Cargo:</strong> {user.role?.roleName ? user.role?.roleName : "Não possui"}
+													<strong className="font-medium">Cargo:</strong>{" "}
+													{user.role?.roleName ? user.role?.roleName : "Não possui"}
 												</p>
 												<p className="text-gray-700">
 													<strong className="font-medium">Distrito:</strong> {user.tertiary.districtName}
 												</p>
 												<p className="text-gray-700 flex gap-1">
 													<strong className="font-medium">Salário:</strong>{" "}
-													{user.isEmployee ? (
-														<MoneyFormatter value={user.salary || 0} currency="BRL" />
-													) : (
+													{user.salary === 0 ? (
 														<Dialog>
 															<DialogTrigger asChild>
 																<p className="cursor-pointer">Adicionar salário</p>
@@ -237,6 +239,8 @@ export default function UserPage({ params }: { params: { id: string } }) {
 																</form>
 															</DialogContent>
 														</Dialog>
+													) : (
+														<MoneyFormatter value={user.salary || 0} currency="BRL" />
 													)}
 												</p>
 											</div>
@@ -270,7 +274,9 @@ export default function UserPage({ params }: { params: { id: string } }) {
 										<CardContent className="p-6">
 											{user.role?.permissions.map((permission, index) => (
 												<div key={index} className="flex gap-4 mb-4 md:mb-8">
-													<span className=" text-sm sm:text-base lg:text-xl font-semibold w-full">{permission.resourceLabel}</span>
+													<span className=" text-sm sm:text-base lg:text-xl font-semibold w-full">
+														{permission.resourceLabel}
+													</span>
 													<ul className="list-none flex gap-2 md:gap-4">
 														<li className="rounded text-sm capitalize hover:cursor-pointer " title="Criar">
 															<PlusIcon

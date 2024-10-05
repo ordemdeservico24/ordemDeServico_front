@@ -11,7 +11,8 @@ export interface IUser {
 	role: IRole;
 	isTeamLeader: boolean;
 	isTeamMember: boolean;
-	isEmployee: boolean;
+	cpf?: string;
+	isUser: boolean;
 	salary: number | null;
 	startCompanyDate?: string;
 	createdAt?: string;

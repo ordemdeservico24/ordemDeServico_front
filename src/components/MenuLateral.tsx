@@ -278,7 +278,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 				>
 					<div className="flex items-center gap-2">
 						<FaUser className="h-4 w-4 md:h-5 md:w-5" />
-						<span>Usuários</span>
+						<span>Funcionários/Usuários</span>
 					</div>
 					<FaChevronDown
 						className={`h-4 w-4 md:h-5 md:w-5 transition-transform ${openDropdown === "usuarios" ? "rotate-180" : "rotate-0"}`}

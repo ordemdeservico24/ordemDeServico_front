@@ -79,7 +79,7 @@ const MenuHome = () => {
 		<Card className="hidden md:block w-[300px] h-full p-4 transition-transform duration-300 ease-in-out z-20">
 			<div className="flex flex-col justify-between ">
 				<div>
-					<div className="w-full flex justify-center items-center h-[170px] bg-[#cccccc]">
+					<div className="w-full flex justify-center items-center h-[170px] bg-[#cccccc] overflow-hidden">
 						<Image src={company ? company?.companyPhoto : Logo} alt="Logo" layout="responsive" width={60} height={60} />
 					</div>
 					<h1 className="text-center text-[#000] text-[1.2rem] mb-1 mt-2">{company?.companyName || "Empresa"}</h1>
@@ -277,7 +277,7 @@ const MenuHome = () => {
 							>
 								<div className="flex items-center gap-2">
 									<FaUser className="h-5 w-5" />
-									<span>Usuários</span>
+									<span>Funcionários/Usuários</span>
 								</div>
 								{openDropdown === "usuarios" ? <FaChevronUp className="h-5 w-5" /> : <FaChevronDown className="h-5 w-5" />}
 							</Button>

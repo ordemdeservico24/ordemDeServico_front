@@ -248,7 +248,6 @@ export default function StoragePage() {
 						</svg>
 					</div>
 				) : (
-				
 					<Tabs defaultValue="all">
 						<TabsContent value="all">
 							<Card>
@@ -282,7 +281,13 @@ export default function StoragePage() {
 																required
 																className="w-full"
 															/>
-															<Input type="number" name="quantity" placeholder="Quantidade" required className="w-full" />
+															<Input
+																type="number"
+																name="quantity"
+																placeholder="Quantidade"
+																required
+																className="w-full"
+															/>
 															<Select onValueChange={handleSelectUnitChange} value={selectedUnitMeasurement}>
 																<SelectTrigger className="outline-none border border-[#2a2a2a] rounded px-2 py-1">
 																	<SelectValue placeholder="Selecione uma Unidade de Medida" />
@@ -351,7 +356,13 @@ export default function StoragePage() {
 													</DialogHeader>
 													<form onSubmit={onSubmitSupplier} className="flex flex-col justify-center items-center">
 														<div className="flex flex-col items-center max-w-96 w-full space-y-4">
-															<Input type="text" name="name" placeholder="Nome do fornecedor" required className="w-full" />
+															<Input
+																type="text"
+																name="name"
+																placeholder="Nome do fornecedor"
+																required
+																className="w-full"
+															/>
 															<Input type="email" name="email" placeholder="E-mail" required className="w-full" />
 															<Input type="tel" name="phone" placeholder="Telefone" required className="w-full" />
 															<Button
@@ -374,6 +385,7 @@ export default function StoragePage() {
 												<TableCell>Nome do Produto</TableCell>
 												<TableCell>Quantidade</TableCell>
 												<TableCell>Total em Medida</TableCell>
+												<TableCell>Restante</TableCell>
 												<TableCell>Valor</TableCell>
 												<TableCell>Fornecedor</TableCell>
 											</TableRow>
@@ -384,6 +396,17 @@ export default function StoragePage() {
 													<TableCell>{item.productName}</TableCell>
 													<TableCell>{item.quantity}</TableCell>
 													<TableCell>{formatTotalMeasurement(item)}</TableCell>
+													<TableCell>
+														{item.unitOfMeasurement === "unit"
+															? `${item.quantity - item.usedQuantity} ${
+																	item.quantity - item.usedQuantity > 1 ? "unidades" : "unidade"
+															  }`
+															: `${item.totalMeasurement - item.usedMeasurement} ${
+																	item.unitOfMeasurement === "meter"
+																		? `${item.totalMeasurement - item.usedMeasurement > 1 ? "metros" : "metro"}`
+																		: `${item.totalMeasurement - item.usedMeasurement > 1 ? "litros" : "litro"}`
+															  }`}
+													</TableCell>
 													<TableCell>
 														<MoneyFormatter value={item.productValue || 0} currency="BRL" />
 													</TableCell>

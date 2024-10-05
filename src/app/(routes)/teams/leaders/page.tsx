@@ -34,7 +34,7 @@ export default function Page() {
 				.then((res) => res.json())
 				.then((data) => setLeaders(data))
 				.catch((error) => console.error("Fetch error:", error))
-			.finally(() => setIsLoading(false));
+				.finally(() => setIsLoading(false));
 		}
 	}, [token]);
 
@@ -76,7 +76,7 @@ export default function Page() {
 	};
 
 	useEffect(() => {
-		fetch(`https://ordemdeservicosdev.onrender.com/api/user/get-all-users?limit=${100}`, {
+		fetch(`https://ordemdeservicosdev.onrender.com/api/user/get-all-users?limit=${100}&type=user`, {
 			method: "GET",
 			headers: {
 				"Content-type": "application/json",
@@ -118,7 +118,7 @@ export default function Page() {
 	return (
 		<Container className="p-4">
 			<main className="grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">
-			{isLoading ? (
+				{isLoading ? (
 					<div className="flex justify-center items-center">
 						<svg
 							className="h-8 w-8 animate-spin text-gray-600 mx-auto"
@@ -136,118 +136,120 @@ export default function Page() {
 						</svg>
 					</div>
 				) : (
-				<>
-					{hasPermission(role, ["teams_management", "teamleader"], "read") && (
-					<Tabs defaultValue="all">
-						<TabsContent value="all">
-							<Card x-chunk="dashboard-06-chunk-0">
-								<CardHeader>
-									<div className="flex justify-between items-center">
-										<div>
-											<CardTitle className="text-[#3b82f6] text-2xl font-bold">Líderes</CardTitle>
-											<CardDescription>Cheque todas as informações relacionado aos líderes apresentados.</CardDescription>
-										</div>
+					<>
+						{hasPermission(role, ["teams_management", "teamleader"], "read") && (
+							<Tabs defaultValue="all">
+								<TabsContent value="all">
+									<Card x-chunk="dashboard-06-chunk-0">
+										<CardHeader>
+											<div className="flex justify-between items-center">
+												<div>
+													<CardTitle className="text-[#3b82f6] text-2xl font-bold">Líderes</CardTitle>
+													<CardDescription>
+														Cheque todas as informações relacionado aos líderes apresentados.
+													</CardDescription>
+												</div>
 
-										<div className="flex gap-3 items-center justify-between">
-											{hasPermission(role, ["teams_management"], "create") && (
-												<Dialog>
-													<DialogTrigger asChild>
-														<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
-															Criar
-														</Button>
-													</DialogTrigger>
-													<DialogContent className="sm:max-w-[425px]">
-														<DialogHeader>
-															<DialogTitle>Adicionar líder</DialogTitle>
-															<DialogDescription>
-																Selecione um usuário para atribuir à equipe como líder.
-															</DialogDescription>
-														</DialogHeader>
-														<form
-															action="#"
-															onSubmit={(e) => onSubmit(e)}
-															className="flex flex-col justify-center items-center"
-														>
-															<div className="flex flex-col gap-3 items-center max-w-96 w-full">
-																<select
-																	name="id"
-																	className="outline-none border focus:border-[#2a2a2a] rounded px-2 py-1 w-full"
-																>
-																	<option value="">Selecione um usuário</option>
-																	{filteredUsers.map((users) => (
-																		<option value={users.id} key={users.id}>
-																			{users.name}
-																		</option>
-																	))}
-																</select>
-																<Button
-																	className="text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
-																	type="submit"
-																>
+												<div className="flex gap-3 items-center justify-between">
+													{hasPermission(role, ["teams_management"], "create") && (
+														<Dialog>
+															<DialogTrigger asChild>
+																<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
 																	Criar
 																</Button>
-															</div>
-														</form>
-													</DialogContent>
-												</Dialog>
-											)}
-										</div>
-									</div>
-								</CardHeader>
-								<div className="p-3">
-									<Table className="w-full bg-white shadow-md rounded-lg overflow-x-auto">
-										<TableHeader>
-											<TableRow>
-												<TableHead className="font-bold">Nome</TableHead>
-												<TableHead className="font-bold">E-mail</TableHead>
-												<TableHead className="font-bold">Telefone</TableHead>
-												<TableHead className="font-bold">Profissão</TableHead>
-											</TableRow>
-										</TableHeader>
-										<TableBody>
-											{leaders.map((leader, index) => (
-												<TableRow key={index} className="hover:bg-gray-100 cursor-pointer">
-													<TableCell>{leader.user.name}</TableCell>
-													<TableCell>{leader.user.email}</TableCell>
-													<TableCell>{leader.user.phone}</TableCell>
-													<TableCell>{leader.user.role.roleName}</TableCell>
-													{hasPermission(role, "teams_management", "delete") && (
-														<TableCell>
-															<Dialog>
-																<DialogTrigger asChild>
-																	<Button variant="ghost">
-																		<FiTrash className="text-red-500 hover:text-red-700" size={20} />
-																	</Button>
-																</DialogTrigger>
-																<DialogContent className="sm:max-w-[425px]">
-																	<DialogHeader>
-																		<DialogTitle>Excluir Líder</DialogTitle>
-																		<DialogDescription>
-																			Tem certeza que deseja excluir o líder <b>{leader.user.name}</b>? Esta
-																			ação não poderá ser desfeita.
-																		</DialogDescription>
-																	</DialogHeader>
-																	<div className="flex justify-end space-x-4">
-																		<Button variant="outline" onClick={() => console.log("Cancelado")}>
-																			Cancelar
-																		</Button>
-																		<Button variant="destructive" onClick={() => handleDelete(leader.id)}>
-																			Confirmar Exclusão
+															</DialogTrigger>
+															<DialogContent className="sm:max-w-[425px]">
+																<DialogHeader>
+																	<DialogTitle>Adicionar líder</DialogTitle>
+																	<DialogDescription>
+																		Selecione um usuário para atribuir à equipe como líder.
+																	</DialogDescription>
+																</DialogHeader>
+																<form
+																	action="#"
+																	onSubmit={(e) => onSubmit(e)}
+																	className="flex flex-col justify-center items-center"
+																>
+																	<div className="flex flex-col gap-3 items-center max-w-96 w-full">
+																		<select
+																			name="id"
+																			className="outline-none border focus:border-[#2a2a2a] rounded px-2 py-1 w-full"
+																		>
+																			<option value="">Selecione um usuário</option>
+																			{filteredUsers.map((users) => (
+																				<option value={users.id} key={users.id}>
+																					{users.name}
+																				</option>
+																			))}
+																		</select>
+																		<Button
+																			className="text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
+																			type="submit"
+																		>
+																			Criar
 																		</Button>
 																	</div>
-																</DialogContent>
-															</Dialog>
-														</TableCell>
+																</form>
+															</DialogContent>
+														</Dialog>
 													)}
-												</TableRow>
-											))}
-										</TableBody>
-									</Table>
-								</div>
-							</Card>
-						</TabsContent>
-					</Tabs>
-					)}
+												</div>
+											</div>
+										</CardHeader>
+										<div className="p-3">
+											<Table className="w-full bg-white shadow-md rounded-lg overflow-x-auto">
+												<TableHeader>
+													<TableRow>
+														<TableHead className="font-bold">Nome</TableHead>
+														<TableHead className="font-bold">E-mail</TableHead>
+														<TableHead className="font-bold">Telefone</TableHead>
+														<TableHead className="font-bold">Profissão</TableHead>
+													</TableRow>
+												</TableHeader>
+												<TableBody>
+													{leaders.map((leader, index) => (
+														<TableRow key={index} className="hover:bg-gray-100 cursor-pointer">
+															<TableCell>{leader.user.name}</TableCell>
+															<TableCell>{leader.user.email}</TableCell>
+															<TableCell>{leader.user.phone}</TableCell>
+															<TableCell>{leader.user.role.roleName}</TableCell>
+															{hasPermission(role, "teams_management", "delete") && (
+																<TableCell>
+																	<Dialog>
+																		<DialogTrigger asChild>
+																			<Button variant="ghost">
+																				<FiTrash className="text-red-500 hover:text-red-700" size={20} />
+																			</Button>
+																		</DialogTrigger>
+																		<DialogContent className="sm:max-w-[425px]">
+																			<DialogHeader>
+																				<DialogTitle>Excluir Líder</DialogTitle>
+																				<DialogDescription>
+																					Tem certeza que deseja excluir o líder <b>{leader.user.name}</b>?
+																					Esta ação não poderá ser desfeita.
+																				</DialogDescription>
+																			</DialogHeader>
+																			<div className="flex justify-end space-x-4">
+																				<Button variant="outline" onClick={() => console.log("Cancelado")}>
+																					Cancelar
+																				</Button>
+																				<Button variant="destructive" onClick={() => handleDelete(leader.id)}>
+																					Confirmar Exclusão
+																				</Button>
+																			</div>
+																		</DialogContent>
+																	</Dialog>
+																</TableCell>
+															)}
+														</TableRow>
+													))}
+												</TableBody>
+											</Table>
+										</div>
+									</Card>
+								</TabsContent>
+							</Tabs>
+						)}
 					</>
 				)}
 			</main>

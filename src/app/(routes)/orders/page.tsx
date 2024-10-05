@@ -48,6 +48,15 @@ export default function Page() {
 	const { role = [] } = useStore();
 
 	useEffect(() => {
+		if (orderStatus?.length && !selectedFilter) {
+			const openStatus = orderStatus.find((status) => status.open === true); // Encontra o status com open === true
+			if (openStatus) {
+				setSelectedFilter(openStatus.id); // Define o status com `open: true` como o valor padrão
+			}
+		}
+	}, [orderStatus]);
+
+	useEffect(() => {
 		fetch("https://ordemdeservicosdev.onrender.com/api/order/get-all-subjects", {
 			method: "GET",
 			headers: {
@@ -291,7 +300,12 @@ export default function Page() {
 															placeholder="N° da casa do solicitante"
 															required
 														/>
-														<Input type="text" name="requesterComplement" placeholder="Complemento do solicitante" required />
+														<Input
+															type="text"
+															name="requesterComplement"
+															placeholder="Complemento do solicitante"
+															required
+														/>
 														<Input type="text" name="requesterZipcode" placeholder="CEP do solicitante" required />
 														<Textarea name="notes" placeholder="Observações" className="border rounded px-2 py-1 mb-4" />
 														<Button
@@ -304,69 +318,66 @@ export default function Page() {
 												</DialogContent>
 											</Dialog>
 										)}
-										<DropdownMenu>
-											<DropdownMenuTrigger asChild>
-												<Button variant="outline">
-													<Filter className="mr-2 h-4 w-4" />
-													Filtrar
-												</Button>
-											</DropdownMenuTrigger>
-											<DropdownMenuContent>
-												<DropdownMenuRadioGroup value={selectedFilter || ""} onValueChange={handleFilterChange}>
-													{orderStatus?.map((status) => (
-														<DropdownMenuRadioItem
-															key={status.id}
-															value={status.id}
-															className="outline-none px-6 py-1 focus:bg-accent hover:cursor-pointer"
-														>
-															{status.orderStatusName}
-														</DropdownMenuRadioItem>
-													))}
-												</DropdownMenuRadioGroup>
-											</DropdownMenuContent>
-										</DropdownMenu>
+										<p>
+											{orderStatus?.map((status) => (
+												<span
+													key={status.id}
+													onClick={() => handleFilterChange(status.id)}
+													className={`cursor-pointer px-4 py-2 rounded-md text-sm font-medium border transition-all duration-200 ease-in-out
+														${
+															selectedFilter === status.id
+																? "bg-slate-300 text-slate-800 border-slate-400"
+																: "bg-background text-foreground border-input hover:bg-accent hover:text-accent-foreground"
+														}`}
+													style={{ marginRight: "8px", display: "inline-block" }}
+												>
+													{status.orderStatusName}
+												</span>
+											))}
+										</p>
 									</div>
 								</div>
 							</div>
 						</CardHeader>
 						<div className="flex flex-col gap-4 p-4 sm:p-6">
-									<div className="grid grid-cols-1 w-full sm:grid-cols-2 lg:grid-cols-3 gap-4">
-										{orders.map((order) => (
-											<div
-												key={order.id}
-												className={`relative border rounded-lg p-4 bg-white shadow-md hover:shadow-lg transition-shadow ${order.isExpired ? "border-5 border-solid border-red-500 overflow-hidden" : ""
-													}`}
-											>
-												{order.isExpired && (
-													<span className="absolute top-[100px] w-[160px] right-[-110px] flex justify-center bg-red-500 text-white text-xs font-semibold px-3 py-2 rounded-tl-lg transform rotate-45 origin-top-right -translate-x-1/2 -translate-y-1/2">
-														Atrasado
-													</span>
-												)}
-												{hasPermission(role, ["orders_management"], "read") && (
-													<Link href={`/orders/order/${order.id}`}>
-														<h2 className={`text-lg font-semibold mb-2 ${order.isExpired ? "pt-3" : "pt-1"}`}>
-															Ordem de Serviço - {order.orderId}
-														</h2>
-													</Link>
-												)}
-												<p className="text-gray-600 mb-2">Data de abertura: {order.openningDate}</p>
-												<p className="text-gray-800 mb-2">{truncateNotes(order.notes, 100)}</p>
-												<div className="flex justify-between items-center">
-													{hasPermission(role, ["orders_management"], "update") && (
-														<OrderStatus
-															currentStatusId={order.orderStatus.id}
-															currentStatus={order.orderStatus.orderStatusName}
-															orderId={order.id}
-															statuses={orderStatus || []}
-														/>
-													)}
-													{hasPermission(role, ["orders_management"], "update") && (
-														<EditDeleteOrder orderId={order.id} subjects={subjects || []} orderStatus={orderStatus || []} />
-													)}
-												</div>
-											</div>
-										))}
+							<div className="grid grid-cols-1 w-full sm:grid-cols-2 lg:grid-cols-3 gap-4">
+								{orders.map((order) => (
+									<div
+										key={order.id}
+										className={`relative border rounded-lg p-4 bg-white shadow-md hover:shadow-lg transition-shadow ${
+											order.isExpired ? "border-5 border-solid border-red-500 overflow-hidden" : ""
+										}`}
+									>
+										{order.isExpired && (
+											<span className="absolute top-[100px] w-[160px] right-[-110px] flex justify-center bg-red-500 text-white text-xs font-semibold px-3 py-2 rounded-tl-lg transform rotate-45 origin-top-right -translate-x-1/2 -translate-y-1/2">
+												Atrasado
+											</span>
+										)}
+										{hasPermission(role, ["orders_management"], "read") && (
+											<Link href={`/orders/order/${order.id}`}>
+												<h2 className={`text-lg font-semibold mb-2 ${order.isExpired ? "pt-3" : "pt-1"}`}>
+													Ordem de Serviço - {order.orderId}
+												</h2>
+											</Link>
+										)}
+										<p className="text-gray-600 mb-2">Data de abertura: {order.openningDate}</p>
+										<p className="text-gray-800 mb-2">{truncateNotes(order.notes, 100)}</p>
+										<div className="flex justify-between items-center">
+											{hasPermission(role, ["orders_management"], "update") && (
+												<OrderStatus
+													currentStatusId={order.orderStatus.id}
+													currentStatus={order.orderStatus.orderStatusName}
+													orderId={order.id}
+													statuses={orderStatus || []}
+												/>
+											)}
+											{hasPermission(role, ["orders_management"], "update") && (
+												<EditDeleteOrder orderId={order.id} subjects={subjects || []} orderStatus={orderStatus || []} />
+											)}
+										</div>
 									</div>
+								))}
+							</div>
 						</div>
 						<div className="flex items-center justify-between pt-0 pb-4">
 							<Pagination>

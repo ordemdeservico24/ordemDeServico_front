@@ -6,7 +6,7 @@ import React, { FormEvent, useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ICreateUserRequest } from "@/interfaces/create-user-request/createUser.interface";
 import { toast } from "react-toastify";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
@@ -14,13 +14,18 @@ import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/ca
 import { getCookie } from "cookies-next";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import MoneyFormatter from "@/components/formatMoneyValues";
+import { FaEdit } from "react-icons/fa";
+import { Label } from "@/components/ui/label";
 
 export default function Page() {
 	const [users, setUsers] = useState<IUser[]>([]);
+	const [user, setUser] = useState<IUser>();
 	const [currentPage, setCurrentPage] = useState(1);
 	const [totalPages, setTotalPages] = useState(1);
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const [isEditing, setIsEditing] = useState(false);
+	const [userId, setUserId] = useState("");
 	const token = getCookie("access_token");
 	const router = useRouter();
 
@@ -71,6 +76,54 @@ export default function Page() {
 		}
 	};
 
+	const createEmployee = async (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
+		const getInput = (name: string): HTMLInputElement => {
+			return e.currentTarget.querySelector(`[name="${name}"]`) as HTMLInputElement;
+		};
+
+		const request: {
+			name: string;
+			phone: string;
+		} = {
+			name: getInput("name").value || "",
+			phone: getInput("phone").value || "",
+		};
+
+		toast.promise(
+			fetch(`https://ordemdeservicosdev.onrender.com/api/user/create-user/id?type=employee`, {
+				method: "POST",
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify(request),
+			})
+				.then((res) => {
+					if (res.ok) {
+						return res.json();
+					}
+				})
+				.then((data) => {
+					console.log(data);
+				})
+				.catch((error) => {
+					console.log(error);
+				}),
+			{
+				pending: "Cadastrando funcionário...",
+				success: {
+					render: "Funcionário cadastrado com sucesso",
+					onClose: () => {
+						window.location.reload();
+					},
+					autoClose: 1500,
+				},
+				error: "Ocorreu um erro ao cadastrar o funcionário",
+			}
+		);
+	};
+
 	const fetchUsers = async () => {
 		try {
 			setIsLoading(true);
@@ -105,6 +158,79 @@ export default function Page() {
 		}
 	};
 
+	const getUser = async (userId: string) => {
+		await fetch(`https://ordemdeservicosdev.onrender.com/api/user/get-user/${userId}`, {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+		})
+			.then((res) => {
+				if (!res.ok) {
+					throw new Error(`HTTP error! status: ${res.status}`);
+				}
+				return res.json();
+			})
+			.then((data) => {
+				setUser(data);
+			})
+			.catch((err) => {
+				console.error(err);
+			});
+	};
+
+	const editUser = async (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
+		const getInput = (name: string): HTMLInputElement => {
+			return e.currentTarget.querySelector(`[name="${name}"]`) as HTMLInputElement;
+		};
+
+		const request: {
+			name: string;
+			email?: string;
+			phone: string;
+			cpf?: string;
+			startCompanyDate: Date;
+		} = {
+			name: getInput("name").value || "",
+			phone: getInput("phone").value || "",
+		};
+
+		toast.promise(
+			fetch(`https://ordemdeservicosdev.onrender.com/api/user/create-user/id?type=employee`, {
+				method: "POST",
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify(request),
+			})
+				.then((res) => {
+					if (res.ok) {
+						return res.json();
+					}
+				})
+				.then((data) => {
+					console.log(data);
+				})
+				.catch((error) => {
+					console.log(error);
+				}),
+			{
+				pending: "Cadastrando funcionário...",
+				success: {
+					render: "Funcionário cadastrado com sucesso",
+					onClose: () => {
+						window.location.reload();
+					},
+					autoClose: 1500,
+				},
+				error: "Ocorreu um erro ao cadastrar o funcionário",
+			}
+		);
+	};
+
 	useEffect(() => {
 		fetchUsers();
 	}, [currentPage, token]);
@@ -136,24 +262,62 @@ export default function Page() {
 								<CardHeader>
 									<div className="flex items-center justify-between">
 										<div>
-											<CardTitle className="text-[#3b82f6] text-2xl font-bold">Usuários</CardTitle>
-											<CardDescription>Cheque todas as informações relacionadas aos usuários.</CardDescription>
+											<CardTitle className="text-[#3b82f6] text-2xl font-bold">Usuários/Funcionários</CardTitle>
+											<CardDescription>Cheque todas as informações relacionadas aos usuários e funcionários.</CardDescription>
 										</div>
-										<div>
+										<div className="flex gap-2">
 											<Dialog>
 												<DialogTrigger asChild>
 													<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
-														Importar Usuários
+														Importar Funcionários
 													</Button>
 												</DialogTrigger>
 												<DialogContent className="sm:max-w-[425px]">
 													<DialogHeader>
-														<DialogTitle>Importar Usuários</DialogTitle>
-														<DialogDescription>Envie uma planilha contendo os usuários.</DialogDescription>
+														<DialogTitle>Importar Funcionários</DialogTitle>
+														<DialogDescription>Envie uma planilha contendo os funcionários.</DialogDescription>
 													</DialogHeader>
-													<form action="#" onSubmit={(e) => onSubmit(e)} className=" flex flex-col justify-center items-center">
+													<form
+														action="#"
+														onSubmit={(e) => onSubmit(e)}
+														className=" flex flex-col justify-center items-center"
+													>
 														<div className="flex gap-3 flex-col items-center max-w-96 w-full">
 															<Input type="file" name="sheetFile" placeholder="Envie uma planilha" className="w-full" />
+															<Button
+																className=" text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
+																type="submit"
+															>
+																Criar
+															</Button>
+														</div>
+													</form>
+												</DialogContent>
+											</Dialog>
+											<Dialog>
+												<DialogTrigger asChild>
+													<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
+														Cadastrar Funcionário
+													</Button>
+												</DialogTrigger>
+												<DialogContent className="sm:max-w-[425px]">
+													<DialogHeader>
+														<DialogTitle>Cadastrar Funcionário</DialogTitle>
+														<DialogDescription>Cadastre um funcionário no sistema.</DialogDescription>
+													</DialogHeader>
+													<form
+														action="#"
+														onSubmit={(e) => createEmployee(e)}
+														className=" flex flex-col justify-center items-center"
+													>
+														<div className="flex gap-3 flex-col items-center max-w-96 w-full">
+															<Input type="text" name="name" placeholder="Nome do Funcionário" className="w-full" />
+															<Input
+																type="text"
+																name="phone"
+																placeholder="Telefone do Funcionário"
+																className="w-full"
+															/>
 															<Button
 																className=" text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
 																type="submit"
@@ -177,7 +341,7 @@ export default function Page() {
 													<TableHead className="font-bold">Email</TableHead>
 													<TableHead className="font-bold">Telefone</TableHead>
 													<TableHead className="font-bold">Cargo</TableHead>
-													<TableHead className="font-bold">Funcionário</TableHead>
+													<TableHead className="font-bold">Usuário</TableHead>
 													<TableHead className="font-bold">Salário</TableHead>
 												</TableRow>
 											</TableHeader>
@@ -214,18 +378,73 @@ export default function Page() {
 															<TableCell>{user.email}</TableCell>
 															<TableCell>{user.phone}</TableCell>
 															<TableCell>{user.role?.roleName}</TableCell>
-															<TableCell>{user.isEmployee ? "Sim" : "Não"}</TableCell>
+															<TableCell>{user.isUser ? "Sim" : "Não"}</TableCell>
 															<TableCell>
 																<MoneyFormatter value={user.salary || 0} />
 															</TableCell>
 															<TableCell style={{ cursor: "pointer" }} onClick={() => router.push(`/users/${user.id}`)}>
 																<Button variant="outline">Ver dados</Button>
 															</TableCell>
+															<TableCell
+																style={{ cursor: "pointer" }}
+																onClick={() => {
+																	setIsEditing(true), getUser(user.id);
+																}}
+															>
+																<FaEdit
+																	className="text-gray-500 cursor-pointer hover:text-gray-700 transition-colors duration-200"
+																	size={20}
+																/>
+															</TableCell>
 														</TableRow>
 													))
 												)}
 											</TableBody>
 										</Table>
+										<Dialog open={isEditing} onOpenChange={setIsEditing}>
+											<DialogContent className="sm:max-w-[425px]">
+												<DialogHeader>
+													<DialogTitle>Editar Usuário</DialogTitle>
+													<DialogDescription>Edite os dados desse usuário abaixo</DialogDescription>
+												</DialogHeader>
+												{user && (
+													<form action="#" onSubmit={(e) => editUser(e)} className="flex flex-col gap-2">
+														<Input type="text" name="name" defaultValue={user.name} placeholder="Digite aqui o nome" />
+														<Input
+															type="tel"
+															name="phone"
+															defaultValue={user.phone}
+															placeholder="Digite aqui o telefone"
+														/>
+														{user.isUser ? (
+															<Input
+																type="email"
+																name="email"
+																defaultValue={user.email}
+																placeholder="Digite aqui o email"
+															/>
+														) : (
+															""
+														)}
+														<Input type="text" name="cpf" defaultValue={user.cpf} placeholder="Digite aqui o CPF" />
+														<Label htmlFor="startCompanyDate">Data de início na empresa:</Label>
+														<Input type="date" name="startCompanyDate" defaultValue={user.startCompanyDate} />
+														<DialogFooter>
+															<Button type="submit" className="bg-blue-500 hover:bg-blue-600">
+																Salvar
+															</Button>
+															<Button
+																type="button"
+																className="bg-blue-500 hover:bg-blue-600"
+																onClick={() => setIsEditing(false)}
+															>
+																Cancelar
+															</Button>
+														</DialogFooter>
+													</form>
+												)}
+											</DialogContent>
+										</Dialog>
 									</div>
 								</div>
 								<div className="flex items-center justify-between pt-0 pb-4">

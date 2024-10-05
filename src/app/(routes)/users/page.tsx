@@ -265,7 +265,7 @@ export default function Page() {
 	}, [currentPage, token]);
 
 	return (
-		<Container className="p-4">
+		<Container className="p-4 overflow-x-auto">
 			<main className="grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">
 				{isLoading ? (
 					<div className="flex justify-center items-center">

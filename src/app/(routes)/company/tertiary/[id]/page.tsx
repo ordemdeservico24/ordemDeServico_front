@@ -37,7 +37,7 @@ export default function Page({ params }: { params: { id: string } }) {
 				console.log(status, data);
 				setTertiary(data);
 			});
-			setIsLoading(false);
+		setIsLoading(false);
 	}, [params.id, token]);
 
 	return (
@@ -61,7 +61,6 @@ export default function Page({ params }: { params: { id: string } }) {
 						</svg>
 					</div>
 				) : (
-				
 					<div className="max-w-7xl mx-auto space-y-6">
 						<h1 className="text-3xl font-bold">{tertiary?.nameDistrict}</h1>
 
@@ -144,7 +143,23 @@ export default function Page({ params }: { params: { id: string } }) {
 							<CardContent>
 								<p className="mb-4">Compartilhe este link para os usuários se cadastrarem a esse distrito</p>
 								<div className="flex gap-2">
-									<CopyToClipboardButton textToCopy={`http://localhost:3000/register/${tertiary?.id}`} />
+									<CopyToClipboardButton textToCopy={`https://ordem-de-servico-front.vercel.app/register/${tertiary?.id}`} />
+								</div>
+							</CardContent>
+						</Card>
+						<Card>
+							<CardHeader>
+								<CardTitle className="flex items-center gap-2">
+									<Clipboard className="h-5 w-5" />
+									Cadastro de Funcionários
+								</CardTitle>
+							</CardHeader>
+							<CardContent>
+								<p className="mb-4">Compartilhe este link para os funcionários se cadastrarem a esse distrito</p>
+								<div className="flex gap-2">
+									<CopyToClipboardButton
+										textToCopy={`https://ordem-de-servico-front.vercel.app/register/employee/${tertiary?.id}`}
+									/>
 								</div>
 							</CardContent>
 						</Card>

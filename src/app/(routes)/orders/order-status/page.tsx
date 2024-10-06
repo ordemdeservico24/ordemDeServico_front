@@ -97,9 +97,9 @@ export default function Page() {
 	};
 
 	return (
-		<Container className="p-4">
+		<Container className="p-4 overflow-x-auto">
 			<main className="grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">
-			{isLoading ? (
+				{isLoading ? (
 					<div className="flex justify-center items-center">
 						<svg
 							className="h-8 w-8 animate-spin text-gray-600 mx-auto"
@@ -116,119 +116,128 @@ export default function Page() {
 							/>
 						</svg>
 					</div>
-					) : error ? (
+				) : error ? (
 					<div className="text-center text-red-500 p-8">
-								<span>{error}</span>
-							</div>
-						) : (
-				<Tabs defaultValue="all">
-					<TabsContent value="all">
-						<Card x-chunk="dashboard-06-chunk-0">
-							<CardHeader>
-								<div className="flex items-center justify-between">
-									<div>
-										<CardTitle className="text-[#3b82f6] text-2xl font-bold">Status das Ordens</CardTitle>
-										<CardDescription>Veja todos os status disponíveis para as ordens de serviço.</CardDescription>
-									</div>
-									<div>
-										<Dialog>
-											<DialogTrigger asChild>
-												<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
-													Criar
-												</Button>
-											</DialogTrigger>
-											<DialogContent className="sm:max-w-[425px]">
-												<DialogHeader>
-													<DialogTitle>Adicionar Status</DialogTitle>
-													<DialogDescription>Adicione um status para utilizar nas ordens de serviço.</DialogDescription>
-												</DialogHeader>
-												<form action="#" onSubmit={(e) => onSubmit(e)} className=" flex flex-col justify-center items-center">
-													<div className="flex gap-3 flex-col items-center max-w-96 w-full">
-														<Input type="text" name="orderStatusName" placeholder="Nome do  status" className="w-full" />
-														<Select onValueChange={handleSelectOrderStatusChange} value={selectedStatus}>
-															<SelectTrigger className="outline-none border border-[#2a2a2a] rounded px-2 py-1">
-																<SelectValue placeholder="Selecione uma ação" />
-															</SelectTrigger>
-															<SelectContent>
-																<SelectItem value="open">Aberto</SelectItem>
-																<SelectItem value="inProgress">Em andamento</SelectItem>
-																<SelectItem value="review">Em revisão</SelectItem>
-																<SelectItem value="finish">Finalizada</SelectItem>
-															</SelectContent>
-														</Select>
-														<Button
-															className=" text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
-															type="submit"
-														>
-															Criar
-														</Button>
-													</div>
-												</form>
-											</DialogContent>
-										</Dialog>
-									</div>
-								</div>
-							</CardHeader>
-
-							<div className="p-3">
-								<div className="w-full overflow-x-auto">
-									<Table className="min-w-[600px] bg-white shadow-md rounded-lg">
-										<TableHeader>
-											<TableRow>
-												<TableHead className="font-bold">Nome</TableHead>
-												<TableHead className="font-bold">Aberto</TableHead>
-												<TableHead className="font-bold">Em Andamento</TableHead>
-												<TableHead className="font-bold">Revisão</TableHead>
-												<TableHead className="font-bold">Finalizada</TableHead>
-												<TableHead className="font-bold">Ordens</TableHead>
-											</TableRow>
-										</TableHeader>
-										<TableBody>
-											{isLoading ? (
-												<TableRow>
-													<TableCell colSpan={5} className="text-center">
-														<svg
-															className="h-8 w-8 animate-spin text-gray-600 mx-auto"
-															xmlns="http://www.w3.org/2000/svg"
-															fill="none"
-															viewBox="0 0 24 24"
-															stroke="currentColor"
-															strokeWidth={2}
-														>
-															<path
-																strokeLinecap="round"
-																strokeLinejoin="round"
-																d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+						<span>{error}</span>
+					</div>
+				) : (
+					<Tabs defaultValue="all">
+						<TabsContent value="all">
+							<Card x-chunk="dashboard-06-chunk-0">
+								<CardHeader>
+									<div className="flex items-center justify-between">
+										<div>
+											<CardTitle className="text-[#3b82f6] text-2xl font-bold">Status das Ordens</CardTitle>
+											<CardDescription>Veja todos os status disponíveis para as ordens de serviço.</CardDescription>
+										</div>
+										<div>
+											<Dialog>
+												<DialogTrigger asChild>
+													<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
+														Criar
+													</Button>
+												</DialogTrigger>
+												<DialogContent className="sm:max-w-[425px]">
+													<DialogHeader>
+														<DialogTitle>Adicionar Status</DialogTitle>
+														<DialogDescription>Adicione um status para utilizar nas ordens de serviço.</DialogDescription>
+													</DialogHeader>
+													<form
+														action="#"
+														onSubmit={(e) => onSubmit(e)}
+														className=" flex flex-col justify-center items-center"
+													>
+														<div className="flex gap-3 flex-col items-center max-w-96 w-full">
+															<Input
+																type="text"
+																name="orderStatusName"
+																placeholder="Nome do  status"
+																className="w-full"
 															/>
-														</svg>
-													</TableCell>
-												</TableRow>
-											) : error ? (
+															<Select onValueChange={handleSelectOrderStatusChange} value={selectedStatus}>
+																<SelectTrigger className="outline-none border border-[#2a2a2a] rounded px-2 py-1">
+																	<SelectValue placeholder="Selecione uma ação" />
+																</SelectTrigger>
+																<SelectContent>
+																	<SelectItem value="open">Aberto</SelectItem>
+																	<SelectItem value="inProgress">Em andamento</SelectItem>
+																	<SelectItem value="review">Em revisão</SelectItem>
+																	<SelectItem value="finish">Finalizada</SelectItem>
+																</SelectContent>
+															</Select>
+															<Button
+																className=" text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
+																type="submit"
+															>
+																Criar
+															</Button>
+														</div>
+													</form>
+												</DialogContent>
+											</Dialog>
+										</div>
+									</div>
+								</CardHeader>
+
+								<div className="p-3">
+									<div className="w-full overflow-x-auto">
+										<Table className="min-w-[600px] bg-white shadow-md rounded-lg">
+											<TableHeader>
 												<TableRow>
-													<TableCell colSpan={5} className="text-center text-red-500">
-														{error}
-													</TableCell>
+													<TableHead className="font-bold">Nome</TableHead>
+													<TableHead className="font-bold">Aberto</TableHead>
+													<TableHead className="font-bold">Em Andamento</TableHead>
+													<TableHead className="font-bold">Revisão</TableHead>
+													<TableHead className="font-bold">Finalizada</TableHead>
+													<TableHead className="font-bold">Ordens</TableHead>
 												</TableRow>
-											) : (
-												orderStatus?.map((status) => (
-													<TableRow key={status.id} className="border-b">
-														<TableCell>{status.orderStatusName}</TableCell>
-														<TableCell>{status.open ? "Sim" : "Não"}</TableCell>
-														<TableCell>{status.inProgress ? "Sim" : "Não"}</TableCell>
-														<TableCell>{status.review ? "Sim" : "Não"}</TableCell>
-														<TableCell>{status.finish ? "Sim" : "Não"}</TableCell>
-														<TableCell>{status.orders?.length}</TableCell>
+											</TableHeader>
+											<TableBody>
+												{isLoading ? (
+													<TableRow>
+														<TableCell colSpan={5} className="text-center">
+															<svg
+																className="h-8 w-8 animate-spin text-gray-600 mx-auto"
+																xmlns="http://www.w3.org/2000/svg"
+																fill="none"
+																viewBox="0 0 24 24"
+																stroke="currentColor"
+																strokeWidth={2}
+															>
+																<path
+																	strokeLinecap="round"
+																	strokeLinejoin="round"
+																	d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+																/>
+															</svg>
+														</TableCell>
 													</TableRow>
-												))
-											)}
-										</TableBody>
-									</Table>
+												) : error ? (
+													<TableRow>
+														<TableCell colSpan={5} className="text-center text-red-500">
+															{error}
+														</TableCell>
+													</TableRow>
+												) : (
+													orderStatus?.map((status) => (
+														<TableRow key={status.id} className="border-b">
+															<TableCell>{status.orderStatusName}</TableCell>
+															<TableCell>{status.open ? "Sim" : "Não"}</TableCell>
+															<TableCell>{status.inProgress ? "Sim" : "Não"}</TableCell>
+															<TableCell>{status.review ? "Sim" : "Não"}</TableCell>
+															<TableCell>{status.finish ? "Sim" : "Não"}</TableCell>
+															<TableCell>{status.orders?.length}</TableCell>
+														</TableRow>
+													))
+												)}
+											</TableBody>
+										</Table>
+									</div>
 								</div>
-							</div>
-						</Card>
-					</TabsContent>
+							</Card>
+						</TabsContent>
 					</Tabs>
-						)}
+				)}
 			</main>
 		</Container>
 	);

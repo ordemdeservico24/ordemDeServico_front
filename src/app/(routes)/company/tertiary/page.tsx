@@ -1,16 +1,22 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import { Container } from "@/components/container";
 import { Table, TableHeader, TableBody, TableRow, TableCell } from "@/components/ui/table";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getCookie } from "cookies-next";
-import { ITertiaryGroup } from "@/interfaces/company.interface";
+import { ISecondaryGroup, ITertiaryGroup } from "@/interfaces/company.interface";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import { Input } from "@/components/ui/input";
 
 export default function TertiaryGroupsPage() {
 	const token = getCookie("access_token");
 	const [tertiaryGroups, setTertiaryGroups] = useState<ITertiaryGroup[] | null>(null);
+	const [secondaryGroups, setSecondaryGroups] = useState<ISecondaryGroup[] | null>(null);
+	const [secondary, setSecondary] = useState<ISecondaryGroup | string>("");
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const router = useRouter();
@@ -43,8 +49,84 @@ export default function TertiaryGroupsPage() {
 			}
 		};
 
+		const fetchSecondaryGroups = async () => {
+			setIsLoading(true);
+			setError(null);
+
+			try {
+				const response = await fetch("https://ordemdeservicosdev.onrender.com/api/company/get-all-secondaries", {
+					method: "GET",
+					headers: {
+						"Content-type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+				});
+
+				if (!response.ok) {
+					throw new Error("Network response was not ok");
+				}
+
+				const data = await response.json();
+				setSecondaryGroups(data);
+			} catch (error) {
+				console.error("Erro ao buscar os grupos terciários:", error);
+				setError("Erro ao carregar dados dos grupos terciários.");
+			} finally {
+				setIsLoading(false);
+			}
+		};
+
 		fetchTertiaryGroups();
+		fetchSecondaryGroups();
 	}, [token]);
+
+	const handleSelectChangeSecondary = (value: string) => {
+		setSecondary(value);
+	};
+
+	const handleAddDistrict = async (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
+		const getInput = (name: string): HTMLInputElement => {
+			return e.currentTarget.querySelector(`[name="${name}"]`) as HTMLInputElement;
+		};
+
+		const request: {
+			districtName: string;
+		} = {
+			districtName: getInput("districtName").value || "",
+		};
+		try {
+			const response = await toast.promise(
+				fetch(`https://ordemdeservicosdev.onrender.com/api/company/create-tertiary/${secondary}`, {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+					body: JSON.stringify(request),
+				}),
+				{
+					pending: "Criando Distrito",
+					success: {
+						render: "Distrito criado com sucesso",
+						onClose: () => {
+							window.location.reload();
+						},
+						autoClose: 1500,
+					},
+					error: "Ocorreu um erro ao criar",
+				}
+			);
+
+			if (!response.ok) {
+				throw new Error("Failed to create category");
+			}
+		} catch (error) {
+			console.error("Error creating category:", error);
+			setError("Erro ao criar categoria.");
+		}
+	};
 
 	return (
 		<Container className="overflow-x-auto">
@@ -66,32 +148,71 @@ export default function TertiaryGroupsPage() {
 							/>
 						</svg>
 					</div>
-					) : error ? (
+				) : error ? (
 					<div className="text-center text-red-500 p-8">
-								<span>{error}</span>
+						<span>{error}</span>
+					</div>
+				) : (
+					<Card>
+						<CardHeader>
+							<div className="flex items-center justify-between">
+								<div>
+									<CardTitle className="text-[#3b82f6] text-2xl font-bold">Distritos</CardTitle>
+									<CardDescription>Veja todas as informações relacionadas aos distritos.</CardDescription>
+								</div>
+								<Dialog>
+									<DialogTrigger asChild>
+										<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
+											Criar Novo Distrito
+										</Button>
+									</DialogTrigger>
+									<DialogContent className="sm:max-w-[425px]">
+										<DialogHeader>
+											<DialogTitle>Adicionar nova distrito</DialogTitle>
+											<DialogDescription>
+												Adicione um novo distrito para que os usuários/funcionários entrem nele
+											</DialogDescription>
+										</DialogHeader>
+										<form
+											action="#"
+											onSubmit={(e) => handleAddDistrict(e)}
+											className=" flex flex-col justify-center items-center"
+										>
+											<div className="flex gap-3 flex-col items-center max-w-96 w-full">
+												<Select onValueChange={handleSelectChangeSecondary}>
+													<SelectTrigger className="outline-none border border-[#2a2a2a] rounded px-2 py-1">
+														<SelectValue placeholder="Escolha a cidade do distrito" />
+													</SelectTrigger>
+													<SelectContent>
+														{secondaryGroups?.map((secondary) => (
+															<SelectItem key={secondary.id} value={secondary.id || ""}>
+																{secondary.cityName}
+															</SelectItem>
+														))}
+													</SelectContent>
+												</Select>
+												<Input type="text" name="districtName" placeholder="Nome do Distrito" className="w-full" />
+												<Button
+													className=" text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
+													type="submit"
+												>
+													Criar Distrito
+												</Button>
+											</div>
+										</form>
+									</DialogContent>
+								</Dialog>
 							</div>
-						) : (
-						<Card>
-					<CardHeader>
-						<div className="flex items-center justify-between">
-							<div>
-								<CardTitle className="text-[#3b82f6] text-2xl font-bold">Distritos</CardTitle>
-								<CardDescription>Veja todas as informações relacionadas aos distritos.</CardDescription>
-							</div>
-							<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
-								Criar Novo Distrito
-							</Button>
-						</div>
-					</CardHeader>
-					<div>
+						</CardHeader>
+						<div>
 							<Table className="overflow-x-auto">
 								<TableHeader>
 									<TableRow>
-										<TableCell>Nome do Distrito</TableCell>
-										<TableCell>Cidade</TableCell>
-										<TableCell>Usuários</TableCell>
-										<TableCell>Ordens</TableCell>
-										<TableCell>Equipes</TableCell>
+										<TableCell className="whitespace-nowrap">Nome do Distrito</TableCell>
+										<TableCell className="whitespace-nowrap">Cidade</TableCell>
+										<TableCell className="whitespace-nowrap">Usuários</TableCell>
+										<TableCell className="whitespace-nowrap">Ordens</TableCell>
+										<TableCell className="whitespace-nowrap">Equipes</TableCell>
 									</TableRow>
 								</TableHeader>
 								<TableBody>
@@ -102,16 +223,16 @@ export default function TertiaryGroupsPage() {
 												style={{ cursor: "pointer" }}
 												onClick={() => router.push(`/company/tertiary/${group.id}`)}
 											>
-												<TableCell>{group.districtName}</TableCell>
-												<TableCell>{group.secondary.cityName}</TableCell>
-												<TableCell>{group.users?.length || 0} usuários</TableCell>
-												<TableCell>{group.orders?.length || 0} ordens</TableCell>
-												<TableCell>{group.subjects?.length || 0} equipes</TableCell>
+												<TableCell className="whitespace-nowrap">{group.districtName}</TableCell>
+												<TableCell className="whitespace-nowrap">{group.secondary.cityName}</TableCell>
+												<TableCell className="whitespace-nowrap">{group.users?.length || 0} usuários</TableCell>
+												<TableCell className="whitespace-nowrap">{group.orders?.length || 0} ordens</TableCell>
+												<TableCell className="whitespace-nowrap">{group.subjects?.length || 0} equipes</TableCell>
 											</TableRow>
 										))}
 								</TableBody>
 							</Table>
-					</div>
+						</div>
 					</Card>
 				)}
 			</main>

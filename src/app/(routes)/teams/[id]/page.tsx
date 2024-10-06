@@ -28,7 +28,8 @@ export default function Page({ params }: { params: { id: string } }) {
 			.then(({ status, data }) => {
 				console.log(status, data);
 				setTeam(data);
-			}).finally(() => {
+			})
+			.finally(() => {
 				setIsLoading(false);
 			});
 	}, [params.id, token]);
@@ -108,7 +109,7 @@ export default function Page({ params }: { params: { id: string } }) {
 														<p>{member.user.name}</p>
 													</TableCell>
 													<TableCell>
-														<p>{member.user.role.roleName}</p>
+														<p>{member.user.role ? member.user.role.roleName : "Não informado"}</p>
 													</TableCell>
 													<TableCell>
 														<p>{member.user.phone}</p>

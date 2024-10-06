@@ -104,7 +104,8 @@ export default function Page() {
 				.then((data) => {
 					console.log(data);
 					setMembers(data);
-				}).finally(() => {
+				})
+				.finally(() => {
 					setIsLoading(false);
 				});
 		}
@@ -184,7 +185,7 @@ export default function Page() {
 	};
 
 	return (
-		<Container className="p-4">
+		<Container className="p-4 overflow-x-auto">
 			<main className="grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">
 				{isLoading ? (
 					<div className="flex justify-center items-center">
@@ -223,7 +224,9 @@ export default function Page() {
 														<DialogContent className="sm:max-w-[425px]">
 															<DialogHeader>
 																<DialogTitle>Adicionar membro</DialogTitle>
-																<DialogDescription>Selecione o usuário e a equipe para criar um membro.</DialogDescription>
+																<DialogDescription>
+																	Selecione o usuário e a equipe para criar um membro.
+																</DialogDescription>
 															</DialogHeader>
 															<form
 																action="#"
@@ -270,19 +273,23 @@ export default function Page() {
 											<Table className="w-full bg-white shadow-md rounded-lg overflow-x-auto">
 												<TableHeader>
 													<TableRow>
-														<TableHead className="font-bold">Nome</TableHead>
-														<TableHead className="font-bold">E-mail</TableHead>
-														<TableHead className="font-bold">Telefone</TableHead>
-														<TableHead className="font-bold">Profissão</TableHead>
+														<TableHead className="font-bold whitespace-nowrap">Nome</TableHead>
+														<TableHead className="font-bold whitespace-nowrap">E-mail</TableHead>
+														<TableHead className="font-bold whitespace-nowrap">Telefone</TableHead>
+														<TableHead className="font-bold whitespace-nowrap">Profissão</TableHead>
 													</TableRow>
 												</TableHeader>
 												<TableBody>
 													{members.map((member, index) => (
 														<TableRow key={index} className="hover:bg-gray-100 cursor-pointer">
-															<TableCell>{member.user.name}</TableCell>
-															<TableCell>{member.user.email}</TableCell>
-															<TableCell>{member.user.phone}</TableCell>
-															<TableCell>{member.user.role.roleName}</TableCell>
+															<TableCell className="whitespace-nowrap">{member.user.name}</TableCell>
+															<TableCell className="whitespace-nowrap">
+																{member.user.email ? member.user.email : "Não possui"}
+															</TableCell>
+															<TableCell className="whitespace-nowrap">{member.user.phone}</TableCell>
+															<TableCell className="whitespace-nowrap">
+																{member.user.role ? member.user.role.roleName : "Não informado"}
+															</TableCell>
 															{hasPermission(role, "teams_management", "delete") && (
 																<TableCell>
 																	<Dialog>
@@ -295,15 +302,18 @@ export default function Page() {
 																			<DialogHeader>
 																				<DialogTitle>Excluir Líder</DialogTitle>
 																				<DialogDescription>
-																					Tem certeza que deseja excluir o líder <b>{member.user.name}</b>? Esta
-																					ação não poderá ser desfeita.
+																					Tem certeza que deseja excluir o líder <b>{member.user.name}</b>?
+																					Esta ação não poderá ser desfeita.
 																				</DialogDescription>
 																			</DialogHeader>
 																			<div className="flex justify-end space-x-4">
 																				<Button variant="outline" onClick={() => console.log("Cancelado")}>
 																					Cancelar
 																				</Button>
-																				<Button variant="destructive" onClick={() => handleDeleteMember(member.id)}>
+																				<Button
+																					variant="destructive"
+																					onClick={() => handleDeleteMember(member.id)}
+																				>
 																					Confirmar Exclusão
 																				</Button>
 																			</div>

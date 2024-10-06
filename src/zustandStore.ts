@@ -104,11 +104,13 @@ export const useStore = create<StoreState>()(
 					token: "",
 					name: "",
 					profilePicture: "",
+					teamId: "",
 					role: [],
 				});
 				deleteCookie("access_token", { path: "/" });
 				localStorage.removeItem("user_name");
 				localStorage.removeItem("profile_picture");
+				localStorage.removeItem("teamId");
 				localStorage.removeItem("role");
 			},
 		}),

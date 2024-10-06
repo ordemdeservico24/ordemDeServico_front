@@ -24,7 +24,6 @@ export default function CategoryDetailPage() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [isAddItemDialogOpen, setIsAddItemDialogOpen] = useState(false);
 
-	
 	useEffect(() => {
 		setIsLoading(true);
 		const fetchCategoryItem = async () => {
@@ -121,7 +120,7 @@ export default function CategoryDetailPage() {
 		setIsLoading(false);
 	};
 
-	if(!categoryItem) {
+	if (!categoryItem) {
 		return (
 			<Container>
 				<main className="flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">
@@ -149,13 +148,13 @@ export default function CategoryDetailPage() {
 					)}
 				</main>
 			</Container>
-		)
+		);
 	}
 
 	const totalAmountSpent = categoryItem.items.reduce((sum: number, item: FinancialItem) => sum + item.amountSpent, 0);
 
 	return (
-		<Container>
+		<Container className="overflow-x-auto">
 			<main className="flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">
 				{isLoading ? (
 					<div className="flex justify-center items-center">
@@ -178,8 +177,8 @@ export default function CategoryDetailPage() {
 					<div className="text-center text-red-500 p-8">
 						<span>{error}</span>
 					</div>
-					) : (
-						<>
+				) : (
+					<>
 						<Card>
 							<CardHeader>
 								<div className="flex justify-between items-center">
@@ -284,7 +283,9 @@ export default function CategoryDetailPage() {
 												<TableCell>{new Date(item.createdAt).toLocaleDateString()}</TableCell>
 												<TableCell>{item.isRecurrent ? "Sim" : "Não"}</TableCell>
 												<TableCell>{item.installments || "-"}</TableCell>
-												<TableCell>{item.installmentValue ? <MoneyFormatter value={item.installmentValue} /> : "-"}</TableCell>
+												<TableCell>
+													{item.installmentValue ? <MoneyFormatter value={item.installmentValue} /> : "-"}
+												</TableCell>
 											</TableRow>
 										))}
 									</TableBody>

@@ -218,7 +218,7 @@ export default function RevenuesPage() {
 												<TableCell>Nome</TableCell>
 												<TableCell>Descrição</TableCell>
 												<TableCell>Quantidade</TableCell>
-												<TableCell>Valor</TableCell>
+												<TableCell>Valor Unitário</TableCell>
 												<TableCell>Data de Criação</TableCell>
 												<TableCell>Gerar recibo</TableCell>
 											</TableRow>

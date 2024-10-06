@@ -15,6 +15,7 @@ export interface IUser {
 	isUser: boolean;
 	salary: number | null;
 	startCompanyDate?: string;
+	companyId: string;
 	createdAt?: string;
 	updatedAt?: string;
 }

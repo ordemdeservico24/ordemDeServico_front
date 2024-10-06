@@ -17,6 +17,7 @@ import MoneyFormatter from "@/components/formatMoneyValues";
 import { FaEdit } from "react-icons/fa";
 import { Label } from "@/components/ui/label";
 import { User } from "lucide-react";
+import { useStore } from "@/zustandStore";
 
 export default function Page() {
 	const [users, setUsers] = useState<IUser[]>([]);
@@ -26,8 +27,8 @@ export default function Page() {
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const [isEditing, setIsEditing] = useState(false);
-	const [userId, setUserId] = useState("");
 	const token = getCookie("access_token");
+	const { userId } = useStore();
 	const router = useRouter();
 
 	const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -92,8 +93,25 @@ export default function Page() {
 			phone: getInput("phone").value || "",
 		};
 
+		const user = await fetch(`https://ordemdeservicosdev.onrender.com/api/user/get-user/${userId}`, {
+			method: "GET",
+			headers: {
+				Authorization: `Bearer ${token}`,
+				"Content-type": "application/json",
+			},
+		})
+			.then((res) => {
+				return res.json();
+			})
+			.then((data) => {
+				return data;
+			})
+			.catch((err) => {
+				throw new Error("Ocorreu um erro ao buscar pelo usuário");
+			});
+
 		toast.promise(
-			fetch(`https://ordemdeservicosdev.onrender.com/api/user/create-user/bea03c80-6d96-4514-a15f-eae6c3df042a?type=employee`, {
+			fetch(`https://ordemdeservicosdev.onrender.com/api/user/create-user/${user.tertiaryGroupId}?type=employee`, {
 				method: "POST",
 				headers: {
 					Authorization: `Bearer ${token}`,

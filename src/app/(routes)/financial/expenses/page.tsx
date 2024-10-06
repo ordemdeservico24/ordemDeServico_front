@@ -6,6 +6,7 @@ import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/ca
 import { Table, TableHeader, TableBody, TableRow, TableCell } from "@/components/ui/table";
 import { getCookie } from "cookies-next";
 import MoneyFormatter from "@/components/formatMoneyValues";
+import { useRouter } from "next/navigation";
 
 export default function ExpensesPage() {
 	const [categories, setCategories] = useState<any[]>([]);
@@ -13,6 +14,7 @@ export default function ExpensesPage() {
 	const [error, setError] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 	const token = getCookie("access_token");
+	const router = useRouter();
 
 	useEffect(() => {
 		setIsLoading(true);
@@ -69,7 +71,6 @@ export default function ExpensesPage() {
 						<span>{error}</span>
 					</div>
 				) : (
-				
 					<Tabs defaultValue="all">
 						<TabsContent value="all">
 							<Card>
@@ -96,7 +97,7 @@ export default function ExpensesPage() {
 										</TableHeader>
 										<TableBody>
 											{categories.map((category) => (
-												<TableRow key={category.id}>
+												<TableRow key={category.id} onClick={() => router.push(`/financial/categories/${category.id}`)}>
 													<TableCell>{category.name}</TableCell>
 													<TableCell>{category.description}</TableCell>
 													<TableCell>{category.items}</TableCell>

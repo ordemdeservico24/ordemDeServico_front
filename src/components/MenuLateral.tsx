@@ -82,11 +82,11 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 
 	return (
 		<div
-			className={`sm:hidden fixed left-0 w-[261px] h-full p-4 bg-[#f1f1f1] transition-transform duration-300 ease-in-out z-20 [box-shadow:rgba(60,_64,_67,_0.3)_0px_1px_2px_0px,_rgba(60,_64,_67,_0.15)_0px_1px_3px_1px] ${
+			className={`sm:hidden fixed left-0 w-[268px] h-full p-4 bg-[#f1f1f1] transition-transform duration-300 ease-in-out z-20 [box-shadow:rgba(60,_64,_67,_0.3)_0px_1px_2px_0px,_rgba(60,_64,_67,_0.15)_0px_1px_3px_1px] ${
 				isOpen ? "translate-x-0" : "-translate-x-full"
 			}`}
 		>
-			<div className="w-full flex justify-center items-center h-[170px] bg-[#cccccc]">
+			<div className="w-full flex justify-center items-center h-[170px] bg-[#cccccc] overflow-hidden">
 				<Image src={company ? company?.companyPhoto : Logo} alt="Logo" layout="responsive" width={60} height={60} />
 			</div>
 			<h1 className="text-center text-[#000] text-[1.2rem] mb-1 mt-2">{company?.companyName || "Empresa"}</h1>
@@ -114,15 +114,31 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 
 						{openDropdown === "empresa" && (
 							<div className="flex flex-col ml-4">
-								<Link href="#" className="flex items-center pl-4 rounded-lg gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]">
+								<Link
+									href="/company/firm"
+									className="flex items-center pl-4 rounded-lg gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]"
+								>
+									<FaGlobe className="h-4 w-4 md:h-5 md:w-5" />
+									<span>Minha Empresa</span>
+								</Link>
+								<Link
+									href="/company/primary"
+									className="flex items-center pl-4 rounded-lg gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]"
+								>
 									<FaGlobe className="h-4 w-4 md:h-5 md:w-5" />
 									<span>Estado</span>
 								</Link>
-								<Link href="#" className="flex items-center pl-4 rounded-lg gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]">
+								<Link
+									href="/company/secondary"
+									className="flex items-center pl-4 rounded-lg gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]"
+								>
 									<FaMap className="h-4 w-4 md:h-5 md:w-5" />
 									<span>Cidade</span>
 								</Link>
-								<Link href="#" className="flex items-center pl-4 rounded-lg gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]">
+								<Link
+									href="/company/tertiary"
+									className="flex items-center pl-4 rounded-lg gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]"
+								>
 									<FaMapPin className="h-4 w-4 md:h-5 md:w-5" />
 									<span>Distrito</span>
 								</Link>

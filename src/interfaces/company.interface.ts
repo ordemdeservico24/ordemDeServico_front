@@ -22,6 +22,7 @@ export interface IPrimaryGroup {
 	id?: string;
 	stateName: string;
 	companyId?: string;
+	company: ICompany;
 	secondaries?: ISecondaryGroup[];
 }
 
@@ -30,6 +31,7 @@ export interface ISecondaryGroup {
 	cityName: string;
 	primaryGroupId?: string;
 	tertiaries?: ITertiaryGroup[];
+	primary: IPrimaryGroup;
 	company: ICompany;
 }
 

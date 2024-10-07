@@ -35,6 +35,7 @@ import { getCookie } from "cookies-next";
 import { ICompany } from "@/interfaces/company.interface";
 import { MdHomeRepairService } from "react-icons/md";
 import { ChartColumnIncreasingIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface MenuProps {
 	isOpen: boolean;
@@ -45,7 +46,8 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 	const [company, setCompany] = useState<ICompany>();
 	const [error, setError] = useState<string | null>(null);
 	const token = getCookie("access_token");
-	const { role, logout, teamId } = useStore();
+	const { role, logout, teamId, roleLevel } = useStore();
+	const router = useRouter();
 
 	useEffect(() => {
 		fetch("https://ordemdeservicosdev.onrender.com/api/company/get-company", {
@@ -70,6 +72,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 
 	const handleLogout = () => {
 		logout();
+		router.push("/");
 	};
 
 	const toggleDropdown = (dropdown: string) => {
@@ -97,7 +100,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 					<span>Início</span>
 				</Link>
 
-				{hasPermission(role, "admin_management") && (
+				{hasPermission(role, "admin_management", "read", "primary", roleLevel) && (
 					<div>
 						<button
 							onClick={() => toggleDropdown("empresa")}
@@ -147,51 +150,57 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 					</div>
 				)}
 
-				<Link href="/stock" className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]">
-					<FaDatabase className="h-4 w-4 md:h-5 md:w-5" />
-					<span>Estoque</span>
-				</Link>
+				{hasPermission(role, "admin_management", "read") && (
+					<Link href="/stock" className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]">
+						<FaDatabase className="h-4 w-4 md:h-5 md:w-5" />
+						<span>Estoque</span>
+					</Link>
+				)}
 
-				<button
-					onClick={() => toggleDropdown("financeiro")}
-					className="flex items-center justify-between px-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9] w-full"
-				>
-					<div className="flex items-center gap-2">
-						<FaMoneyCheck className="h-4 w-4 md:h-5 md:w-5" />
-						<span>Financeiro</span>
-					</div>
-					<FaChevronDown
-						className={`h-4 w-4 md:h-5 md:w-5 transition-transform ${openDropdown === "financeiro" ? "rotate-180" : "rotate-0"}`}
-					/>
-				</button>
+				{hasPermission(role, "admin_management", "read", "primary", roleLevel) && (
+					<div>
+						<button
+							onClick={() => toggleDropdown("financeiro")}
+							className="flex items-center justify-between px-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9] w-full"
+						>
+							<div className="flex items-center gap-2">
+								<FaMoneyCheck className="h-4 w-4 md:h-5 md:w-5" />
+								<span>Financeiro</span>
+							</div>
+							<FaChevronDown
+								className={`h-4 w-4 md:h-5 md:w-5 transition-transform ${openDropdown === "financeiro" ? "rotate-180" : "rotate-0"}`}
+							/>
+						</button>
 
-				{openDropdown === "financeiro" && (
-					<div className="flex flex-col ml-4">
-						<Link
-							href="/financial/categories"
-							className="flex items-center rounded-lg pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]"
-						>
-							<FaTag className="h-4 w-4 md:h-5 md:w-5" />
-							<span>Categorias</span>
-						</Link>
-						<Link
-							href="/financial/expenses"
-							className="flex items-center rounded-lg pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]"
-						>
-							<FaFileInvoice className="h-4 w-4 md:h-5 md:w-5" />
-							<span>Despesas</span>
-						</Link>
-						<Link
-							href="/financial/revenues"
-							className="flex items-center rounded-lg pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]"
-						>
-							<FaChartBar className="h-4 w-4 md:h-5 md:w-5" />
-							<span>Receitas</span>
-						</Link>
+						{openDropdown === "financeiro" && (
+							<div className="flex flex-col ml-4">
+								<Link
+									href="/financial/categories"
+									className="flex items-center rounded-lg pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]"
+								>
+									<FaTag className="h-4 w-4 md:h-5 md:w-5" />
+									<span>Categorias</span>
+								</Link>
+								<Link
+									href="/financial/expenses"
+									className="flex items-center rounded-lg pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]"
+								>
+									<FaFileInvoice className="h-4 w-4 md:h-5 md:w-5" />
+									<span>Despesas</span>
+								</Link>
+								<Link
+									href="/financial/revenues"
+									className="flex items-center rounded-lg pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]"
+								>
+									<FaChartBar className="h-4 w-4 md:h-5 md:w-5" />
+									<span>Receitas</span>
+								</Link>
+							</div>
+						)}
 					</div>
 				)}
 
-				{hasPermission(role, "orders_management") && (
+				{hasPermission(role, "orders_management", "read") && (
 					<div>
 						<button
 							onClick={() => toggleDropdown("ordem")}
@@ -234,7 +243,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 					</div>
 				)}
 
-				{hasPermission(role, "teams_management") && (
+				{hasPermission(role, ["teams_management", "teamleader", "teammember"], "read") && (
 					<div>
 						<button
 							onClick={() => toggleDropdown("equipe")}
@@ -262,59 +271,77 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 								) : (
 									""
 								)}
-								<Link
-									href="/teams"
-									className="flex items-center rounded-lg pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]"
-								>
-									<FaThLarge className="h-4 w-4 md:h-5 md:w-5" />
-									<span>Ver Equipes</span>
-								</Link>
-								<Link
-									href="/teams/leaders"
-									className="flex items-center rounded-lg pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]"
-								>
-									<FaArchive className="h-4 w-4 md:h-5 md:w-5" />
-									<span>Líderes</span>
-								</Link>
-								<Link
-									href="/teams/members"
-									className="flex items-center rounded-lg pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]"
-								>
-									<FaCalendar className="h-4 w-4 md:h-5 md:w-5" />
-									<span>Membros</span>
-								</Link>
+								{hasPermission(role, ["teams_management", "teamleader"], "read") && (
+									<Link
+										href="/teams"
+										className="flex items-center rounded-lg pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]"
+									>
+										<FaThLarge className="h-4 w-4 md:h-5 md:w-5" />
+										<span>Ver Equipes</span>
+									</Link>
+								)}
+								{hasPermission(role, ["teams_management", "teamleader"], "read") && (
+									<Link
+										href="/teams/leaders"
+										className="flex items-center rounded-lg pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]"
+									>
+										<FaArchive className="h-4 w-4 md:h-5 md:w-5" />
+										<span>Líderes</span>
+									</Link>
+								)}
+								{hasPermission(role, ["teams_management", "teamleader", "teammember"], "read") && (
+									<Link
+										href="/teams/members"
+										className="flex items-center rounded-lg pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]"
+									>
+										<FaCalendar className="h-4 w-4 md:h-5 md:w-5" />
+										<span>Membros</span>
+									</Link>
+								)}
 							</div>
 						)}
 					</div>
 				)}
 
-				<button
-					onClick={() => toggleDropdown("usuarios")}
-					className="flex items-center justify-between px-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9] w-full"
-				>
-					<div className="flex items-center gap-2">
-						<FaUser className="h-4 w-4 md:h-5 md:w-5" />
-						<span>Funcionários/Usuários</span>
-					</div>
-					<FaChevronDown
-						className={`h-4 w-4 md:h-5 md:w-5 transition-transform ${openDropdown === "usuarios" ? "rotate-180" : "rotate-0"}`}
-					/>
-				</button>
+				{hasPermission(role, "admin_management", "read", ["primary", "tertiary"], roleLevel) && (
+					<div>
+						<button
+							onClick={() => toggleDropdown("usuarios")}
+							className="flex items-center justify-between px-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9] w-full"
+						>
+							<div className="flex items-center gap-2">
+								<FaUser className="h-4 w-4 md:h-5 md:w-5" />
+								<span>Funcionários/Usuários</span>
+							</div>
+							<FaChevronDown
+								className={`h-4 w-4 md:h-5 md:w-5 transition-transform ${openDropdown === "usuarios" ? "rotate-180" : "rotate-0"}`}
+							/>
+						</button>
 
-				{openDropdown === "usuarios" && (
-					<div className="flex flex-col ml-4">
-						<Link href="/users" className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]">
-							<FaUsers className="h-4 w-4 md:h-5 md:w-5" />
-							<span>Ver todos</span>
-						</Link>
-						<Link href="/users" className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]">
-							<FaClipboardList className="h-4 w-4 md:h-5 md:w-5" />
-							<span>Cargos</span>
-						</Link>
+						{openDropdown === "usuarios" && (
+							<div className="flex flex-col ml-4">
+								<Link
+									href="/users"
+									className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]"
+								>
+									<FaUsers className="h-4 w-4 md:h-5 md:w-5" />
+									<span>Ver todos</span>
+								</Link>
+								{hasPermission(role, "roles_management", "read", "primary", roleLevel) && (
+									<Link
+										href="/users"
+										className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]"
+									>
+										<FaClipboardList className="h-4 w-4 md:h-5 md:w-5" />
+										<span>Cargos</span>
+									</Link>
+								)}
+							</div>
+						)}
 					</div>
 				)}
 
-				{hasPermission(role, ["orders_management", "admin_management"]) && (
+				{hasPermission(role, ["orders_management", "admin_management"], "read", "primary", roleLevel) && (
 					<div>
 						<button
 							onClick={() => toggleDropdown("relatorios")}
@@ -331,7 +358,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 
 						{openDropdown === "relatorios" && (
 							<div className="flex flex-col ml-4">
-								{hasPermission(role, "orders_management") && (
+								{hasPermission(role, "orders_management", "read", "primary", roleLevel) && (
 									<Link
 										href="/orders/report"
 										className="flex items-center rounded-lg pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]"
@@ -340,7 +367,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 										<span>Ordens de Serviço</span>
 									</Link>
 								)}
-								{hasPermission(role, "admin_management") && (
+								{hasPermission(role, "admin_management", "read", "primary", roleLevel) && (
 									<Link
 										href="/financial/report"
 										className="flex items-center rounded-lg pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]"

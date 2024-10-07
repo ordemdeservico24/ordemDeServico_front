@@ -16,6 +16,7 @@ interface User {
 	profilePicture: string;
 	token: string;
 	role: Role[];
+	roleLevel: string;
 }
 
 interface StoreState {
@@ -25,12 +26,14 @@ interface StoreState {
 	teamId?: string;
 	profilePicture: string;
 	role: Role[];
+	roleLevel: string;
 	setToken: (token: string) => void;
 	setName: (name: string) => void;
 	setUserId: (userId: string) => void;
 	setTeamId: (teamId: string) => void;
 	setProfilePicture: (profilePicture: string) => void;
 	setRole: (role: Role[]) => void;
+	setRoleLevel: (roleLevel: string) => void;
 	setUser: (user: User) => void;
 	loadUserFromStorage: () => void;
 	logout: () => void;
@@ -45,6 +48,7 @@ export const useStore = create<StoreState>()(
 			teamId: "",
 			profilePicture: "",
 			role: [],
+			roleLevel: "",
 
 			setToken: (token) => {
 				set({ token });
@@ -76,12 +80,18 @@ export const useStore = create<StoreState>()(
 				localStorage.setItem("role", JSON.stringify(role));
 			},
 
+			setRoleLevel: (roleLevel) => {
+				set({ roleLevel });
+				localStorage.setItem("roleLevel", JSON.stringify(roleLevel));
+			},
+
 			setUser: (user) => {
 				set({
 					token: user.token,
 					name: user.name,
 					profilePicture: user.profilePicture,
 					role: user.role,
+					roleLevel: user.roleLevel,
 				});
 				setCookie("access_token", user.token, { maxAge: 7 * 24 * 60 * 60, path: "/" });
 				localStorage.setItem("user_name", user.name);
@@ -105,13 +115,17 @@ export const useStore = create<StoreState>()(
 					name: "",
 					profilePicture: "",
 					teamId: "",
+					userId: "",
 					role: [],
+					roleLevel: "",
 				});
 				deleteCookie("access_token", { path: "/" });
 				localStorage.removeItem("user_name");
 				localStorage.removeItem("profile_picture");
 				localStorage.removeItem("teamId");
+				localStorage.removeItem("userId");
 				localStorage.removeItem("role");
+				localStorage.removeItem("roleLevel");
 			},
 		}),
 		{
@@ -123,6 +137,7 @@ export const useStore = create<StoreState>()(
 				teamId: state.teamId,
 				profilePicture: state.profilePicture,
 				role: state.role,
+				roleLevel: state.roleLevel,
 			}),
 		}
 	)

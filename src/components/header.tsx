@@ -14,40 +14,46 @@ import { FaHome, FaGlobe, FaQuestionCircle } from "react-icons/fa";
 import { FiMenu } from "react-icons/fi";
 import { useStore } from "../zustandStore";
 import ProfileSettingsDialog from "./dialogProfile";
+import { useRouter } from "next/navigation";
 
 interface HeaderProps {
-  onMenuToggle: () => void;
+	onMenuToggle: () => void;
 }
 
 export default function Header({ onMenuToggle }: HeaderProps) {
-  const { name, logout } = useStore();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+	const { name, logout, userId } = useStore();
+	const [isDialogOpen, setIsDialogOpen] = useState(false);
+	const router = useRouter();
 
-  const handleLogout = () => {
-    logout();
-  };
+	const handleLogout = () => {
+		logout();
+	};
 
-  const openDialog = () => setIsDialogOpen(true);
-  const closeDialog = () => setIsDialogOpen(false);
+	const openDialog = () => setIsDialogOpen(true);
+	const closeDialog = () => setIsDialogOpen(false);
 
-  return (
-    <>
-      <header className="w-full flex items-center px-3 sm:px-10 justify-between p-3 bg-[#3b86fb] text-[#fff]">
-        <div className="flex gap-5 items-center space-x-4">
-          <div className="md:hidden">
-            <p onClick={onMenuToggle} className="cursor-pointer"><FiMenu size={24} /></p>
-          </div>
-          <h1 className="mr-10">LOGO</h1>
-          <div className="items-center cursor-pointer hidden sm:flex">
-            <FaHome size={24} />
-            <span className="hidden md:inline ml-2">Home</span>
-          </div>
-        </div>
+	return (
+		<>
+			<header className="w-full flex items-center px-3 sm:px-10 justify-between p-3 bg-[#3b86fb] text-[#fff]">
+				<div className="flex gap-5 items-center space-x-4">
+					<div className="md:hidden">
+						<p onClick={onMenuToggle} className="cursor-pointer">
+							<FiMenu size={24} />
+						</p>
+					</div>
+					{/* <h1 className="mr-10">LOGO</h1>
+					<div className="items-center cursor-pointer hidden sm:flex">
+						<FaHome size={24} />
+						<span className="hidden md:inline ml-2">Home</span>
+					</div> */}
+				</div>
 
-        <div>
-          <div className="flex flex-row items-center gap-3">
-            <h1>{name}</h1>
-            {/* <DropdownMenu>
+				<div>
+					<div className="flex flex-row items-center gap-3">
+						<h1 className="hover:cursor-pointer" onClick={() => router.push(`/users/${userId}`)}>
+							{name}
+						</h1>
+						{/* <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
@@ -71,11 +77,11 @@ export default function Header({ onMenuToggle }: HeaderProps) {
                 <DropdownMenuItem onClick={handleLogout}>Sair</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu> */}
-          </div>
-        </div>
-      </header>
+					</div>
+				</div>
+			</header>
 
-      <ProfileSettingsDialog isOpen={isDialogOpen} onClose={closeDialog} />
-    </>
-  );
+			<ProfileSettingsDialog isOpen={isDialogOpen} onClose={closeDialog} />
+		</>
+	);
 }

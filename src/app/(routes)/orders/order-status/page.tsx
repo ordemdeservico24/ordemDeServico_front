@@ -12,6 +12,8 @@ import { IOrderStatus } from "@/interfaces/order.interface";
 import { toast } from "react-toastify";
 import { ICreateOrderStatus } from "@/interfaces/create-order-request/create-order-request.interface";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useStore } from "@/zustandStore";
+import { hasPermission } from "@/utils/hasPermissions";
 
 export default function Page() {
 	const [isLoading, setIsLoading] = useState(true);
@@ -19,6 +21,7 @@ export default function Page() {
 	const [selectedStatus, setSelectedStatus] = useState<string>("");
 	const [error, setError] = useState<string | null>(null);
 	const token = getCookie("access_token");
+	const { role } = useStore();
 
 	useEffect(() => {
 		fetch("https://ordemdeservicosdev.onrender.com/api/order/get-all-orders-status", {
@@ -130,55 +133,46 @@ export default function Page() {
 											<CardTitle className="text-[#3b82f6] text-2xl font-bold">Status das Ordens</CardTitle>
 											<CardDescription>Veja todos os status disponíveis para as ordens de serviço.</CardDescription>
 										</div>
-										<div>
-											<Dialog>
-												<DialogTrigger asChild>
-													<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
-														Criar
-													</Button>
-												</DialogTrigger>
-												<DialogContent className="sm:max-w-[425px]">
-													<DialogHeader>
-														<DialogTitle>Adicionar Status</DialogTitle>
-														<DialogDescription>Adicione um status para utilizar nas ordens de serviço.</DialogDescription>
-													</DialogHeader>
-													<form
-														action="#"
-														onSubmit={(e) => onSubmit(e)}
-														className=" flex flex-col justify-center items-center"
-													>
-														<div className="flex gap-3 flex-col items-center max-w-96 w-full">
-															<Input
-																type="text"
-																name="orderStatusName"
-																placeholder="Nome do  status"
-																className="w-full"
-															/>
-															<Select onValueChange={handleSelectOrderStatusChange} value={selectedStatus}>
-																<SelectTrigger className="outline-none border border-[#2a2a2a] rounded px-2 py-1">
-																	<SelectValue placeholder="Selecione uma ação" />
-																</SelectTrigger>
-																<SelectContent>
-																	<SelectItem value="open">Aberto</SelectItem>
-																	<SelectItem value="inProgress">Em andamento</SelectItem>
-																	<SelectItem value="review">Em revisão</SelectItem>
-																	<SelectItem value="finish">Finalizada</SelectItem>
-																</SelectContent>
-															</Select>
-															<Button
-																className=" text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
-																type="submit"
-															>
-																Criar
-															</Button>
-														</div>
-													</form>
-												</DialogContent>
-											</Dialog>
-										</div>
+										<div></div>
 									</div>
 								</CardHeader>
-
+								{hasPermission(role, "orders_management", "create") && (
+									<Dialog>
+										<DialogTrigger asChild>
+											<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
+												Criar
+											</Button>
+										</DialogTrigger>
+										<DialogContent className="sm:max-w-[425px]">
+											<DialogHeader>
+												<DialogTitle>Adicionar Status</DialogTitle>
+												<DialogDescription>Adicione um status para utilizar nas ordens de serviço.</DialogDescription>
+											</DialogHeader>
+											<form action="#" onSubmit={(e) => onSubmit(e)} className=" flex flex-col justify-center items-center">
+												<div className="flex gap-3 flex-col items-center max-w-96 w-full">
+													<Input type="text" name="orderStatusName" placeholder="Nome do  status" className="w-full" />
+													<Select onValueChange={handleSelectOrderStatusChange} value={selectedStatus}>
+														<SelectTrigger className="outline-none border border-[#2a2a2a] rounded px-2 py-1">
+															<SelectValue placeholder="Selecione uma ação" />
+														</SelectTrigger>
+														<SelectContent>
+															<SelectItem value="open">Aberto</SelectItem>
+															<SelectItem value="inProgress">Em andamento</SelectItem>
+															<SelectItem value="review">Em revisão</SelectItem>
+															<SelectItem value="finish">Finalizada</SelectItem>
+														</SelectContent>
+													</Select>
+													<Button
+														className=" text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
+														type="submit"
+													>
+														Criar
+													</Button>
+												</div>
+											</form>
+										</DialogContent>
+									</Dialog>
+								)}
 								<div className="p-3">
 									<div className="w-full overflow-x-auto">
 										<Table className="min-w-[600px] bg-white shadow-md rounded-lg">

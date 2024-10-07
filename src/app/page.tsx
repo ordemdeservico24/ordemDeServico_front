@@ -37,12 +37,13 @@ export default function Page() {
 	const setUserId = useStore((state) => state.setUserId);
 	const setTeamId = useStore((state) => state.setTeamId);
 	const setRole = useStore((state) => state.setRole);
+	const setRoleLevel = useStore((state) => state.setRoleLevel);
 	const onSubmit = async (data: any) => {
 		try {
 			const response = await axios.post("https://ordemdeservicosdev.onrender.com/api/user/login", data);
 			console.log("Login successful:", response.data);
 
-			const { token, userName, role, userId, teamId } = response.data;
+			const { token, userName, role, userId, teamId, roleLevel } = response.data;
 
 			if (token) {
 				setToken(token);
@@ -59,8 +60,12 @@ export default function Page() {
 			if (role) {
 				setRole(role);
 			}
+			if (roleLevel) {
+				setRoleLevel(roleLevel);
+			}
 			console.log("Login token:", token);
 			console.log("User role:", role);
+			console.log("User roleLevel:", roleLevel);
 
 			router.push("/home");
 		} catch (error) {

@@ -98,6 +98,7 @@ export default function Page() {
 				profilePicture: result.profilePicture,
 				token: result.token,
 				role: result.role,
+				roleLevel: result.roleLevel,
 			});
 
 			console.log("User created:", result);

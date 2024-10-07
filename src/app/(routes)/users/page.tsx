@@ -390,6 +390,7 @@ export default function Page() {
 													<TableHead className="font-bold">Cargo</TableHead>
 													<TableHead className="font-bold">Usuário</TableHead>
 													<TableHead className="font-bold">Salário</TableHead>
+													<TableHead className="font-bold">Distrito</TableHead>
 												</TableRow>
 											</TableHeader>
 											<TableBody>
@@ -429,6 +430,7 @@ export default function Page() {
 															<TableCell>
 																<MoneyFormatter value={user.salary || 0} />
 															</TableCell>
+															<TableCell>{user.tertiary.districtName}</TableCell>
 															<TableCell style={{ cursor: "pointer" }} onClick={() => router.push(`/users/${user.id}`)}>
 																<Button variant="outline">Ver dados</Button>
 															</TableCell>

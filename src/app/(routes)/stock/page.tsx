@@ -19,6 +19,8 @@ const stockItemSchema = z.object({
 	productName: z.string().min(1, "Nome do produto é obrigatório"),
 	quantity: z.number().min(1, "Quantidade deve ser maior que zero"),
 	productValue: z.number().min(0, "Valor deve ser maior ou igual a zero"),
+	supplierId: z.string().min(1, "Fornecedor é obrigatório"),
+	unitOfMeasurement: z.string().min(1, "Unidade de Medida é obrigatória"),
 });
 
 const supplierSchema = z.object({
@@ -96,13 +98,17 @@ export default function StoragePage() {
 		const formData: {
 			productName: string;
 			quantity: number;
+			unitOfMeasurement: string;
 			totalMeasurement?: number;
 			productValue: number;
+			supplierId: string;
 		} = {
 			productName: getInput("productName").value || "",
 			quantity: +getInput("quantity").value || 0,
 			productValue: +getInput("productValue").value || 0,
+			unitOfMeasurement: selectedUnitMeasurement,
 			totalMeasurement: totalMeasurementValue > 0 ? totalMeasurementValue : undefined,
+			supplierId: selectedSupplier,
 		};
 
 		const body: any = {
@@ -118,9 +124,11 @@ export default function StoragePage() {
 		}
 
 		const validation = stockItemSchema.safeParse(formData);
+		console.log(validation);
 
 		if (!validation.success) {
 			validation.error.errors.forEach((err) => toast.error(err.message));
+			console.log(validation.error.errors);
 			return;
 		}
 

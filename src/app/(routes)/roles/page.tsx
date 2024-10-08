@@ -137,7 +137,8 @@ export default function Page() {
 			.catch((error) => {
 				console.error("Erro ao buscar usuários:", error);
 				setRoles([]);
-			}).finally(() => {
+			})
+			.finally(() => {
 				setIsLoading(false);
 			});
 	}, [token]);
@@ -177,7 +178,7 @@ export default function Page() {
 	};
 
 	return (
-		<Container className="p-4">
+		<Container className="p-4 overflow-x-auto">
 			<main className="grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">
 				{isLoading ? (
 					<div className="flex justify-center items-center">
@@ -197,7 +198,6 @@ export default function Page() {
 						</svg>
 					</div>
 				) : (
-				
 					<Tabs defaultValue="all">
 						<TabsContent value="all">
 							<Card x-chunk="dashboard-06-chunk-0">
@@ -219,7 +219,11 @@ export default function Page() {
 														<DialogTitle>Criar cargo</DialogTitle>
 														<DialogDescription>Adicione as informações para criar um cargo.</DialogDescription>
 													</DialogHeader>
-													<form action="#" onSubmit={(e) => onSubmit(e)} className="flex flex-col justify-center items-center">
+													<form
+														action="#"
+														onSubmit={(e) => onSubmit(e)}
+														className="flex flex-col justify-center items-center"
+													>
 														<div className="flex gap-3 flex-col items-center max-w-full w-full">
 															<div className="flex flex-col md:flex-row max-h-fit md:max-h-12 gap-4 w-full">
 																<Input

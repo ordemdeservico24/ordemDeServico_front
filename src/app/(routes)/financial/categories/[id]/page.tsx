@@ -239,23 +239,25 @@ export default function CategoryDetailPage() {
 								<Table>
 									<TableHeader>
 										<TableRow>
-											<TableCell>Nome</TableCell>
-											<TableCell>Descrição</TableCell>
-											<TableCell>Valor Gasto</TableCell>
-											<TableCell>Foto do Item</TableCell>
-											<TableCell>Data de Criação</TableCell>
-											<TableCell>Recorrente</TableCell>
-											<TableCell>Parcelas</TableCell>
-											<TableCell>Valor por Parcela</TableCell>
+											<TableCell className="whitespace-nowrap">Nome</TableCell>
+											<TableCell className="whitespace-nowrap">Descrição</TableCell>
+											<TableCell className="whitespace-nowrap">Valor Gasto</TableCell>
+											<TableCell className="whitespace-nowrap">Foto do Item</TableCell>
+											<TableCell className="whitespace-nowrap">Data de Criação</TableCell>
+											<TableCell className="whitespace-nowrap">Recorrente</TableCell>
+											<TableCell className="whitespace-nowrap">Parcelas</TableCell>
+											<TableCell className="whitespace-nowrap">Valor por Parcela</TableCell>
 										</TableRow>
 									</TableHeader>
 									<TableBody>
 										{categoryItem.items.map((item: FinancialItem) => (
 											<TableRow key={item.id}>
-												<TableCell>{item.name}</TableCell>
-												<TableCell>{item.description || "-"}</TableCell>
-												<TableCell>R$ {item.amountSpent ? <MoneyFormatter value={item.amountSpent} /> : "0.00"}</TableCell>
-												<TableCell>
+												<TableCell className="whitespace-nowrap">{item.name}</TableCell>
+												<TableCell className="whitespace-nowrap">{item.description || "-"}</TableCell>
+												<TableCell className="whitespace-nowrap">
+													R$ {item.amountSpent ? <MoneyFormatter value={item.amountSpent} /> : "0.00"}
+												</TableCell>
+												<TableCell className="whitespace-nowrap">
 													{item.itemPhoto ? (
 														<Dialog>
 															<DialogTrigger asChild>
@@ -280,10 +282,10 @@ export default function CategoryDetailPage() {
 														"Sem foto"
 													)}
 												</TableCell>
-												<TableCell>{new Date(item.createdAt).toLocaleDateString()}</TableCell>
-												<TableCell>{item.isRecurrent ? "Sim" : "Não"}</TableCell>
-												<TableCell>{item.installments || "-"}</TableCell>
-												<TableCell>
+												<TableCell className="whitespace-nowrap">{new Date(item.createdAt).toLocaleDateString()}</TableCell>
+												<TableCell className="whitespace-nowrap">{item.isRecurrent ? "Sim" : "Não"}</TableCell>
+												<TableCell className="whitespace-nowrap">{item.installments || "-"}</TableCell>
+												<TableCell className="whitespace-nowrap">
 													{item.installmentValue ? <MoneyFormatter value={item.installmentValue} /> : "-"}
 												</TableCell>
 											</TableRow>

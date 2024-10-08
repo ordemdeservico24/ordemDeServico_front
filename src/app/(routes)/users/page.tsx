@@ -440,15 +440,15 @@ export default function Page() {
 												) : (
 													users.map((user, index) => (
 														<TableRow key={index} className="border-b">
-															<TableCell>{user.name}</TableCell>
-															<TableCell>{user.email}</TableCell>
-															<TableCell>{user.phone}</TableCell>
-															<TableCell>{user.role?.roleName}</TableCell>
-															<TableCell>{user.isUser ? "Sim" : "Não"}</TableCell>
-															<TableCell>
+															<TableCell className="whitespace-nowrap">{user.name}</TableCell>
+															<TableCell className="whitespace-nowrap">{user.email}</TableCell>
+															<TableCell className="whitespace-nowrap">{user.phone}</TableCell>
+															<TableCell className="whitespace-nowrap">{user.role?.roleName}</TableCell>
+															<TableCell className="whitespace-nowrap">{user.isUser ? "Sim" : "Não"}</TableCell>
+															<TableCell className="whitespace-nowrap">
 																<MoneyFormatter value={user.salary || 0} />
 															</TableCell>
-															<TableCell>{user.tertiary.districtName}</TableCell>
+															<TableCell className="whitespace-nowrap">{user.tertiary.districtName}</TableCell>
 															<TableCell style={{ cursor: "pointer" }} onClick={() => router.push(`/users/${user.id}`)}>
 																<Button variant="outline">Ver dados</Button>
 															</TableCell>

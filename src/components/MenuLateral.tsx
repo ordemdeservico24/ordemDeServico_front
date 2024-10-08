@@ -329,7 +329,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 								</Link>
 								{hasPermission(role, "roles_management", "read", "primary", roleLevel) && (
 									<Link
-										href="/users"
+										href="/roles"
 										className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]"
 									>
 										<FaClipboardList className="h-4 w-4 md:h-5 md:w-5" />

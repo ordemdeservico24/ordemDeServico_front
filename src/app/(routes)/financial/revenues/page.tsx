@@ -215,23 +215,27 @@ export default function RevenuesPage() {
 									<Table>
 										<TableHeader>
 											<TableRow>
-												<TableCell>Nome</TableCell>
-												<TableCell>Descrição</TableCell>
-												<TableCell>Quantidade</TableCell>
-												<TableCell>Valor Unitário</TableCell>
-												<TableCell>Data de Criação</TableCell>
-												<TableCell>Gerar recibo</TableCell>
+												<TableCell className="whitespace-nowrap">Nome</TableCell>
+												<TableCell className="whitespace-nowrap">Descrição</TableCell>
+												<TableCell className="whitespace-nowrap">Quantidade</TableCell>
+												<TableCell className="whitespace-nowrap">Valor Unitário</TableCell>
+												<TableCell className="whitespace-nowrap">Data de Criação</TableCell>
+												<TableCell className="whitespace-nowrap">Gerar recibo</TableCell>
 											</TableRow>
 										</TableHeader>
 										<TableBody>
 											{revenues?.items.map((item) => (
 												<TableRow key={item.id}>
-													<TableCell>{item.name}</TableCell>
-													<TableCell>{item.description || "-"}</TableCell>
-													<TableCell>{item.quantity}</TableCell>
-													<TableCell>{item.value ? <MoneyFormatter value={item.value} /> : "0.00"}</TableCell>
-													<TableCell>{new Date(item.createdAt).toLocaleDateString()}</TableCell>
-													<TableCell>
+													<TableCell className="whitespace-nowrap">{item.name}</TableCell>
+													<TableCell className="whitespace-nowrap">{item.description || "-"}</TableCell>
+													<TableCell className="whitespace-nowrap">{item.quantity}</TableCell>
+													<TableCell className="whitespace-nowrap">
+														{item.value ? <MoneyFormatter value={item.value} /> : "0.00"}
+													</TableCell>
+													<TableCell className="whitespace-nowrap">
+														{new Date(item.createdAt).toLocaleDateString()}
+													</TableCell>
+													<TableCell className="whitespace-nowrap">
 														<Button
 															variant="default"
 															className="bg-blue-500 hover:bg-blue-600"

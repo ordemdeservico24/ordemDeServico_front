@@ -140,18 +140,18 @@ export default function Page() {
 									<Table className="overflow-x-auto">
 										<TableHeader>
 											<TableRow>
-												<TableHead>Nome da categoria</TableHead>
-												<TableHead>Dias para resolução</TableHead>
-												<TableHead>Ordens atribuídas</TableHead>
+												<TableHead className="whitespace-nowrap">Nome da categoria</TableHead>
+												<TableHead className="whitespace-nowrap">Dias para resolução</TableHead>
+												<TableHead className="whitespace-nowrap">Ordens atribuídas</TableHead>
 											</TableRow>
 										</TableHeader>
 										<TableBody>
 											{Array.isArray(subjects) &&
 												subjects.map((subject, index) => (
 													<TableRow key={index} className="cursor-pointer hover:bg-gray-100">
-														<TableCell>{subject.name}</TableCell>
-														<TableCell>{subject.expirationDays}</TableCell>
-														<TableCell>{subject.orders?.length}</TableCell>
+														<TableCell className="whitespace-nowrap">{subject.name}</TableCell>
+														<TableCell className="whitespace-nowrap">{subject.expirationDays}</TableCell>
+														<TableCell className="whitespace-nowrap">{subject.orders?.length}</TableCell>
 													</TableRow>
 												))}
 										</TableBody>

@@ -116,7 +116,7 @@ export default function Page() {
 	};
 
 	return (
-		<Container className="p-4">
+		<Container className="p-4 overflow-x-auto">
 			<main className="grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">
 				{isLoading ? (
 					<div className="flex justify-center items-center">
@@ -209,10 +209,10 @@ export default function Page() {
 												<TableBody>
 													{leaders.map((leader, index) => (
 														<TableRow key={index} className="hover:bg-gray-100 cursor-pointer">
-															<TableCell>{leader.user.name}</TableCell>
-															<TableCell>{leader.user.email}</TableCell>
-															<TableCell>{leader.user.phone}</TableCell>
-															<TableCell>{leader.user.role.roleName}</TableCell>
+															<TableCell className="whitespace-nowrap">{leader.user.name}</TableCell>
+															<TableCell className="whitespace-nowrap">{leader.user.email}</TableCell>
+															<TableCell className="whitespace-nowrap">{leader.user.phone}</TableCell>
+															<TableCell className="whitespace-nowrap">{leader.user.role.roleName}</TableCell>
 															{hasPermission(role, "teams_management", "delete") && (
 																<TableCell>
 																	<Dialog>

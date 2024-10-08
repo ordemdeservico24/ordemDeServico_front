@@ -45,7 +45,8 @@ export default function Page() {
 			.catch((err) => {
 				console.error("Erro ao buscar os dados:", err);
 				setError("Erro ao carregar dados da equipe.");
-			}).finally(() => {
+			})
+			.finally(() => {
 				setIsLoading(false);
 			});
 	}, [token]);
@@ -116,7 +117,7 @@ export default function Page() {
 	return (
 		<Container className="overflow-x-auto">
 			<main className="grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">
-			{isLoading ? (
+				{isLoading ? (
 					<div className="flex justify-center items-center">
 						<svg
 							className="h-8 w-8 animate-spin text-gray-600 mx-auto"
@@ -134,116 +135,145 @@ export default function Page() {
 						</svg>
 					</div>
 				) : (
-				<>
-				{hasPermission(role, ["teams_management", "teamleader"], "read") && (
-					<Tabs defaultValue="all">
-						<TabsContent value="all">
-							<Card x-chunk="dashboard-06-chunk-0">
-								<CardHeader>
-									<div className="flex items-center justify-between">
-										<div>
-											<CardTitle className="text-[#3b82f6] text-2xl font-bold">Equipes</CardTitle>
-											<CardDescription>Cheque todas as informações relacionado aos membros apresentados.</CardDescription>
-										</div>
-										<div className="flex gap-3 items-center justify-between">
-											{hasPermission(role, ["teams_management"], "create") && (
-												<Dialog>
-													<DialogTrigger asChild>
-														<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
-															Criar Equipe
-														</Button>
-													</DialogTrigger>
-													<DialogContent className="sm:max-w-[425px]">
-														<DialogHeader>
-															<DialogTitle>Criar equipe</DialogTitle>
-															<DialogDescription>Adicione os dados abaixo e crie uma nova equipe.</DialogDescription>
-														</DialogHeader>
-														<form
-															action="#"
-															onSubmit={(e) => onSubmit(e)}
-															className="flex flex-col justify-center items-center"
-														>
-															<div className="flex flex-col gap-3 items-center max-w-96 w-full">
-																<Input type="text" name="teamName" placeholder="Nome da equipe" className="w-full" />
-																<select
-																	name="teamLeaderId"
-																	id="teamLeaderId"
-																	className="outline-none border focus:border-[#2a2a2a] rounded px-2 py-1 w-full mb-4"
-																>
-																	<option value="">{"Selecione um líder"}</option>
-																	{availableLeaders.map((leader, index) => (
-																		<option value={leader.id} key={index}>
-																			{leader.user.name}
-																		</option>
-																	))}
-																</select>
-																<Button
-																	className="text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
-																	type="submit"
-																>
-																	Criar
+					<>
+						{hasPermission(role, ["teams_management", "teamleader"], "read") && (
+							<Tabs defaultValue="all">
+								<TabsContent value="all">
+									<Card x-chunk="dashboard-06-chunk-0">
+										<CardHeader>
+											<div className="flex items-center justify-between">
+												<div>
+													<CardTitle className="text-[#3b82f6] text-2xl font-bold">Equipes</CardTitle>
+													<CardDescription>
+														Cheque todas as informações relacionado aos membros apresentados.
+													</CardDescription>
+												</div>
+												<div className="flex gap-3 items-center justify-between">
+													{hasPermission(role, ["teams_management"], "create") && (
+														<Dialog>
+															<DialogTrigger asChild>
+																<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
+																	Criar Equipe
 																</Button>
-															</div>
-														</form>
-													</DialogContent>
-												</Dialog>
+															</DialogTrigger>
+															<DialogContent className="sm:max-w-[425px]">
+																<DialogHeader>
+																	<DialogTitle>Criar equipe</DialogTitle>
+																	<DialogDescription>
+																		Adicione os dados abaixo e crie uma nova equipe.
+																	</DialogDescription>
+																</DialogHeader>
+																<form
+																	action="#"
+																	onSubmit={(e) => onSubmit(e)}
+																	className="flex flex-col justify-center items-center"
+																>
+																	<div className="flex flex-col gap-3 items-center max-w-96 w-full">
+																		<Input
+																			type="text"
+																			name="teamName"
+																			placeholder="Nome da equipe"
+																			className="w-full"
+																		/>
+																		<select
+																			name="teamLeaderId"
+																			id="teamLeaderId"
+																			className="outline-none border focus:border-[#2a2a2a] rounded px-2 py-1 w-full mb-4"
+																		>
+																			<option value="">{"Selecione um líder"}</option>
+																			{availableLeaders.map((leader, index) => (
+																				<option value={leader.id} key={index}>
+																					{leader.user.name}
+																				</option>
+																			))}
+																		</select>
+																		<Button
+																			className="text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
+																			type="submit"
+																		>
+																			Criar
+																		</Button>
+																	</div>
+																</form>
+															</DialogContent>
+														</Dialog>
+													)}
+												</div>
+											</div>
+										</CardHeader>
+
+										<div className="p-3">
+											{error ? (
+												<p className="text-red-500">{error}</p>
+											) : (
+												<Table>
+													<TableHeader>
+														<TableRow>
+															<TableHead className="whitespace-nowrap">Nome da equipe</TableHead>
+															<TableHead className="whitespace-nowrap">Líder da equipe</TableHead>
+															<TableHead className="whitespace-nowrap">Ordens atribuídas</TableHead>
+															<TableHead className="whitespace-nowrap">Membros na equipe</TableHead>
+														</TableRow>
+													</TableHeader>
+													<TableBody>
+														{teams.map((team, index) => (
+															<TableRow
+																key={index}
+																className="cursor-pointer hover:bg-gray-100 whitespace-nowrap"
+																style={{ cursor: "pointer" }}
+																onClick={() => router.push(`/teams/${team.id}`)}
+															>
+																<TableCell
+																	style={{ cursor: "pointer" }}
+																	onClick={() => router.push(`/teams/${team.id}`)}
+																>
+																	{hasPermission(
+																		role,
+																		["teams_management", "teamleader", "teammember"],
+																		"read"
+																	) && <span className="block w-full h-full">{team.teamName}</span>}
+																</TableCell>
+																<TableCell
+																	style={{ cursor: "pointer" }}
+																	onClick={() => router.push(`/teams/${team.id}`)}
+																>
+																	{hasPermission(
+																		role,
+																		["teams_management", "teamleader", "teammember"],
+																		"read"
+																	) && <span className="block w-full h-full">{team.leader.user.name}</span>}
+																</TableCell>
+																<TableCell
+																	style={{ cursor: "pointer" }}
+																	onClick={() => router.push(`/teams/${team.id}`)}
+																>
+																	{hasPermission(
+																		role,
+																		["teams_management", "teamleader", "teammember"],
+																		"read"
+																	) && <span className="block w-full h-full">{team.orders.length}</span>}
+																</TableCell>
+																<TableCell
+																	style={{ cursor: "pointer" }}
+																	onClick={() => router.push(`/teams/${team.id}`)}
+																>
+																	{hasPermission(
+																		role,
+																		["teams_management", "teamleader", "teammember"],
+																		"read"
+																	) && <span className="block w-full h-full">{team.members.length}</span>}
+																</TableCell>
+															</TableRow>
+														))}
+													</TableBody>
+												</Table>
 											)}
 										</div>
-									</div>
-								</CardHeader>
-
-								<div className="p-3">
-									{error ? (
-										<p className="text-red-500">{error}</p>
-									) : (
-										<Table>
-											<TableHeader>
-												<TableRow>
-													<TableHead>Nome da equipe</TableHead>
-													<TableHead>Líder da equipe</TableHead>
-													<TableHead>Ordens atribuídas</TableHead>
-													<TableHead>Membros na equipe</TableHead>
-												</TableRow>
-											</TableHeader>
-											<TableBody>
-												{teams.map((team, index) => (
-													<TableRow
-														key={index}
-														className="cursor-pointer hover:bg-gray-100 whitespace-nowrap"
-														style={{ cursor: "pointer" }}
-														onClick={() => router.push(`/teams/${team.id}`)}
-													>
-														<TableCell style={{ cursor: "pointer" }} onClick={() => router.push(`/teams/${team.id}`)}>
-															{hasPermission(role, ["teams_management", "teamleader", "teammember"], "read") && (
-																<span className="block w-full h-full">{team.teamName}</span>
-															)}
-														</TableCell>
-														<TableCell style={{ cursor: "pointer" }} onClick={() => router.push(`/teams/${team.id}`)}>
-															{hasPermission(role, ["teams_management", "teamleader", "teammember"], "read") && (
-																<span className="block w-full h-full">{team.leader.user.name}</span>
-															)}
-														</TableCell>
-														<TableCell style={{ cursor: "pointer" }} onClick={() => router.push(`/teams/${team.id}`)}>
-															{hasPermission(role, ["teams_management", "teamleader", "teammember"], "read") && (
-																<span className="block w-full h-full">{team.orders.length}</span>
-															)}
-														</TableCell>
-														<TableCell style={{ cursor: "pointer" }} onClick={() => router.push(`/teams/${team.id}`)}>
-															{hasPermission(role, ["teams_management", "teamleader", "teammember"], "read") && (
-																<span className="block w-full h-full">{team.members.length}</span>
-															)}
-														</TableCell>
-													</TableRow>
-												))}
-											</TableBody>
-										</Table>
-									)}
-								</div>
-							</Card>
-						</TabsContent>
-					</Tabs>
-							)}
-						</>
+									</Card>
+								</TabsContent>
+							</Tabs>
+						)}
+					</>
 				)}
 			</main>
 		</Container>

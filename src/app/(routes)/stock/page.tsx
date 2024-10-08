@@ -382,21 +382,21 @@ export default function StoragePage() {
 									<Table className="overflow-x-auto">
 										<TableHeader>
 											<TableRow>
-												<TableCell>Nome do Produto</TableCell>
-												<TableCell>Quantidade</TableCell>
-												<TableCell>Total em Medida</TableCell>
-												<TableCell>Restante</TableCell>
-												<TableCell>Valor</TableCell>
-												<TableCell>Fornecedor</TableCell>
+												<TableCell className="whitespace-nowrap">Nome do Produto</TableCell>
+												<TableCell className="whitespace-nowrap">Quantidade</TableCell>
+												<TableCell className="whitespace-nowrap">Total em Medida</TableCell>
+												<TableCell className="whitespace-nowrap">Restante</TableCell>
+												<TableCell className="whitespace-nowrap">Valor</TableCell>
+												<TableCell className="whitespace-nowrap">Fornecedor</TableCell>
 											</TableRow>
 										</TableHeader>
 										<TableBody>
 											{items.map((item) => (
 												<TableRow key={item.id}>
-													<TableCell>{item.productName}</TableCell>
-													<TableCell>{item.quantity}</TableCell>
-													<TableCell>{formatTotalMeasurement(item)}</TableCell>
-													<TableCell>
+													<TableCell className="whitespace-nowrap">{item.productName}</TableCell>
+													<TableCell className="whitespace-nowrap">{item.quantity}</TableCell>
+													<TableCell className="whitespace-nowrap">{formatTotalMeasurement(item)}</TableCell>
+													<TableCell className="whitespace-nowrap">
 														{item.unitOfMeasurement === "unit"
 															? `${item.quantity - item.usedQuantity} ${
 																	item.quantity - item.usedQuantity > 1 ? "unidades" : "unidade"
@@ -407,10 +407,10 @@ export default function StoragePage() {
 																		: `${item.totalMeasurement - item.usedMeasurement > 1 ? "litros" : "litro"}`
 															  }`}
 													</TableCell>
-													<TableCell>
+													<TableCell className="whitespace-nowrap">
 														<MoneyFormatter value={item.productValue || 0} currency="BRL" />
 													</TableCell>
-													<TableCell>{item.supplier?.supplierName}</TableCell>
+													<TableCell className="whitespace-nowrap">{item.supplier?.supplierName}</TableCell>
 												</TableRow>
 											))}
 										</TableBody>

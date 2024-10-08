@@ -89,19 +89,21 @@ export default function ExpensesPage() {
 									<Table>
 										<TableHeader>
 											<TableRow>
-												<TableCell>Categoria</TableCell>
-												<TableCell>Descrição</TableCell>
-												<TableCell>Quantidade de Itens</TableCell>
-												<TableCell>Data de Criação</TableCell>
+												<TableCell className="whitespace-nowrap">Categoria</TableCell>
+												<TableCell className="whitespace-nowrap">Descrição</TableCell>
+												<TableCell className="whitespace-nowrap">Quantidade de Itens</TableCell>
+												<TableCell className="whitespace-nowrap">Data de Criação</TableCell>
 											</TableRow>
 										</TableHeader>
 										<TableBody>
 											{categories.map((category) => (
 												<TableRow key={category.id} onClick={() => router.push(`/financial/categories/${category.id}`)}>
-													<TableCell>{category.name}</TableCell>
-													<TableCell>{category.description}</TableCell>
-													<TableCell>{category.items}</TableCell>
-													<TableCell>{new Date(category.createdAt).toLocaleDateString()}</TableCell>
+													<TableCell className="whitespace-nowrap">{category.name}</TableCell>
+													<TableCell className="whitespace-nowrap">{category.description}</TableCell>
+													<TableCell className="whitespace-nowrap">{category.items}</TableCell>
+													<TableCell className="whitespace-nowrap">
+														{new Date(category.createdAt).toLocaleDateString()}
+													</TableCell>
 												</TableRow>
 											))}
 										</TableBody>

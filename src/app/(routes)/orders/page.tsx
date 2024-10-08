@@ -50,9 +50,9 @@ export default function Page() {
 
 	useEffect(() => {
 		if (orderStatus?.length && !selectedFilter) {
-			const openStatus = orderStatus.find((status) => status.open === true); // Encontra o status com open === true
+			const openStatus = orderStatus.find((status) => status.open === true);
 			if (openStatus) {
-				setSelectedFilter(openStatus.id); // Define o status com `open: true` como o valor padrão
+				setSelectedFilter(openStatus.id);
 			}
 		}
 	}, [orderStatus]);
@@ -231,7 +231,7 @@ export default function Page() {
 	}, [searchText]);
 
 	return (
-		<Container>
+		<Container className="overflow-x-auto">
 			<main className="grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">
 				{isLoading ? (
 					<div className="flex justify-center items-center">
@@ -338,23 +338,21 @@ export default function Page() {
 												</DialogContent>
 											</Dialog>
 										)}
-										<p>
-											{orderStatus?.map((status) => (
-												<span
-													key={status.id}
-													onClick={() => handleFilterChange(status.id)}
-													className={`cursor-pointer px-4 py-2 rounded-md text-sm font-medium border transition-all duration-200 ease-in-out
+										{orderStatus?.map((status) => (
+											<span
+												key={status.id}
+												onClick={() => handleFilterChange(status.id)}
+												className={`cursor-pointer px-4 whitespace-nowrap py-2 rounded-md text-sm font-medium border transition-all duration-200 ease-in-out
 														${
 															selectedFilter === status.id
 																? "bg-slate-300 text-slate-800 border-slate-400"
 																: "bg-background text-foreground border-input hover:bg-accent hover:text-accent-foreground"
 														}`}
-													style={{ marginRight: "8px", display: "inline-block" }}
-												>
-													{status.orderStatusName}
-												</span>
-											))}
-										</p>
+												style={{ marginRight: "8px", display: "inline-block" }}
+											>
+												{status.orderStatusName}
+											</span>
+										))}
 									</div>
 								</div>
 							</div>

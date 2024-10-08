@@ -158,7 +158,7 @@ export default function CategoriesPage() {
 											<TableRow>
 												<TableCell>Nome</TableCell>
 												<TableCell>Descrição</TableCell>
-												<TableCell>Data de Criação</TableCell>
+												<TableCell className="whitespace-nowrap">Data de Criação</TableCell>
 											</TableRow>
 										</TableHeader>
 										<TableBody>
@@ -168,9 +168,11 @@ export default function CategoriesPage() {
 													style={{ cursor: "pointer" }}
 													onClick={() => router.push(`/financial/categories/${category.id}`)}
 												>
-													<TableCell>{category.name}</TableCell>
-													<TableCell>{category.description || "-"}</TableCell>
-													<TableCell>{new Date(category.createdAt).toLocaleDateString()}</TableCell>
+													<TableCell className="whitespace-nowrap">{category.name}</TableCell>
+													<TableCell className="whitespace-nowrap">{category.description || "-"}</TableCell>
+													<TableCell className="whitespace-nowrap">
+														{new Date(category.createdAt).toLocaleDateString()}
+													</TableCell>
 												</TableRow>
 											))}
 										</TableBody>

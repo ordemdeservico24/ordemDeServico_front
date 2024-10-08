@@ -220,12 +220,12 @@ export default function Page() {
 							<TableBody>
 								{financialReport.categories.map((category) => (
 									<TableRow key={category.categoryId}>
-										<TableCell>{category.categoryName}</TableCell>
-										<TableCell>
+										<TableCell className="whitespace-nowrap">{category.categoryName}</TableCell>
+										<TableCell className="whitespace-nowrap">
 											<MoneyFormatter value={category.amount} />
 										</TableCell>
-										<TableCell>{category.items}</TableCell>
-										<TableCell>{new Date(category.createdAt).toLocaleString()}</TableCell>
+										<TableCell className="whitespace-nowrap">{category.items}</TableCell>
+										<TableCell className="whitespace-nowrap">{new Date(category.createdAt).toLocaleString()}</TableCell>
 									</TableRow>
 								))}
 							</TableBody>
@@ -246,12 +246,12 @@ export default function Page() {
 							<TableBody>
 								{financialReport.revenues.map((item) => (
 									<TableRow key={item.itemId}>
-										<TableCell>{item.itemName}</TableCell>
-										<TableCell>
+										<TableCell className="whitespace-nowrap">{item.itemName}</TableCell>
+										<TableCell className="whitespace-nowrap">
 											<MoneyFormatter value={item.itemValue} />
 										</TableCell>
-										<TableCell>{item.itemQuantity}</TableCell>
-										<TableCell>{new Date(item.createdAt).toLocaleString()}</TableCell>
+										<TableCell className="whitespace-nowrap">{item.itemQuantity}</TableCell>
+										<TableCell className="whitespace-nowrap">{new Date(item.createdAt).toLocaleString()}</TableCell>
 									</TableRow>
 								))}
 							</TableBody>

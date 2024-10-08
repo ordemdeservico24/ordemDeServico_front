@@ -152,6 +152,14 @@ export default function UserPage({ params }: { params: { id: string } }) {
 		);
 	};
 
+	const formatDate = (dateString: string) => {
+		const date = new Date(dateString);
+		const year = date.getUTCFullYear();
+		const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+		const day = String(date.getUTCDate()).padStart(2, "0");
+		return `${day}/${month}/${year}`;
+	};
+
 	return (
 		<Container className="p-4">
 			<main className="grid flex-1 items-start gap-8 sm:px-6 sm:py-0 md:gap-12">
@@ -187,10 +195,10 @@ export default function UserPage({ params }: { params: { id: string } }) {
 									</CardHeader>
 									<CardContent className="p-6 space-y-6">
 										<div className="border-b border-gray-300 pb-4 mb-4">
-											<h2 className="text-xl font-semibold mb-4">Dados do Usuário</h2>
+											<h2 className="text-xl font-semibold mb-4">Dados do {user.isUser ? "Usuário" : "Funcionário"}</h2>
 											<div className="space-y-2">
 												<p className="text-gray-700">
-													<strong className="font-medium">Email:</strong> {user.email}
+													<strong className="font-medium">Email:</strong> {user.email ? user.email : "Não possui"}
 												</p>
 												<p className="text-gray-700">
 													<strong className="font-medium">Telefone:</strong> {user.phone}
@@ -201,6 +209,10 @@ export default function UserPage({ params }: { params: { id: string } }) {
 												</p>
 												<p className="text-gray-700">
 													<strong className="font-medium">Distrito:</strong> {user.tertiary.districtName}
+												</p>
+												<p className="text-gray-700">
+													<strong className="font-medium">Data de Início na Empresa:</strong>{" "}
+													{user.startCompanyDate ? formatDate(user.startCompanyDate) : "Não informado"}
 												</p>
 												<p className="text-gray-700 flex gap-1">
 													<strong className="font-medium">Salário:</strong>{" "}

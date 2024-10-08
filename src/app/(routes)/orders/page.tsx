@@ -20,7 +20,7 @@ import { useStore } from "@/zustandStore";
 import { hasPermission } from "@/utils/hasPermissions";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuCheckboxItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Filter } from "lucide-react";
+import { Filter, Search } from "lucide-react";
 import { DropdownMenuRadioGroup, DropdownMenuRadioItem } from "@radix-ui/react-dropdown-menu";
 
 export default function Page() {
@@ -43,6 +43,7 @@ export default function Page() {
 	const [orderStatus, setOrderStatus] = useState<IOrderStatus[]>();
 	const [selectedStatus, setSelectedStatus] = useState<string>("");
 	const [selectedFilter, setSelectedFilter] = useState<string | undefined>(undefined);
+	const [searchText, setSearchText] = useState("");
 	const [error, setError] = useState<string | null>(null);
 	const token = getCookie("access_token");
 	const { role = [] } = useStore();
@@ -105,16 +106,17 @@ export default function Page() {
 		setSelectedFilter((prevStatus) => (prevStatus === status ? undefined : status));
 	}, []);
 
-	const fetchOrders = async () => {
+	const fetchOrders = async (searchText?: string) => {
 		try {
 			setIsLoading(true);
 			setError(null);
 			const limit = 9;
 			const offset = limit * (currentPage - 1);
 			const filterParam = selectedFilter ? `&status=${selectedFilter}` : "";
+			const searchQuery = searchText ? `&search=${searchText}` : "";
 
 			const response = await fetch(
-				`https://ordemdeservicosdev.onrender.com/api/order/get-all-orders?limit=${limit}&offset=${offset}${filterParam}`,
+				`https://ordemdeservicosdev.onrender.com/api/order/get-all-orders?limit=${limit}&offset=${offset}${filterParam}${searchQuery}`,
 				{
 					method: "GET",
 					headers: {
@@ -220,6 +222,14 @@ export default function Page() {
 		fetchOrders();
 	}, [currentPage, token, selectedFilter]);
 
+	useEffect(() => {
+		const delayDebounceFn = setTimeout(() => {
+			fetchOrders(searchText);
+		}, 650);
+
+		return () => clearTimeout(delayDebounceFn); // Limpa o debounce anterior
+	}, [searchText]);
+
 	return (
 		<Container>
 			<main className="grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">
@@ -251,6 +261,16 @@ export default function Page() {
 								<div>
 									<CardTitle className="text-[#3b82f6] text-2xl font-bold">Ordens de Serviço</CardTitle>
 									<CardDescription>Cheque todas as ordens de serviços e dados relacionados a mesma.</CardDescription>
+									<div className="relative mt-4 mb-2">
+										<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+										<Input
+											type="search"
+											placeholder="Pesquisar ordens de serviço..."
+											onChange={(e) => setSearchText(e.target.value)}
+											className="pl-10 w-full"
+											value={searchText}
+										/>
+									</div>
 									<div className="flex items-center gap-2 pt-4">
 										{hasPermission(role, ["orders_management"], "create") && (
 											<Dialog>

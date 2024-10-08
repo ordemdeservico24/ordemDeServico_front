@@ -88,9 +88,13 @@ export default function Page() {
 		const request: {
 			name: string;
 			phone: string;
+			startCompanyDate: string | null;
+			salary: number;
 		} = {
 			name: getInput("name").value || "",
 			phone: getInput("phone").value || "",
+			startCompanyDate: getInput("startCompanyDate").value ? new Date(getInput("startCompanyDate").value).toISOString() : null,
+			salary: +getInput("salary").value || 0,
 		};
 
 		const user = await fetch(`https://ordemdeservicosdev.onrender.com/api/user/get-user/${userId}`, {
@@ -119,9 +123,14 @@ export default function Page() {
 				},
 				body: JSON.stringify(request),
 			})
-				.then((res) => {
-					if (res.ok) {
-						return res.json();
+				.then(async (res) => {
+					if (await res.ok) {
+						return await res.json();
+					}
+					if (res.status === 400) {
+						const data = await res.json();
+						toast.error(data.message);
+						throw new Error(data.message);
 					}
 				})
 				.then((data) => {
@@ -129,6 +138,7 @@ export default function Page() {
 				})
 				.catch((error) => {
 					console.log(error);
+					throw error;
 				}),
 			{
 				pending: "Cadastrando funcionário...",
@@ -365,6 +375,14 @@ export default function Page() {
 																placeholder="Telefone do Funcionário"
 																className="w-full"
 															/>
+															<Input
+																type="number"
+																name="salary"
+																placeholder="Salário do Funcionário"
+																step="0.01"
+																className="w-full"
+															/>
+															<Input type="date" name="startCompanyDate" className="w-full" />
 															<Button
 																className=" text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
 																type="submit"

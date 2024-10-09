@@ -3,6 +3,7 @@ import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { ReactQueryClientProvider } from "@/components/ClientQueryProvider";
 
 const inter = Montserrat({ subsets: ["latin"] });
 
@@ -19,12 +20,14 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={`${inter.className}bg-background`}>
+        <ReactQueryClientProvider>
         <div className="flex flex-col">
           <main className="flex-1">
             {children}
           </main>
           <ToastContainer />
-        </div>
+          </div>
+        </ReactQueryClientProvider>
       </body>
     </html>
   );

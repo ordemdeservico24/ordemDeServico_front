@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import {
 	FaHome,
@@ -8,7 +8,6 @@ import {
 	FaTag,
 	FaSignOutAlt,
 	FaChevronDown,
-	FaChevronUp,
 	FaBuilding,
 	FaGlobe,
 	FaMap,
@@ -19,23 +18,21 @@ import {
 	FaArchive,
 	FaCalendar,
 	FaMoneyCheck,
-	FaSlash,
 	FaUsers,
 	FaFileInvoice,
 	FaChartBar,
 	FaClipboardList,
 } from "react-icons/fa";
-import { RiTeamLine } from "react-icons/ri";
 import Logo from "../assets/logo.png";
 import Image from "next/image";
 import { Role, useStore } from "../zustandStore";
-import IconWrapper from "./IconWrapper";
 import { hasPermission } from "@/utils/hasPermissions";
 import { getCookie } from "cookies-next";
 import { ICompany } from "@/interfaces/company.interface";
 import { MdHomeRepairService } from "react-icons/md";
 import { ChartColumnIncreasingIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useCompanyData } from "@/hooks/useCompanyData";
 
 interface MenuProps {
 	isOpen: boolean;
@@ -43,32 +40,9 @@ interface MenuProps {
 
 const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 	const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-	const [company, setCompany] = useState<ICompany>();
-	const [error, setError] = useState<string | null>(null);
-	const token = getCookie("access_token");
 	const { role, logout, teamId, roleLevel } = useStore();
 	const router = useRouter();
-
-	useEffect(() => {
-		fetch("https://ordemdeservicosdev.onrender.com/api/company/get-company", {
-			method: "GET",
-			headers: {
-				"Content-type": "application/json",
-				Authorization: `Bearer ${token}`,
-			},
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				setCompany(data);
-				if (!data) {
-					setError("Erro ao carregar dados da equipe.");
-				}
-			})
-			.catch((err) => {
-				console.error("Erro ao buscar os dados:", err);
-				setError("Erro ao carregar dados da equipe.");
-			});
-	}, [token]);
+	const { data } = useCompanyData();
 
 	const handleLogout = () => {
 		logout();
@@ -90,9 +64,9 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 			}`}
 		>
 			<div className="w-full flex justify-center items-center h-[170px] bg-[#cccccc] overflow-hidden">
-				<Image src={company ? company?.companyPhoto : Logo} alt="Logo" layout="responsive" width={60} height={60} />
+				<Image src={data ? data?.companyPhoto : Logo} alt="Logo" layout="responsive" width={60} height={60} />
 			</div>
-			<h1 className="text-center text-[#000] text-[1.2rem] mb-1 mt-2">{company?.companyName || "Empresa"}</h1>
+			<h1 className="text-center text-[#000] text-[1.2rem] mb-1 mt-2">{data?.companyName || "Empresa"}</h1>
 
 			<div className="flex flex-col mt-6">
 				<Link href="/home" className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]">

@@ -1,7 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-
 import {
 	FaHome,
 	FaShoppingCart,
@@ -20,7 +19,6 @@ import {
 	FaArchive,
 	FaCalendar,
 	FaMoneyCheck,
-	FaSlash,
 	FaUsers,
 	FaFileInvoice,
 	FaChartBar,
@@ -35,43 +33,18 @@ import Logo from "../assets/logo.png";
 import Image from "next/image";
 import { useStore } from "../zustandStore";
 import { hasPermission } from "@/utils/hasPermissions";
-import { getCookie } from "cookies-next";
-import { ICompany } from "@/interfaces/company.interface";
 import { ChartColumnIncreasingIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useCompanyData } from "@/hooks/useCompanyData";
 
 const MenuHome = () => {
+	const { data } = useCompanyData();
 	const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-	const [company, setCompany] = useState<ICompany>();
-	const [error, setError] = useState<string | null>(null);
 	const { role = [], logout, teamId, roleLevel } = useStore();
-	const token = getCookie("access_token");
 	const router = useRouter();
-
 	const toggleDropdown = (dropdown: string) => {
 		setOpenDropdown((prevDropdown) => (prevDropdown === dropdown ? null : dropdown));
 	};
-
-	useEffect(() => {
-		fetch("https://ordemdeservicosdev.onrender.com/api/company/get-company", {
-			method: "GET",
-			headers: {
-				"Content-type": "application/json",
-				Authorization: `Bearer ${token}`,
-			},
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				setCompany(data);
-				if (!data) {
-					setError("Erro ao carregar dados da equipe.");
-				}
-			})
-			.catch((err) => {
-				console.error("Erro ao buscar os dados:", err);
-				setError("Erro ao carregar dados da equipe.");
-			});
-	}, [token]);
 
 	const handleLogout = () => {
 		logout();
@@ -83,9 +56,9 @@ const MenuHome = () => {
 			<div className="flex flex-col justify-between ">
 				<div>
 					<div className="w-full flex justify-center items-center h-[170px] bg-[#cccccc] overflow-hidden">
-						<Image src={company ? company?.companyPhoto : Logo} alt="Logo" layout="responsive" width={60} height={60} />
+						<Image src={data ? data?.companyPhoto : Logo} alt="Logo" layout="responsive" width={60} height={60} />
 					</div>
-					<h1 className="text-center text-[#000] text-[1.2rem] mb-1 mt-2">{company?.companyName || "Empresa"}</h1>
+					<h1 className="text-center text-[#000] text-[1.2rem] mb-1 mt-2">{data?.companyName || "Empresa"}</h1>
 
 					<div className="flex flex-col p-4">
 						<Link href="/home">

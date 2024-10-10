@@ -71,7 +71,7 @@ export default function StoragePage() {
 				setSuppliers(data);
 			})
 			.catch((error) => {
-				console.error("Erro ao buscar os dados", error);
+				console.error("Erro ao buscar os dados:", error);
 				setError("Erro ao carregar dados dos fornecedores.");
 			});
 		setIsLoading(false);

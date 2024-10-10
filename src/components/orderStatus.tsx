@@ -32,6 +32,7 @@ export const OrderStatus: React.FC<OrderStatusProps> = ({ currentStatusId, curre
 	const [usedItems, setUsedItems] = useState<IUsedItem[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [searchTerm, setSearchTerm] = useState<string>("");
+	const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({});
 	const token = getCookie("access_token");
 
 	useEffect(() => {
@@ -81,6 +82,10 @@ export const OrderStatus: React.FC<OrderStatusProps> = ({ currentStatusId, curre
 			usedMeasurement: item.usedMeasurement,
 			usedQuantity: item.usedQuantity,
 		}));
+	};
+
+	const handleCheckboxChange = (itemId: string, checked: boolean) => {
+		setCheckedItems((prev) => ({ ...prev, [itemId]: checked }));
 	};
 
 	const updateOrderStatus = async (value: string) => {
@@ -271,12 +276,7 @@ export const OrderStatus: React.FC<OrderStatusProps> = ({ currentStatusId, curre
 											<input
 												type="checkbox"
 												id={`item-${item.id}`}
-												onClick={() => handleAddItem(item.id, item.productName, quantityInputRef, measurementInputRef)}
-												onChange={(e) => {
-													if (!e.target.checked) {
-														setUsedItems((prev) => prev.filter((usedItem) => usedItem.itemId !== item.id));
-													}
-												}}
+												onChange={(e) => handleCheckboxChange(item.id, e.target.checked)}
 											/>
 											<Label htmlFor={`item-${item.id}`} className="flex-grow text-[11px] sm:text-sm">
 												{item.productName} -{" "}
@@ -302,7 +302,8 @@ export const OrderStatus: React.FC<OrderStatusProps> = ({ currentStatusId, curre
 												className="w-20 border-[#0000007e]"
 												min="0"
 												step={item.unitOfMeasurement === "unit" ? "0" : "0.01"}
-												onChange={() => {}}
+												onChange={() => handleAddItem(item.id, item.productName, quantityInputRef, measurementInputRef)}
+												disabled={!checkedItems[item.id]}
 											/>
 											{/* <Button
 												variant="outline"

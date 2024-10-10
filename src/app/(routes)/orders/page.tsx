@@ -362,24 +362,26 @@ export default function Page() {
 								{orders.map((order) => (
 									<div
 										key={order.id}
-										className={`relative border rounded-lg p-4 bg-white shadow-md hover:shadow-lg transition-shadow ${
+										className={`relative border rounded-lg p-4 flex flex-col justify-between bg-white shadow-md hover:shadow-lg transition-shadow ${
 											order.isExpired ? "border-5 border-solid border-red-500 overflow-hidden" : ""
 										}`}
 									>
-										{order.isExpired && (
-											<span className="absolute top-[100px] w-[160px] right-[-110px] flex justify-center bg-red-500 text-white text-xs font-semibold px-3 py-2 rounded-tl-lg transform rotate-45 origin-top-right -translate-x-1/2 -translate-y-1/2">
-												Atrasado
-											</span>
-										)}
-										{hasPermission(role, ["orders_management"], "read") && (
-											<Link href={`/orders/order/${order.id}`}>
-												<h2 className={`text-lg font-semibold mb-2 ${order.isExpired ? "pt-3" : "pt-1"}`}>
-													Ordem de Serviço - {order.orderId}
-												</h2>
-											</Link>
-										)}
-										<p className="text-gray-600 mb-2">Data de abertura: {order.openningDate}</p>
-										<p className="text-gray-800 mb-2">{truncateNotes(order.notes, 100)}</p>
+										<div>
+											{order.isExpired && (
+												<span className="absolute top-[100px] w-[160px] right-[-110px] flex justify-center bg-red-500 text-white text-xs font-semibold px-3 py-2 rounded-tl-lg transform rotate-45 origin-top-right -translate-x-1/2 -translate-y-1/2">
+													Atrasado
+												</span>
+											)}
+											{hasPermission(role, ["orders_management"], "read") && (
+												<Link href={`/orders/order/${order.id}`}>
+													<h2 className={`text-lg font-semibold mb-2 ${order.isExpired ? "pt-3" : "pt-1"}`}>
+														Ordem de Serviço - {order.orderId}
+													</h2>
+												</Link>
+											)}
+											<p className="text-gray-600 mb-2">Data de abertura: {order.openningDate}</p>
+											<p className="text-gray-800 mb-2">{truncateNotes(order.notes, 100)}</p>
+										</div>
 										<div className="flex justify-between items-center">
 											{hasPermission(role, ["orders_management"], "update") && (
 												<OrderStatus

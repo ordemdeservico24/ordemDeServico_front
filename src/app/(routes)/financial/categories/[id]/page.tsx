@@ -13,6 +13,8 @@ import AddItemForm from "@/components/AddItem";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import MoneyFormatter from "@/components/formatMoneyValues";
+const BASE_URL = process.env.BASE_URL;
+
 export default function CategoryDetailPage() {
 	const [categoryItem, setCategoryItem] = useState<FinancialCategoryItem | null>(null);
 	const [error, setError] = useState<string | null>(null);
@@ -36,7 +38,7 @@ export default function CategoryDetailPage() {
 			console.log(`Buscando dados para a categoria com ID: ${id}`);
 
 			try {
-				const response = await fetch(`https://ordemdeservicosdev.onrender.com/api/finance/get-category/${id}`, {
+				const response = await fetch(`${BASE_URL}/finance/get-category/${id}`, {
 					method: "GET",
 					headers: {
 						"Content-Type": "application/json",
@@ -83,7 +85,7 @@ export default function CategoryDetailPage() {
 		setError(null);
 
 		toast.promise(
-			fetch(`https://ordemdeservicosdev.onrender.com/api/finance/create-item/${id}`, {
+			fetch(`${BASE_URL}/finance/create-item/${id}`, {
 				method: "POST",
 				headers: {
 					Authorization: `Bearer ${token}`,

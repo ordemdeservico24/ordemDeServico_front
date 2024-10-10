@@ -19,9 +19,7 @@ import { z } from "zod";
 import { useStore } from "@/zustandStore";
 import { hasPermission } from "@/utils/hasPermissions";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuCheckboxItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Filter, Search } from "lucide-react";
-import { DropdownMenuRadioGroup, DropdownMenuRadioItem } from "@radix-ui/react-dropdown-menu";
+import { Search } from "lucide-react";
 
 export default function Page() {
 	const orderSchema = z.object({

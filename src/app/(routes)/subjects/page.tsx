@@ -13,6 +13,7 @@ import { getCookie } from "cookies-next";
 import { z } from "zod";
 import { hasPermission } from "@/utils/hasPermissions";
 import { useStore } from "@/zustandStore";
+const BASE_URL = process.env.BASE_URL;
 
 const subjectSchema = z.object({
 	name: z.string().min(1, "Nome é obrigatório"),
@@ -27,7 +28,7 @@ export default function Page() {
 
 	useEffect(() => {
 		setIsLoading(true);
-		fetch("https://ordemdeservicosdev.onrender.com/api/order/get-all-subjects", {
+		fetch(`${BASE_URL}/order/get-all-subjects`, {
 			method: "GET",
 			headers: {
 				"Content-type": "application/json",
@@ -72,7 +73,7 @@ export default function Page() {
 		const request: ISubject = validation.data;
 
 		toast.promise(
-			fetch("https://ordemdeservicosdev.onrender.com/api/order/create-subject", {
+			fetch(`${BASE_URL}/order/create-subject`, {
 				method: "POST",
 				headers: {
 					"Content-type": "application/json",

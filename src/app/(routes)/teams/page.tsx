@@ -2,7 +2,6 @@
 import { Container } from "@/components/container";
 import { ITeam, ITeamLeader } from "@/interfaces/team.interfaces";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import React, { useEffect, FormEvent, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -15,6 +14,7 @@ import { getCookie } from "cookies-next";
 import { ICreateTeam } from "@/interfaces/create-team-request/createTeam.interface";
 import { useStore } from "@/zustandStore";
 import { hasPermission } from "@/utils/hasPermissions";
+const BASE_URL = process.env.BASE_URL;
 
 export default function Page() {
 	const [teams, setTeams] = useState<ITeam[]>([]);
@@ -26,7 +26,7 @@ export default function Page() {
 
 	useEffect(() => {
 		setIsLoading(true);
-		fetch("https://ordemdeservicosdev.onrender.com/api/team/get-all-teams", {
+		fetch(`${BASE_URL}/team/get-all-teams`, {
 			method: "GET",
 			headers: {
 				"Content-type": "application/json",
@@ -64,7 +64,7 @@ export default function Page() {
 		};
 
 		toast.promise(
-			fetch("https://ordemdeservicosdev.onrender.com/api/team/create-team", {
+			fetch(`${BASE_URL}/team/create-team`, {
 				method: "POST",
 				headers: {
 					"Content-type": "application/json",
@@ -100,7 +100,7 @@ export default function Page() {
 	const [leaders, setLeaders] = useState<ITeamLeader[]>([]);
 
 	useEffect(() => {
-		fetch("https://ordemdeservicosdev.onrender.com/api/team/get-all-leaders", {
+		fetch(`${BASE_URL}/team/get-all-leaders`, {
 			method: "GET",
 			headers: {
 				"Content-type": "application/json",

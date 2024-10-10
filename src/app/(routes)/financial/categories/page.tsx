@@ -10,6 +10,7 @@ import { getCookie } from "cookies-next";
 import { FinancialCategory } from "@/interfaces/financial.interface";
 import { Table, TableHeader, TableBody, TableRow, TableCell } from "@/components/ui/table";
 import { toast } from "react-toastify";
+const BASE_URL = process.env.BASE_URL;
 
 export default function CategoriesPage() {
 	const [categories, setCategories] = useState<FinancialCategory[]>([]);
@@ -23,7 +24,7 @@ export default function CategoriesPage() {
 		setIsLoading(true);
 		const fetchCategories = async () => {
 			try {
-				const response = await fetch("https://ordemdeservicosdev.onrender.com/api/finance/get-all-categories", {
+				const response = await fetch(`${BASE_URL}/finance/get-all-categories`, {
 					method: "GET",
 					headers: {
 						"Content-Type": "application/json",
@@ -51,7 +52,7 @@ export default function CategoriesPage() {
 	const handleAddCategory = async () => {
 		try {
 			const response = await toast.promise(
-				fetch("https://ordemdeservicosdev.onrender.com/api/finance/create-category", {
+				fetch(`${BASE_URL}/finance/create-category`, {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",

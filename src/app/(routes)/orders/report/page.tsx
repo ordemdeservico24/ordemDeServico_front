@@ -1,13 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { BarChart3, Calendar, Clock, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import { IOrderReport } from "@/interfaces/order.interface";
 import { getCookie } from "cookies-next";
 import { Container } from "@/components/container";
+const BASE_URL = process.env.BASE_URL;
 
 export default function Page() {
 	const [orderData, setOrderData] = useState<IOrderReport[]>([]);
@@ -18,7 +17,7 @@ export default function Page() {
 	useEffect(() => {
 		setIsLoading(true);
 		setError(null);
-		fetch(`https://ordemdeservicosdev.onrender.com/api/order/report`, {
+		fetch(`${BASE_URL}/order/report`, {
 			method: "GET",
 			headers: {
 				"Content-type": "application/json",

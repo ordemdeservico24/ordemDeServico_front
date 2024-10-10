@@ -3,38 +3,11 @@ import { Container } from "@/components/container";
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
 import { useStore } from "../../../zustandStore";
 import { getCookie } from "cookies-next";
 import { Briefcase, HelpCircle, User } from "lucide-react";
 import { IUser } from "@/interfaces/user.interface";
-
-interface Order {
-	id: string;
-	orderId: number;
-	openningDate: string;
-	expirationDate: string;
-	orderStatus: string;
-	subject: string;
-	notes: string;
-	requesterName: string;
-	requesterPhone: string;
-	requesterStreet: string;
-	requesterHouseNumber: number;
-	requesterComplement: string;
-	requesterZipcode: string;
-	teamId: string;
-	createdAt: string;
-	updatedAt: string;
-	assignedTeam: {
-		id: string;
-		teamLeaderId: string;
-		teamName: string;
-		createdAt: string;
-		updatedAt: string;
-	};
-}
+const BASE_URL = process.env.BASE_URL;
 
 export default function Home() {
 	const [user, setUser] = useState<IUser>();
@@ -45,7 +18,7 @@ export default function Home() {
 	useEffect(() => {
 		setIsLoading(true);
 
-		fetch(`https://ordemdeservicosdev.onrender.com/api/user/get-user/${userId}`, {
+		fetch(`${BASE_URL}/user/get-user/${userId}`, {
 			method: "GET",
 			headers: {
 				"Content-type": "application/json",
@@ -73,7 +46,7 @@ export default function Home() {
 	const diffTimeUser = Math.abs(currentDate.getTime() - createdAt.getTime());
 	const diffDaysUser = Math.ceil(diffTimeUser / (1000 * 60 * 60 * 24));
 
-	const startCompanyDate = user?.startCompanyDate ? new Date(user.startCompanyDate) : new Date(); // Se `startCompanyDate` for undefined, usar a data atual
+	const startCompanyDate = user?.startCompanyDate ? new Date(user.startCompanyDate) : new Date();
 	const diffTimeCompany = Math.abs(currentDate.getTime() - startCompanyDate.getTime());
 	const diffDaysCompany = Math.ceil(diffTimeCompany / (1000 * 60 * 60 * 24));
 

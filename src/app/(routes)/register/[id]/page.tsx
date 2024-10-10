@@ -15,7 +15,9 @@ import { useStore } from "../../../../zustandStore";
 import { EyeIcon, EyeOffIcon, Loader } from "lucide-react";
 import { useState } from "react";
 import { useHookFormMask } from "use-mask-input";
-import { toast } from "react-toastify";
+import { toast } from "react-toastify"
+const BASE_URL = process.env.BASE_URL;
+
 interface FormData {
 	name: string;
 	phone: string;
@@ -71,7 +73,7 @@ export default function Page() {
 	const setUser = useStore((state) => state.setUser);
 	const onSubmit = async (data: FormData) => {
 		try {
-			const response = await fetch(`https://ordemdeservicosdev.onrender.com/api/user/create-user/${id}?type=user`, {
+			const response = await fetch(`${BASE_URL}/user/create-user/${id}?type=user`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

@@ -14,6 +14,7 @@ import { ICreateOrderStatus } from "@/interfaces/create-order-request/create-ord
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useStore } from "@/zustandStore";
 import { hasPermission } from "@/utils/hasPermissions";
+const BASE_URL = process.env.BASE_URL;
 
 export default function Page() {
 	const [isLoading, setIsLoading] = useState(true);
@@ -24,7 +25,7 @@ export default function Page() {
 	const { role } = useStore();
 
 	useEffect(() => {
-		fetch("https://ordemdeservicosdev.onrender.com/api/order/get-all-orders-status", {
+		fetch(`${BASE_URL}/order/get-all-orders-status`, {
 			method: "GET",
 			headers: {
 				"Content-type": "application/json",
@@ -65,7 +66,7 @@ export default function Page() {
 		};
 
 		toast.promise(
-			fetch("https://ordemdeservicosdev.onrender.com/api/order/create-order-status", {
+			fetch(`${BASE_URL}/order/create-order-status`, {
 				method: "POST",
 				headers: {
 					"Content-type": "application/json",

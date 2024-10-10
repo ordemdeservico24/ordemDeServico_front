@@ -32,7 +32,7 @@ import { ICompany } from "@/interfaces/company.interface";
 import { MdHomeRepairService } from "react-icons/md";
 import { ChartColumnIncreasingIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCompanyData } from "@/hooks/useCompanyData";
+import { useCompanyData } from "@/hooks/company/useCompanyData";
 
 interface MenuProps {
 	isOpen: boolean;

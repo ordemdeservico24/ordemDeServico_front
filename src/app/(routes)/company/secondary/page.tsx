@@ -10,7 +10,7 @@ import { IPrimaryGroup, ISecondaryGroup } from "@/interfaces/company.interface";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "react-toastify";
-
+const BASE_URL = process.env.BASE_URL;
 export default function SecondaryGroupsPage() {
 	const token = getCookie("access_token");
 	const [secondaryGroups, setSecondaryGroups] = useState<ISecondaryGroup[] | null>(null);
@@ -25,7 +25,7 @@ export default function SecondaryGroupsPage() {
 			setError(null);
 
 			try {
-				const response = await fetch("https://ordemdeservicosdev.onrender.com/api/company/get-all-secondaries", {
+				const response = await fetch(`${BASE_URL}/company/get-all-secondaries`, {
 					method: "GET",
 					headers: {
 						"Content-type": "application/json",
@@ -52,7 +52,7 @@ export default function SecondaryGroupsPage() {
 			setError(null);
 
 			try {
-				const response = await fetch("https://ordemdeservicosdev.onrender.com/api/company/get-all-primaries", {
+				const response = await fetch(`${BASE_URL}/company/get-all-primaries`, {
 					method: "GET",
 					headers: {
 						"Content-type": "application/json",
@@ -96,7 +96,7 @@ export default function SecondaryGroupsPage() {
 		};
 		try {
 			const response = await toast.promise(
-				fetch(`https://ordemdeservicosdev.onrender.com/api/company/create-secondary/${primary}`, {
+				fetch(`${BASE_URL}/company/create-secondary/${primary}`, {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",

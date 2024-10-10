@@ -1,6 +1,6 @@
 "use client";
 import { Container } from "@/components/container";
-import { ITeam, ITeamLeader } from "@/interfaces/team.interfaces";
+import { ITeamLeader } from "@/interfaces/team.interfaces";
 import React, { useEffect, FormEvent, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FiTrash } from "react-icons/fi";
@@ -13,6 +13,7 @@ import { getCookie } from "cookies-next";
 import { IUser } from "@/interfaces/user.interface";
 import { useStore } from "@/zustandStore";
 import { hasPermission } from "@/utils/hasPermissions";
+const BASE_URL = process.env.BASE_URL;
 
 export default function Page() {
 	const [users, setUsers] = useState<IUser[]>([]);
@@ -24,7 +25,7 @@ export default function Page() {
 	useEffect(() => {
 		setIsLoading(true);
 		if (hasPermission(role, ["teams_management", "teamleader"], "read")) {
-			fetch("https://ordemdeservicosdev.onrender.com/api/team/get-all-leaders", {
+			fetch(`${BASE_URL}/team/get-all-leaders`, {
 				method: "GET",
 				headers: {
 					"Content-type": "application/json",
@@ -50,7 +51,7 @@ export default function Page() {
 
 		try {
 			toast.promise(
-				fetch("https://ordemdeservicosdev.onrender.com/api/team/create-leader", {
+				fetch(`${BASE_URL}/team/create-leader`, {
 					method: "POST",
 					headers: {
 						"Content-type": "application/json",
@@ -76,7 +77,7 @@ export default function Page() {
 	};
 
 	useEffect(() => {
-		fetch(`https://ordemdeservicosdev.onrender.com/api/user/get-all-users?limit=${100}&type=user`, {
+		fetch(`${BASE_URL}/user/get-all-users?limit=${100}&type=user`, {
 			method: "GET",
 			headers: {
 				"Content-type": "application/json",
@@ -95,7 +96,7 @@ export default function Page() {
 
 	const handleDelete = async (id: string) => {
 		try {
-			const response = await fetch(`https://ordemdeservicosdev.onrender.com/api/team/delete-leader/${id}`, {
+			const response = await fetch(`${BASE_URL}/team/delete-leader/${id}`, {
 				method: "DELETE",
 				headers: {
 					"Content-type": "application/json",

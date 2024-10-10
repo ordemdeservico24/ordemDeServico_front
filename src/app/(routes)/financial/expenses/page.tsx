@@ -7,7 +7,7 @@ import { Table, TableHeader, TableBody, TableRow, TableCell } from "@/components
 import { getCookie } from "cookies-next";
 import MoneyFormatter from "@/components/formatMoneyValues";
 import { useRouter } from "next/navigation";
-
+const BASE_URL = process.env.BASE_URL;
 export default function ExpensesPage() {
 	const [categories, setCategories] = useState<any[]>([]);
 	const [totalExpenses, setTotalExpenses] = useState<number>(0);
@@ -20,7 +20,7 @@ export default function ExpensesPage() {
 		setIsLoading(true);
 		const fetchExpenses = async () => {
 			try {
-				const response = await fetch("https://ordemdeservicosdev.onrender.com/api/finance/expenses", {
+				const response = await fetch(`${BASE_URL}/finance/expenses`, {
 					method: "GET",
 					headers: {
 						"Content-Type": "application/json",

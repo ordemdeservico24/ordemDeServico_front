@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "react-toastify";
 import { useStore } from "@/zustandStore";
 import { IUser } from "@/interfaces/user.interface";
-
+const BASE_URL = process.env.BASE_URL;
 export default function PrimaryGroupsPage() {
 	const token = getCookie("access_token");
 	const [primaryGroups, setPrimaryGroups] = useState<IPrimaryGroup[] | null>(null);
@@ -26,7 +26,7 @@ export default function PrimaryGroupsPage() {
 			setError(null);
 
 			try {
-				const response = await fetch("https://ordemdeservicosdev.onrender.com/api/company/get-all-primaries", {
+				const response = await fetch(`${BASE_URL}/company/get-all-primaries`, {
 					method: "GET",
 					headers: {
 						"Content-type": "application/json",

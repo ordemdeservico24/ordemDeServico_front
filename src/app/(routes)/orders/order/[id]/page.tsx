@@ -10,6 +10,7 @@ import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { getCookie } from "cookies-next";
 import { hasPermission } from "@/utils/hasPermissions";
 import { useStore } from "@/zustandStore";
+const BASE_URL = process.env.BASE_URL;
 
 export default function Page({ params }: { params: { id: string } }) {
 	const [order, setOrder] = useState<IOrderGet>();
@@ -20,7 +21,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
 	useEffect(() => {
 		setIsLoading(true);
-		fetch(`https://ordemdeservicosdev.onrender.com/api/order/get-order/${params.id}`, {
+		fetch(`${BASE_URL}/order/get-order/${params.id}`, {
 			method: "GET",
 			headers: {
 				"Content-type": "application/json",
@@ -35,7 +36,7 @@ export default function Page({ params }: { params: { id: string } }) {
 				console.log(status, data);
 				setOrder(data);
 			});
-		fetch("https://ordemdeservicosdev.onrender.com/api/order/get-all-orders-status", {
+		fetch(`${BASE_URL}/order/get-all-orders-status`, {
 			method: "GET",
 			headers: {
 				"Content-type": "application/json",

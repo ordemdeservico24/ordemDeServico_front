@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { toast } from "react-toastify";
 import { z } from "zod";
 import { getCookie } from "cookies-next";
-
+const BASE_URL = process.env.BASE_URL;
 import { IStockItem, ISupplier } from "@/interfaces/stock.interface";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MoneyFormatter from "@/components/formatMoneyValues";
@@ -41,7 +41,7 @@ export default function StoragePage() {
 
 	useEffect(() => {
 		setIsLoading(true);
-		fetch("https://ordemdeservicosdev.onrender.com/api/storage/get-all-items", {
+		fetch(`${BASE_URL}/storage/get-all-items`, {
 			method: "GET",
 			headers: {
 				"Content-type": "application/json",
@@ -59,7 +59,7 @@ export default function StoragePage() {
 				setIsLoading(false);
 			});
 
-		fetch("https://ordemdeservicosdev.onrender.com/api/storage/get-all-suppliers", {
+		fetch(`${BASE_URL}/storage/get-all-suppliers`, {
 			method: "GET",
 			headers: {
 				"Content-type": "application/json",
@@ -93,7 +93,7 @@ export default function StoragePage() {
 		};
 
 		const totalMeasurementInput = getInput("totalMeasurement");
-		const totalMeasurementValue = totalMeasurementInput ? +totalMeasurementInput.value : undefined || 0;
+		const totalMeasurementValue = totalMeasurementInput ? +totalMeasurementInput.value : 0;
 
 		const formData: {
 			productName: string;
@@ -133,7 +133,7 @@ export default function StoragePage() {
 		}
 
 		toast.promise(
-			fetch("https://ordemdeservicosdev.onrender.com/api/storage/create-item", {
+			fetch(`${BASE_URL}/storage/create-item`, {
 				method: "POST",
 				headers: {
 					"Content-type": "application/json",
@@ -187,7 +187,7 @@ export default function StoragePage() {
 		}
 
 		toast.promise(
-			fetch("https://ordemdeservicosdev.onrender.com/api/storage/create-supplier", {
+			fetch(`${BASE_URL}/storage/create-supplier`, {
 				method: "POST",
 				headers: {
 					"Content-type": "application/json",

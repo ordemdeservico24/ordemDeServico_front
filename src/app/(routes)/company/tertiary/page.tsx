@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { Input } from "@/components/ui/input";
-
+const BASE_URL = process.env.BASE_URL;
 export default function TertiaryGroupsPage() {
 	const token = getCookie("access_token");
 	const [tertiaryGroups, setTertiaryGroups] = useState<ITertiaryGroup[] | null>(null);
@@ -27,7 +27,7 @@ export default function TertiaryGroupsPage() {
 			setError(null);
 
 			try {
-				const response = await fetch("https://ordemdeservicosdev.onrender.com/api/company/get-all-tertiaries", {
+				const response = await fetch(`${BASE_URL}/company/get-all-tertiaries`, {
 					method: "GET",
 					headers: {
 						"Content-type": "application/json",
@@ -54,7 +54,7 @@ export default function TertiaryGroupsPage() {
 			setError(null);
 
 			try {
-				const response = await fetch("https://ordemdeservicosdev.onrender.com/api/company/get-all-secondaries", {
+				const response = await fetch(`${BASE_URL}/company/get-all-secondaries`, {
 					method: "GET",
 					headers: {
 						"Content-type": "application/json",
@@ -98,7 +98,7 @@ export default function TertiaryGroupsPage() {
 		};
 		try {
 			const response = await toast.promise(
-				fetch(`https://ordemdeservicosdev.onrender.com/api/company/create-tertiary/${secondary}`, {
+				fetch(`${BASE_URL}/company/create-tertiary/${secondary}`, {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",

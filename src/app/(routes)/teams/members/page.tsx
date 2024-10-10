@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "react-toastify";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getCookie } from "cookies-next";
 import { z } from "zod";
@@ -15,6 +14,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useStore } from "@/zustandStore";
 import { hasPermission } from "@/utils/hasPermissions";
 import { FiTrash } from "react-icons/fi";
+const BASE_URL = process.env.BASE_URL;
 
 const createMemberSchema = z.object({
 	id: z.string().nonempty("Usuário é obrigatório."),
@@ -57,7 +57,7 @@ export default function Page() {
 		}
 
 		toast.promise(
-			fetch("https://ordemdeservicosdev.onrender.com/api/team/create-member", {
+			fetch(`${BASE_URL}/team/create-member`, {
 				method: "POST",
 				headers: {
 					"Content-type": "application/json",
@@ -93,7 +93,7 @@ export default function Page() {
 	useEffect(() => {
 		setIsLoading(true);
 		if (hasPermission(role, ["teams_management", "teamleader", "teammember"], "read")) {
-			fetch("https://ordemdeservicosdev.onrender.com/api/team/get-all-members", {
+			fetch(`${BASE_URL}/team/get-all-members`, {
 				method: "GET",
 				headers: {
 					"Content-type": "application/json",
@@ -112,7 +112,7 @@ export default function Page() {
 	}, [token]);
 
 	useEffect(() => {
-		fetch("https://ordemdeservicosdev.onrender.com/api/team/get-all-teams", {
+		fetch(`${BASE_URL}/team/get-all-teams`, {
 			method: "GET",
 			headers: {
 				"Content-type": "application/json",
@@ -126,7 +126,7 @@ export default function Page() {
 	}, [token]);
 
 	useEffect(() => {
-		fetch(`https://ordemdeservicosdev.onrender.com/api/user/get-all-users?limit=${100}`, {
+		fetch(`${BASE_URL}/user/get-all-users?limit=${100}`, {
 			method: "GET",
 			headers: {
 				"Content-type": "application/json",
@@ -152,7 +152,7 @@ export default function Page() {
 		}
 
 		toast.promise(
-			fetch(`https://ordemdeservicosdev.onrender.com/api/team/delete-member/${id}`, {
+			fetch(`${BASE_URL}/team/delete-member/${id}`, {
 				method: "DELETE",
 				headers: {
 					"Content-type": "application/json",

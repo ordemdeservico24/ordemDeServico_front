@@ -35,7 +35,7 @@ import { useStore } from "../zustandStore";
 import { hasPermission } from "@/utils/hasPermissions";
 import { ChartColumnIncreasingIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCompanyData } from "@/hooks/useCompanyData";
+import { useCompanyData } from "@/hooks/company/useCompanyData";
 
 const MenuHome = () => {
 	const { data } = useCompanyData();

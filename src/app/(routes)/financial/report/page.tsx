@@ -38,6 +38,7 @@ interface financialReport {
 
 export default function Page() {
 	const [selectedCategory, setSelectedCategory] = useState("all");
+	const [isLoading, setIsLoading] = useState(false);
 	const [categories, setCategories] = useState<IFinancialCategory[]>([]);
 	const [startDate, setStartDate] = useState(format(startOfMonth(new Date()), "yyyy-MM-dd"));
 	const [endDate, setEndDate] = useState(format(endOfMonth(new Date()), "yyyy-MM-dd"));
@@ -69,6 +70,7 @@ export default function Page() {
 
 	useEffect(() => {
 		let categoryId;
+		setIsLoading(true);
 		if (selectedCategory === "all") {
 			categoryId = "";
 		} else {
@@ -108,6 +110,7 @@ export default function Page() {
 				console.log(status, data);
 				setCategories(data);
 			});
+			setIsLoading(false);
 	}, [token, startDate, endDate, selectedCategory]);
 
 	const chartData = [
@@ -130,134 +133,153 @@ export default function Page() {
 	return (
 		<Container className="overflow-x-auto sm:overflow-x-hidden">
 			<main className="flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">
-				<div className="container mx-auto p-4">
-					<div className="flex flex-wrap gap-4 mb-4">
-						<div>
-							<Label htmlFor="category">Categoria de Despesa</Label>
-							<Select value={selectedCategory} onValueChange={setSelectedCategory}>
-								<SelectTrigger className="w-[200px]">
-									<SelectValue placeholder="Selecione uma Categoria" />
-								</SelectTrigger>
-								<SelectContent>
-									<SelectItem value="all">Todas</SelectItem>
-									{categories.map((category) => (
-										<SelectItem key={category.id} value={category.id}>
-											{category.name}
-										</SelectItem>
+				{isLoading ? (
+					<div className="flex justify-center items-center">
+						<svg
+							className="h-8 w-8 animate-spin text-gray-600 mx-auto"
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+							strokeWidth={2}
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+							/>
+						</svg>
+					</div>
+				) : (
+					<div className="container mx-auto p-4">
+						<div className="flex flex-wrap gap-4 mb-4">
+							<div>
+								<Label htmlFor="category">Categoria de Despesa</Label>
+								<Select value={selectedCategory} onValueChange={setSelectedCategory}>
+									<SelectTrigger className="w-[200px]">
+										<SelectValue placeholder="Selecione uma Categoria" />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectItem value="all">Todas</SelectItem>
+										{categories.map((category) => (
+											<SelectItem key={category.id} value={category.id}>
+												{category.name}
+											</SelectItem>
+										))}
+									</SelectContent>
+								</Select>
+							</div>
+
+							<div>
+								<Label htmlFor="startDate">Data de Início</Label>
+								<Input type="date" id="startDate" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+							</div>
+
+							<div>
+								<Label htmlFor="endDate">Data Final</Label>
+								<Input type="date" id="endDate" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+							</div>
+						</div>
+
+						<div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8">
+							<Card>
+								<CardHeader>
+									<CardTitle>Total de Receitas</CardTitle>
+								</CardHeader>
+								<CardContent>
+									<p className="text-2xl font-bold">
+										<MoneyFormatter value={financialReport.totalRevenues} />
+									</p>
+								</CardContent>
+							</Card>
+							<Card>
+								<CardHeader>
+									<CardTitle>Total de Despesas</CardTitle>
+								</CardHeader>
+								<CardContent>
+									<p className="text-2xl font-bold">
+										<MoneyFormatter value={financialReport.totalExpenses} />
+									</p>
+								</CardContent>
+							</Card>
+							<Card>
+								<CardHeader>
+									<CardTitle>Balanço Final</CardTitle>
+								</CardHeader>
+								<CardContent>
+									<p className={`text-2xl font-bold ${financialReport.balance >= 0 ? "text-green-600" : "text-red-600"}`}>
+										<MoneyFormatter value={financialReport.balance} />
+									</p>
+								</CardContent>
+							</Card>
+						</div>
+
+						<div className="mb-8">
+							<h2 className="text-xl font-bold mb-2">Visão Geral</h2>
+							<ResponsiveContainer width="100%" height={300}>
+								<BarChart data={chartData}>
+									<CartesianGrid strokeDasharray="6 6" />
+									<XAxis dataKey="name" />
+									<YAxis />
+									<Tooltip formatter={(value) => formatCurrency(value as number)} />
+									<Legend />
+									<Bar dataKey="Valor" fill="#133bce" />
+								</BarChart>
+							</ResponsiveContainer>
+						</div>
+						<div className="mb-8">
+							<h2 className="text-xl font-bold mb-2">Despesas</h2>
+							<Table>
+								<TableHeader>
+									<TableRow>
+										<TableHead>Categoria</TableHead>
+										<TableHead>Valor</TableHead>
+										<TableHead>Itens</TableHead>
+										<TableHead>Criado em</TableHead>
+									</TableRow>
+								</TableHeader>
+								<TableBody>
+									{financialReport.categories.map((category) => (
+										<TableRow key={category.categoryId}>
+											<TableCell className="whitespace-nowrap">{category.categoryName}</TableCell>
+											<TableCell className="whitespace-nowrap">
+												<MoneyFormatter value={category.amount} />
+											</TableCell>
+											<TableCell className="whitespace-nowrap">{category.items}</TableCell>
+											<TableCell className="whitespace-nowrap">{new Date(category.createdAt).toLocaleString()}</TableCell>
+										</TableRow>
 									))}
-								</SelectContent>
-							</Select>
+								</TableBody>
+							</Table>
 						</div>
 
 						<div>
-							<Label htmlFor="startDate">Data de Início</Label>
-							<Input type="date" id="startDate" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
-						</div>
-
-						<div>
-							<Label htmlFor="endDate">Data Final</Label>
-							<Input type="date" id="endDate" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
-						</div>
-					</div>
-
-					<div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8">
-						<Card>
-							<CardHeader>
-								<CardTitle>Total de Receitas</CardTitle>
-							</CardHeader>
-							<CardContent>
-								<p className="text-2xl font-bold">
-									<MoneyFormatter value={financialReport.totalRevenues} />
-								</p>
-							</CardContent>
-						</Card>
-						<Card>
-							<CardHeader>
-								<CardTitle>Total de Despesas</CardTitle>
-							</CardHeader>
-							<CardContent>
-								<p className="text-2xl font-bold">
-									<MoneyFormatter value={financialReport.totalExpenses} />
-								</p>
-							</CardContent>
-						</Card>
-						<Card>
-							<CardHeader>
-								<CardTitle>Balanço Final</CardTitle>
-							</CardHeader>
-							<CardContent>
-								<p className={`text-2xl font-bold ${financialReport.balance >= 0 ? "text-green-600" : "text-red-600"}`}>
-									<MoneyFormatter value={financialReport.balance} />
-								</p>
-							</CardContent>
-						</Card>
-					</div>
-
-					<div className="mb-8">
-						<h2 className="text-xl font-bold mb-2">Visão Geral</h2>
-						<ResponsiveContainer width="100%" height={300}>
-							<BarChart data={chartData}>
-								<CartesianGrid strokeDasharray="6 6" />
-								<XAxis dataKey="name" />
-								<YAxis />
-								<Tooltip formatter={(value) => formatCurrency(value as number)} />
-								<Legend />
-								<Bar dataKey="Valor" fill="#133bce" />
-							</BarChart>
-						</ResponsiveContainer>
-					</div>
-					<div className="mb-8">
-						<h2 className="text-xl font-bold mb-2">Despesas</h2>
-						<Table>
-							<TableHeader>
-								<TableRow>
-									<TableHead>Categoria</TableHead>
-									<TableHead>Valor</TableHead>
-									<TableHead>Itens</TableHead>
-									<TableHead>Criado em</TableHead>
-								</TableRow>
-							</TableHeader>
-							<TableBody>
-								{financialReport.categories.map((category) => (
-									<TableRow key={category.categoryId}>
-										<TableCell className="whitespace-nowrap">{category.categoryName}</TableCell>
-										<TableCell className="whitespace-nowrap">
-											<MoneyFormatter value={category.amount} />
-										</TableCell>
-										<TableCell className="whitespace-nowrap">{category.items}</TableCell>
-										<TableCell className="whitespace-nowrap">{new Date(category.createdAt).toLocaleString()}</TableCell>
+							<h2 className="text-xl font-bold mb-2">Receitas</h2>
+							<Table>
+								<TableHeader>
+									<TableRow>
+										<TableHead>Nome</TableHead>
+										<TableHead>Valor</TableHead>
+										<TableHead>Itens</TableHead>
+										<TableHead>Criado em</TableHead>
 									</TableRow>
-								))}
-							</TableBody>
-						</Table>
+								</TableHeader>
+								<TableBody>
+									{financialReport.revenues.map((item) => (
+										<TableRow key={item.itemId}>
+											<TableCell className="whitespace-nowrap">{item.itemName}</TableCell>
+											<TableCell className="whitespace-nowrap">
+												<MoneyFormatter value={item.itemValue} />
+											</TableCell>
+											<TableCell className="whitespace-nowrap">{item.itemQuantity}</TableCell>
+											<TableCell className="whitespace-nowrap">{new Date(item.createdAt).toLocaleString()}</TableCell>
+										</TableRow>
+									))}
+								</TableBody>
+							</Table>
+						</div>
 					</div>
-
-					<div>
-						<h2 className="text-xl font-bold mb-2">Receitas</h2>
-						<Table>
-							<TableHeader>
-								<TableRow>
-									<TableHead>Nome</TableHead>
-									<TableHead>Valor</TableHead>
-									<TableHead>Itens</TableHead>
-									<TableHead>Criado em</TableHead>
-								</TableRow>
-							</TableHeader>
-							<TableBody>
-								{financialReport.revenues.map((item) => (
-									<TableRow key={item.itemId}>
-										<TableCell className="whitespace-nowrap">{item.itemName}</TableCell>
-										<TableCell className="whitespace-nowrap">
-											<MoneyFormatter value={item.itemValue} />
-										</TableCell>
-										<TableCell className="whitespace-nowrap">{item.itemQuantity}</TableCell>
-										<TableCell className="whitespace-nowrap">{new Date(item.createdAt).toLocaleString()}</TableCell>
-									</TableRow>
-								))}
-							</TableBody>
-						</Table>
-					</div>
-				</div>
+				)}
 			</main>
 		</Container>
 	);

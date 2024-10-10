@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { withMask } from "use-mask-input";
 import MoneyFormatter from "@/components/formatMoneyValues";
 import { toast } from "react-toastify";
+const BASE_URL = process.env.BASE_URL;
 
 export default function RevenuesPage() {
 	const [revenues, setRevenues] = useState<IRevenue | null>(null);
@@ -24,7 +25,7 @@ export default function RevenuesPage() {
 		setIsLoading(true);
 		const fetchRevenues = async () => {
 			try {
-				const response = await fetch("https://ordemdeservicosdev.onrender.com/api/finance/revenues", {
+				const response = await fetch(`${BASE_URL}/finance/revenues`, {
 					method: "GET",
 					headers: {
 						"Content-Type": "application/json",
@@ -52,7 +53,7 @@ export default function RevenuesPage() {
 	const handleGenerateReceipt = async (itemId: string) => {
 		try {
 			const response = await toast.promise(
-				fetch(`https://ordemdeservicosdev.onrender.com/api/finance/revenues/receipt/${itemId}`, {
+				fetch(`${BASE_URL}/finance/revenues/receipt/${itemId}`, {
 					method: "POST",
 					headers: {
 						Authorization: `Bearer ${token}`,
@@ -107,7 +108,7 @@ export default function RevenuesPage() {
 
 		try {
 			toast.promise(
-				fetch("https://ordemdeservicosdev.onrender.com/api/finance/revenues/create-item", {
+				fetch(`${BASE_URL}/finance/revenues/create-item`, {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
@@ -139,10 +140,6 @@ export default function RevenuesPage() {
 					error: "Ocorreu um erro",
 				}
 			);
-
-			// const data = await response.json();
-
-			// setRevenues((prev) => (prev ? { ...prev, items: [...prev.items, data] } : prev));
 		} catch (error) {
 			console.error("Error creating item:", error);
 			setError("Erro ao criar item.");

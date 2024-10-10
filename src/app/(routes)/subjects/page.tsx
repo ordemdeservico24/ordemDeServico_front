@@ -1,18 +1,17 @@
 "use client";
 import { Container } from "@/components/container";
 import { ISubject } from "@/interfaces/subject.interface";
-import React, { useEffect, useState, FormEvent } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import React, { FormEvent } from "react";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { toast } from "react-toastify";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { getCookie } from "cookies-next";
 import { z } from "zod";
 import { hasPermission } from "@/utils/hasPermissions";
 import { useStore } from "@/zustandStore";
+import { useSubjectData } from "@/hooks/subjects/useSubjectData";
+import { getCookie } from "cookies-next";
+const BASE_URL = process.env.BASE_URL;
 
 const subjectSchema = z.object({
 	name: z.string().min(1, "Nome é obrigatório"),
@@ -20,35 +19,9 @@ const subjectSchema = z.object({
 });
 
 export default function Page() {
-	const [subjects, setSubjects] = useState<ISubject[]>([]);
-	const token = getCookie("access_token");
-	const [isLoading, setIsLoading] = useState(true);
+	const { data, isLoading } = useSubjectData();
 	const { role } = useStore();
-
-	useEffect(() => {
-		setIsLoading(true);
-		fetch("https://ordemdeservicosdev.onrender.com/api/order/get-all-subjects", {
-			method: "GET",
-			headers: {
-				"Content-type": "application/json",
-				Authorization: `Bearer ${token}`,
-			},
-		})
-			.then((res) => {
-				const status = res.status;
-				return res.json().then((data) => ({ status, data }));
-			})
-			.then(({ status, data }) => {
-				console.log(status, data);
-				setSubjects(data);
-			})
-			.catch((error) => {
-				console.error("Erro ao buscar os dados", error);
-			})
-			.finally(() => {
-				setIsLoading(false);
-			});
-	}, [token]);
+	const token = getCookie("access_token");
 
 	const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -72,7 +45,7 @@ export default function Page() {
 		const request: ISubject = validation.data;
 
 		toast.promise(
-			fetch("https://ordemdeservicosdev.onrender.com/api/order/create-subject", {
+			fetch(`${BASE_URL}/order/create-subject`, {
 				method: "POST",
 				headers: {
 					"Content-type": "application/json",
@@ -146,8 +119,8 @@ export default function Page() {
 											</TableRow>
 										</TableHeader>
 										<TableBody>
-											{Array.isArray(subjects) &&
-												subjects.map((subject, index) => (
+											{Array.isArray(data) &&
+												data?.map((subject, index) => (
 													<TableRow key={index} className="cursor-pointer hover:bg-gray-100">
 														<TableCell className="whitespace-nowrap">{subject.name}</TableCell>
 														<TableCell className="whitespace-nowrap">{subject.expirationDays}</TableCell>

@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { ICreateUserRequest } from "@/interfaces/create-user-request/createUser.interface";
 import { toast } from "react-toastify";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,8 +15,8 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import MoneyFormatter from "@/components/formatMoneyValues";
 import { FaEdit } from "react-icons/fa";
 import { Label } from "@/components/ui/label";
-import { User } from "lucide-react";
 import { useStore } from "@/zustandStore";
+const BASE_URL = process.env.BASE_URL;
 
 export default function Page() {
 	const [users, setUsers] = useState<IUser[]>([]);
@@ -45,7 +44,7 @@ export default function Page() {
 			formData.append("sheetFile", inputElement.files[0]);
 
 			toast.promise(
-				fetch(`https://ordemdeservicosdev.onrender.com/api/user/import-users`, {
+				fetch(`${BASE_URL}/user/import-users`, {
 					method: "POST",
 					headers: {
 						Authorization: `Bearer ${token}`,
@@ -97,7 +96,7 @@ export default function Page() {
 			salary: +getInput("salary").value || 0,
 		};
 
-		const user = await fetch(`https://ordemdeservicosdev.onrender.com/api/user/get-user/${userId}`, {
+		const user = await fetch(`${BASE_URL}/user/get-user/${userId}`, {
 			method: "GET",
 			headers: {
 				Authorization: `Bearer ${token}`,
@@ -115,7 +114,7 @@ export default function Page() {
 			});
 
 		toast.promise(
-			fetch(`https://ordemdeservicosdev.onrender.com/api/user/create-user/${user.tertiaryGroupId}?type=employee`, {
+			fetch(`${BASE_URL}/user/create-user/${user.tertiaryGroupId}?type=employee`, {
 				method: "POST",
 				headers: {
 					Authorization: `Bearer ${token}`,
@@ -161,7 +160,7 @@ export default function Page() {
 			const limit = 10;
 			const offset = limit * (currentPage - 1);
 
-			const response = await fetch(`https://ordemdeservicosdev.onrender.com/api/user/get-all-users?limit=${limit}&offset=${offset}`, {
+			const response = await fetch(`${BASE_URL}/user/get-all-users?limit=${limit}&offset=${offset}`, {
 				method: "GET",
 				headers: {
 					"Content-type": "application/json",
@@ -189,7 +188,7 @@ export default function Page() {
 	};
 
 	const getUser = async (userId: string) => {
-		await fetch(`https://ordemdeservicosdev.onrender.com/api/user/get-user/${userId}`, {
+		await fetch(`${BASE_URL}/user/get-user/${userId}`, {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -241,7 +240,7 @@ export default function Page() {
 		});
 
 		toast.promise(
-			fetch(`https://ordemdeservicosdev.onrender.com/api/user/edit-user/${user?.id}`, {
+			fetch(`${BASE_URL}/user/edit-user/${user?.id}`, {
 				method: "PATCH",
 				headers: {
 					Authorization: `Bearer ${token}`,
@@ -283,7 +282,7 @@ export default function Page() {
 	const formatDate = (dateString: string) => {
 		const date = new Date(dateString);
 		const year = date.getFullYear();
-		const month = String(date.getMonth() + 1).padStart(2, "0"); // Mês é 0-indexado
+		const month = String(date.getMonth() + 1).padStart(2, "0");
 		const day = String(date.getDate()).padStart(2, "0");
 		return `${year}-${month}-${day}`;
 	};

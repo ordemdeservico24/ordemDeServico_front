@@ -1,6 +1,5 @@
 "use client";
-import { useRouter, useParams } from "next/navigation";
-import Link from "next/link";
+import { useParams } from "next/navigation";
 import Image from "next/image";
 import Bg from "../../../../../assets/bg.jpg";
 
@@ -11,11 +10,10 @@ import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { EyeIcon, EyeOffIcon, Loader } from "lucide-react";
-import { useState } from "react";
+import { Loader } from "lucide-react";
 import { useHookFormMask } from "use-mask-input";
 import { toast } from "react-toastify";
-import { useStore } from "@/zustandStore";
+const BASE_URL = process.env.BASE_URL;
 interface FormData {
 	name: string;
 	phone: string;
@@ -50,7 +48,7 @@ export default function Page() {
 
 	const onSubmit = async (data: FormData) => {
 		try {
-			const response = await fetch(`https://ordemdeservicosdev.onrender.com/api/user/create-user/${id}?type=employee`, {
+			const response = await fetch(`${BASE_URL}/user/create-user/${id}?type=employee`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

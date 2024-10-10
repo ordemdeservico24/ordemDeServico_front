@@ -7,6 +7,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getCookie } from "cookies-next";
+const BASE_URL = process.env.BASE_URL;
+
 export default function Page({ params }: { params: { id: string } }) {
 	const [team, setTeam] = useState<ITeam>();
 	const token = getCookie("access_token");
@@ -14,7 +16,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
 	useEffect(() => {
 		setIsLoading(true);
-		fetch(`https://ordemdeservicosdev.onrender.com/api/team/get-team/${params.id}`, {
+		fetch(`${BASE_URL}/team/get-team/${params.id}`, {
 			method: "GET",
 			headers: {
 				"Content-type": "application/json",

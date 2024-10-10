@@ -10,11 +10,11 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { IRoleRequest } from "@/interfaces/create-role-request/createRole.interface";
 import { IRole, IRolePermission } from "@/interfaces/user.interface";
 import { getCookie } from "cookies-next";
-import { EditIcon, EyeIcon, PlusIcon, TrashIcon } from "lucide-react";
-import Link from "next/link";
+import { TrashIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
+const BASE_URL = process.env.BASE_URL;
 
 export default function Page() {
 	const [roles, setRoles] = useState<IRole[]>([]);
@@ -28,14 +28,12 @@ export default function Page() {
 			const existingResource = prev.find((item) => item.resource === resource);
 
 			if (existingResource) {
-				// Se já existir, podemos simplesmente retornar sem mudar
 				return prev;
 			} else {
-				// Se não existir, adicionamos um novo objeto para o resource
 				return [
 					...prev,
 					{
-						operations: [], // Inicializa como um array vazio
+						operations: [],
 						resource,
 						resourceLabel,
 					},
@@ -49,20 +47,18 @@ export default function Page() {
 			return prev.map((item) => {
 				if (item.resource === resource) {
 					if (item.operations.includes(operation)) {
-						// Se a operação já está lá, remova-a
 						return {
 							...item,
 							operations: item.operations.filter((op) => op !== operation),
 						};
 					} else {
-						// Se não está lá, adicione-a
 						return {
 							...item,
 							operations: [...item.operations, operation],
 						};
 					}
 				}
-				return item; // Retorna o item inalterado
+				return item;
 			});
 		});
 	};
@@ -81,7 +77,7 @@ export default function Page() {
 		};
 		console.log(request);
 		toast.promise(
-			fetch(`https://ordemdeservicosdev.onrender.com/api/user/create-role`, {
+			fetch(`${BASE_URL}/user/create-role`, {
 				method: "POST",
 				headers: {
 					"Content-type": "application/json",
@@ -116,7 +112,7 @@ export default function Page() {
 
 	useEffect(() => {
 		setIsLoading(true);
-		fetch("https://ordemdeservicosdev.onrender.com/api/user/get-all-roles", {
+		fetch(`${BASE_URL}/user/get-all-roles`, {
 			method: "GET",
 			headers: {
 				"Content-type": "application/json",
@@ -145,7 +141,7 @@ export default function Page() {
 
 	const deleteRole = async (roleId: string) => {
 		toast.promise(
-			fetch(`https://ordemdeservicosdev.onrender.com/api/user/delete-role/${roleId}`, {
+			fetch(`${BASE_URL}/user/delete-role/${roleId}`, {
 				method: "DELETE",
 				headers: {
 					"Content-type": "application/json",

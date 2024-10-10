@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { toast } from "react-toastify";
 import { Input } from "@/components/ui/input";
 import MoneyFormatter from "@/components/formatMoneyValues";
+const BASE_URL = process.env.BASE_URL;
 
 export default function UserPage({ params }: { params: { id: string } }) {
 	const [user, setUser] = useState<IUser>();
@@ -22,7 +23,7 @@ export default function UserPage({ params }: { params: { id: string } }) {
 
 	useEffect(() => {
 		setIsLoading(true);
-		fetch(`https://ordemdeservicosdev.onrender.com/api/user/get-user/${params.id}`, {
+		fetch(`${BASE_URL}/user/get-user/${params.id}`, {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -41,7 +42,7 @@ export default function UserPage({ params }: { params: { id: string } }) {
 			.catch((err) => {
 				console.error(err);
 			}),
-			fetch("https://ordemdeservicosdev.onrender.com/api/user/get-all-roles", {
+			fetch(`${BASE_URL}/user/get-all-roles`, {
 				method: "GET",
 				headers: {
 					"Content-type": "application/json",
@@ -72,7 +73,7 @@ export default function UserPage({ params }: { params: { id: string } }) {
 
 	const assignRole = async () => {
 		toast.promise(
-			fetch(`https://ordemdeservicosdev.onrender.com/api/user/assign-role/${params.id}`, {
+			fetch(`${BASE_URL}/user/assign-role/${params.id}`, {
 				method: "PATCH",
 				headers: {
 					"Content-type": "application/json",
@@ -118,7 +119,7 @@ export default function UserPage({ params }: { params: { id: string } }) {
 		};
 
 		toast.promise(
-			fetch(`https://ordemdeservicosdev.onrender.com/api/user/add-salary/${params.id}`, {
+			fetch(`${BASE_URL}/user/add-salary/${params.id}`, {
 				method: "PATCH",
 				headers: {
 					"Content-type": "application/json",

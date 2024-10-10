@@ -1,19 +1,14 @@
 "use client";
-import { AssignedTeam } from "@/components/assignedTeam";
 import { Container } from "@/components/container";
-import { OrderStatus } from "@/components/orderStatus";
-import { IOrderGet, IOrderStatus } from "@/interfaces/order.interface";
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { getCookie } from "cookies-next";
 import { ITertiaryInfoPage } from "@/interfaces/company.interface";
-import { Input } from "@/components/ui/input";
 import { BarChart3, Clipboard, MapPin, Share2, Users } from "lucide-react";
 import CopyToClipboardButton from "@/components/copyToClipboard";
 import { useRouter } from "next/navigation";
-
+const BASE_URL = process.env.BASE_URL;
 export default function Page({ params }: { params: { id: string } }) {
 	const [tertiary, setTertiary] = useState<ITertiaryInfoPage>();
 	const token = getCookie("access_token");
@@ -22,7 +17,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
 	useEffect(() => {
 		setIsLoading(true);
-		fetch(`https://ordemdeservicosdev.onrender.com/api/company/get-tertiary/${params.id}`, {
+		fetch(`${BASE_URL}/company/get-tertiary/${params.id}`, {
 			method: "GET",
 			headers: {
 				"Content-type": "application/json",

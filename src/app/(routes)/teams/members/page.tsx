@@ -14,7 +14,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useStore } from "@/zustandStore";
 import { hasPermission } from "@/utils/hasPermissions";
 import { FiTrash } from "react-icons/fi";
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const createMemberSchema = z.object({
 	id: z.string().nonempty("Usuário é obrigatório."),

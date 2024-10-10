@@ -10,7 +10,7 @@ import { IPrimaryGroup, ISecondaryGroup } from "@/interfaces/company.interface";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "react-toastify";
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 export default function SecondaryGroupsPage() {
 	const token = getCookie("access_token");
 	const [secondaryGroups, setSecondaryGroups] = useState<ISecondaryGroup[] | null>(null);

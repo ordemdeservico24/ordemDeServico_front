@@ -13,7 +13,7 @@ import AddItemForm from "@/components/AddItem";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import MoneyFormatter from "@/components/formatMoneyValues";
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function CategoryDetailPage() {
 	const [categoryItem, setCategoryItem] = useState<FinancialCategoryItem | null>(null);

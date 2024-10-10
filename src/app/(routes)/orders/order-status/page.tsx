@@ -14,7 +14,7 @@ import { ICreateOrderStatus } from "@/interfaces/create-order-request/create-ord
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useStore } from "@/zustandStore";
 import { hasPermission } from "@/utils/hasPermissions";
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function Page() {
 	const [isLoading, setIsLoading] = useState(true);

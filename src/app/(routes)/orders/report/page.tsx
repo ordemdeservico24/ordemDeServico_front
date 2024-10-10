@@ -6,7 +6,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recha
 import { IOrderReport } from "@/interfaces/order.interface";
 import { getCookie } from "cookies-next";
 import { Container } from "@/components/container";
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function Page() {
 	const [orderData, setOrderData] = useState<IOrderReport[]>([]);
@@ -33,10 +33,6 @@ export default function Page() {
 				setOrderData(data);
 			}).finally(() => setIsLoading(false));
 	}, [token]);
-
-	if (orderData.length < 7) {
-		return <p>Carregando dados...</p>;
-	}
 
 	const statusColors = {
 		Aberto: "#f91244",

@@ -7,7 +7,7 @@ import { useStore } from "../../../zustandStore";
 import { getCookie } from "cookies-next";
 import { Briefcase, HelpCircle, User } from "lucide-react";
 import { IUser } from "@/interfaces/user.interface";
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function Home() {
 	const [user, setUser] = useState<IUser>();

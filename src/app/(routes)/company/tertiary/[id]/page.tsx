@@ -8,7 +8,7 @@ import { ITertiaryInfoPage } from "@/interfaces/company.interface";
 import { BarChart3, Clipboard, MapPin, Share2, Users } from "lucide-react";
 import CopyToClipboardButton from "@/components/copyToClipboard";
 import { useRouter } from "next/navigation";
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 export default function Page({ params }: { params: { id: string } }) {
 	const [tertiary, setTertiary] = useState<ITertiaryInfoPage>();
 	const token = getCookie("access_token");

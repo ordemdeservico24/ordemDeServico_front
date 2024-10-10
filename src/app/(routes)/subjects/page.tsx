@@ -11,7 +11,7 @@ import { hasPermission } from "@/utils/hasPermissions";
 import { useStore } from "@/zustandStore";
 import { useSubjectData } from "@/hooks/subjects/useSubjectData";
 import { getCookie } from "cookies-next";
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const subjectSchema = z.object({
 	name: z.string().min(1, "Nome é obrigatório"),

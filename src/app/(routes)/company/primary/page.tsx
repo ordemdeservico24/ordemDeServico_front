@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "react-toastify";
 import { useStore } from "@/zustandStore";
 import { IUser } from "@/interfaces/user.interface";
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 export default function PrimaryGroupsPage() {
 	const token = getCookie("access_token");
 	const [primaryGroups, setPrimaryGroups] = useState<IPrimaryGroup[] | null>(null);

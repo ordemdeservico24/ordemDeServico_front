@@ -8,7 +8,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { EditIcon, EyeIcon, PlusIcon, TrashIcon } from "lucide-react";
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function Page({ params }: { params: { id: string } }) {
 	const [role, setRole] = useState<IRole>();

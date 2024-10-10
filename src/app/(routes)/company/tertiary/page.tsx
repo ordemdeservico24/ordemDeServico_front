@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { Input } from "@/components/ui/input";
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 export default function TertiaryGroupsPage() {
 	const token = getCookie("access_token");
 	const [tertiaryGroups, setTertiaryGroups] = useState<ITertiaryGroup[] | null>(null);

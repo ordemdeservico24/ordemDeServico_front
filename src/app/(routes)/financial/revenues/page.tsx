@@ -13,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { withMask } from "use-mask-input";
 import MoneyFormatter from "@/components/formatMoneyValues";
 import { toast } from "react-toastify";
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function RevenuesPage() {
 	const [revenues, setRevenues] = useState<IRevenue | null>(null);

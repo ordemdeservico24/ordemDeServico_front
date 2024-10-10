@@ -14,7 +14,7 @@ import { TrashIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function Page() {
 	const [roles, setRoles] = useState<IRole[]>([]);

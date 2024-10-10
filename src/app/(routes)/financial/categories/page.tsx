@@ -10,7 +10,7 @@ import { getCookie } from "cookies-next";
 import { FinancialCategory } from "@/interfaces/financial.interface";
 import { Table, TableHeader, TableBody, TableRow, TableCell } from "@/components/ui/table";
 import { toast } from "react-toastify";
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function CategoriesPage() {
 	const [categories, setCategories] = useState<FinancialCategory[]>([]);

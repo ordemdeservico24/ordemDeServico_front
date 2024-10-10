@@ -16,7 +16,7 @@ import MoneyFormatter from "@/components/formatMoneyValues";
 import { FaEdit } from "react-icons/fa";
 import { Label } from "@/components/ui/label";
 import { useStore } from "@/zustandStore";
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function Page() {
 	const [users, setUsers] = useState<IUser[]>([]);

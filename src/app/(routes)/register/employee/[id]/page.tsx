@@ -13,7 +13,7 @@ import { z } from "zod";
 import { Loader } from "lucide-react";
 import { useHookFormMask } from "use-mask-input";
 import { toast } from "react-toastify";
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 interface FormData {
 	name: string;
 	phone: string;

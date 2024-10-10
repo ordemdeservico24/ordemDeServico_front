@@ -7,7 +7,7 @@ import { Table, TableHeader, TableBody, TableRow, TableCell } from "@/components
 import { getCookie } from "cookies-next";
 import MoneyFormatter from "@/components/formatMoneyValues";
 import { useRouter } from "next/navigation";
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 export default function ExpensesPage() {
 	const [categories, setCategories] = useState<any[]>([]);
 	const [totalExpenses, setTotalExpenses] = useState<number>(0);

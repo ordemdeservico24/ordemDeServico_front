@@ -10,7 +10,7 @@ import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { getCookie } from "cookies-next";
 import { hasPermission } from "@/utils/hasPermissions";
 import { useStore } from "@/zustandStore";
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function Page({ params }: { params: { id: string } }) {
 	const [order, setOrder] = useState<IOrderGet>();

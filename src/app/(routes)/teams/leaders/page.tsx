@@ -13,7 +13,7 @@ import { getCookie } from "cookies-next";
 import { IUser } from "@/interfaces/user.interface";
 import { useStore } from "@/zustandStore";
 import { hasPermission } from "@/utils/hasPermissions";
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function Page() {
 	const [users, setUsers] = useState<IUser[]>([]);

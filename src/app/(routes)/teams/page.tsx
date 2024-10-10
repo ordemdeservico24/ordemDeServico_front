@@ -14,7 +14,7 @@ import { getCookie } from "cookies-next";
 import { ICreateTeam } from "@/interfaces/create-team-request/createTeam.interface";
 import { useStore } from "@/zustandStore";
 import { hasPermission } from "@/utils/hasPermissions";
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function Page() {
 	const [teams, setTeams] = useState<ITeam[]>([]);

@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { toast } from "react-toastify";
 import { Input } from "@/components/ui/input";
 import MoneyFormatter from "@/components/formatMoneyValues";
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function UserPage({ params }: { params: { id: string } }) {
 	const [user, setUser] = useState<IUser>();

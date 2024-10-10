@@ -15,6 +15,7 @@ import axios from "axios";
 import { useStore } from "../zustandStore";
 import { EyeIcon, EyeOffIcon, Loader } from "lucide-react";
 import { useState } from "react";
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const loginSchema = z.object({
 	email: z.string().email("Email inválido"),
@@ -40,7 +41,7 @@ export default function Page() {
 	const setRoleLevel = useStore((state) => state.setRoleLevel);
 	const onSubmit = async (data: any) => {
 		try {
-			const response = await axios.post("https://ordemdeservicosdev.onrender.com/api/user/login", data);
+			const response = await axios.post(`${BASE_URL}/user/login`, data);
 			console.log("Login successful:", response.data);
 
 			const { token, userName, role, userId, teamId, roleLevel } = response.data;

@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { toast } from "react-toastify";
 import { z } from "zod";
 import { getCookie } from "cookies-next";
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 import { IStockItem, ISupplier } from "@/interfaces/stock.interface";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MoneyFormatter from "@/components/formatMoneyValues";

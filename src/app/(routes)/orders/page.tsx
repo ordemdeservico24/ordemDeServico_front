@@ -275,7 +275,7 @@ export default function Page() {
 											<Dialog>
 												<DialogTrigger asChild>
 													<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
-														Cadastrar OS
+														Cadastrar Ordem
 													</Button>
 												</DialogTrigger>
 												<DialogContent className="sm:max-w-md">

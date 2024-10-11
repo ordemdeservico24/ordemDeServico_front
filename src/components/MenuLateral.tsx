@@ -33,6 +33,7 @@ import { MdHomeRepairService } from "react-icons/md";
 import { ChartColumnIncreasingIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCompanyData } from "@/hooks/company/useCompanyData";
+import { IoBusinessSharp } from "react-icons/io5";
 
 interface MenuProps {
 	isOpen: boolean;
@@ -95,7 +96,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 									href="/company/firm"
 									className="flex items-center pl-4 rounded-lg gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]"
 								>
-									<FaGlobe className="h-4 w-4 md:h-5 md:w-5" />
+									<IoBusinessSharp className="h-4 w-4 md:h-5 md:w-5" />
 									<span>Minha Empresa</span>
 								</Link>
 								<Link

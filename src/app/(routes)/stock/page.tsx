@@ -14,6 +14,8 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 import { IStockItem, ISupplier } from "@/interfaces/stock.interface";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MoneyFormatter from "@/components/formatMoneyValues";
+import { withMask } from 'use-mask-input';
+
 
 const stockItemSchema = z.object({
 	productName: z.string().min(1, "Nome do produto é obrigatório"),
@@ -26,7 +28,7 @@ const stockItemSchema = z.object({
 const supplierSchema = z.object({
 	supplierName: z.string().min(1, "Nome do fornecedor é obrigatório"),
 	email: z.string().email("Email inválido"),
-	phone: z.string().regex(/^\(\d{2}\)\s\d{4,5}-\d{4}$/, "Telefone inválido"),
+	phone: z.string(),
 });
 
 export default function StoragePage() {
@@ -36,7 +38,6 @@ export default function StoragePage() {
 	const [selectedUnitMeasurement, setSelectedUnitMeasurement] = useState<string>("");
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
-
 	const token = getCookie("access_token");
 
 	useEffect(() => {
@@ -372,7 +373,7 @@ export default function StoragePage() {
 																className="w-full"
 															/>
 															<Input type="email" name="email" placeholder="E-mail" required className="w-full" />
-															<Input type="tel" name="phone" placeholder="Telefone" required className="w-full" />
+															<Input type="tel" ref={withMask('(99) 99999-9999')} name="phone" placeholder="Telefone" required className="w-full" />
 															<Button
 																className="font-medium rounded my-4 px-12 py-2 hover:-translate-y-1 transition-all w-full bg-blue-500 hover:bg-blue-600"
 																type="submit"

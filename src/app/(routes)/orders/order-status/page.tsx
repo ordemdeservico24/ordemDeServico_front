@@ -134,14 +134,12 @@ export default function Page() {
 											<CardTitle className="text-[#3b82f6] text-2xl font-bold">Status das Ordens</CardTitle>
 											<CardDescription>Veja todos os status disponíveis para as ordens de serviço.</CardDescription>
 										</div>
-										<div></div>
-									</div>
-								</CardHeader>
-								{hasPermission(role, "orders_management", "create") && (
+										<div>
+										{hasPermission(role, "orders_management", "create") && (
 									<Dialog>
 										<DialogTrigger asChild>
 											<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
-												Criar
+												Criar Status
 											</Button>
 										</DialogTrigger>
 										<DialogContent className="sm:max-w-[425px]">
@@ -173,7 +171,10 @@ export default function Page() {
 											</form>
 										</DialogContent>
 									</Dialog>
-								)}
+								)}	
+										</div>
+									</div>
+								</CardHeader>
 								<div className="p-3">
 									<div className="w-full overflow-x-auto">
 										<Table className="min-w-[600px] bg-white shadow-md rounded-lg">

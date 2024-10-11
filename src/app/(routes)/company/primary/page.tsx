@@ -53,7 +53,7 @@ export default function PrimaryGroupsPage() {
 			setError(null);
 
 			try {
-				const response = await fetch(`https://ordemdeservicosdev.onrender.com/api/user/get-user/${userId}`, {
+				const response = await fetch(`${BASE_URL}/user/get-user/${userId}`, {
 					method: "GET",
 					headers: {
 						"Content-type": "application/json",
@@ -93,7 +93,7 @@ export default function PrimaryGroupsPage() {
 		};
 		try {
 			const response = await toast.promise(
-				fetch(`https://ordemdeservicosdev.onrender.com/api/company/create-primary/${user?.companyId}`, {
+				fetch(`${BASE_URL}/company/create-primary/${user?.companyId}`, {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",

@@ -25,6 +25,7 @@ import {
 	FaClipboardList,
 } from "react-icons/fa";
 import { MdHomeRepairService } from "react-icons/md";
+import { IoBusinessSharp } from "react-icons/io5";
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -86,7 +87,7 @@ const MenuHome = () => {
 									<div className="flex flex-col ml-1">
 										<Link href="/company/firm">
 											<Button variant="link" className="flex items-center gap-2 py-2">
-												<FaGlobe className="h-5 w-5" />
+												<IoBusinessSharp className="h-5 w-5" />
 												<span>Minha Empresa</span>
 											</Button>
 										</Link>

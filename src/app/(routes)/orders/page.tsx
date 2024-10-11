@@ -20,6 +20,7 @@ import { useStore } from "@/zustandStore";
 import { hasPermission } from "@/utils/hasPermissions";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search } from "lucide-react";
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function Page() {
 	const orderSchema = z.object({
@@ -56,7 +57,7 @@ export default function Page() {
 	}, [orderStatus]);
 
 	useEffect(() => {
-		fetch("https://ordemdeservicosdev.onrender.com/api/order/get-all-subjects", {
+		fetch(`${BASE_URL}/order/get-all-subjects`, {
 			method: "GET",
 			headers: {
 				"Content-type": "application/json",
@@ -74,7 +75,7 @@ export default function Page() {
 			.catch((error) => {
 				console.error("Erro ao buscar os dados", error);
 			});
-		fetch("https://ordemdeservicosdev.onrender.com/api/order/get-all-orders-status", {
+		fetch(`${BASE_URL}/order/get-all-orders-status`, {
 			method: "GET",
 			headers: {
 				"Content-type": "application/json",
@@ -114,7 +115,7 @@ export default function Page() {
 			const searchQuery = searchText ? `&search=${searchText}` : "";
 
 			const response = await fetch(
-				`https://ordemdeservicosdev.onrender.com/api/order/get-all-orders?limit=${limit}&offset=${offset}${filterParam}${searchQuery}`,
+				`${BASE_URL}/order/get-all-orders?limit=${limit}&offset=${offset}${filterParam}${searchQuery}`,
 				{
 					method: "GET",
 					headers: {
@@ -178,7 +179,7 @@ export default function Page() {
 		};
 
 		toast.promise(
-			fetch("https://ordemdeservicosdev.onrender.com/api/order/create-order", {
+			fetch(`${BASE_URL}/order/create-order`, {
 				method: "POST",
 				headers: {
 					"Content-type": "application/json",
@@ -225,7 +226,7 @@ export default function Page() {
 			fetchOrders(searchText);
 		}, 650);
 
-		return () => clearTimeout(delayDebounceFn); // Limpa o debounce anterior
+		return () => clearTimeout(delayDebounceFn);
 	}, [searchText]);
 
 	return (

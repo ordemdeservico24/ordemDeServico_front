@@ -82,7 +82,6 @@ export default function Page({ params }: { params: { id: string } }) {
 								</CardContent>
 							</Card>
 
-							{/* User Information */}
 							<Card className="w-full">
 								<CardHeader>
 									<CardTitle className="flex items-center gap-2">
@@ -104,29 +103,6 @@ export default function Page({ params }: { params: { id: string } }) {
 									</div>
 								</CardContent>
 							</Card>
-
-							{/* City Information
-						<Card>
-							<CardHeader>
-								<CardTitle className="flex items-center gap-2">
-									<MapPin className="h-5 w-5" />
-									City Information
-								</CardTitle>
-							</CardHeader>
-							<CardContent>
-								<div className="space-y-2">
-									<p>
-										Cidade: <span className="font-semibold">{tertiary?.secondary.cityName}</span>
-									</p>
-									<p>
-										Population: <span className="font-semibold">167,000</span>
-									</p>
-									<p>
-										Area: <span className="font-semibold">170 km²</span>
-									</p>
-								</div>
-							</CardContent>
-						</Card> */}
 						</div>
 						<Card>
 							<CardHeader>

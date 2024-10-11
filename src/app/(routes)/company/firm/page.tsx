@@ -2,13 +2,14 @@
 import { useState } from "react";
 import { Container } from "@/components/container";
 import Image from "next/image";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { Card, CardTitle, CardHeader, CardContent } from "@/components/ui/card";
 import { useCompanyData } from "@/hooks/company/useCompanyData";
+import { Users, Building2 } from "lucide-react";
+import { FaBriefcase, FaShoppingCart, FaUser } from "react-icons/fa";
 
 export default function FirmPage() {
 	const [error, setError] = useState<string | null>(null);
-	const [isLoading, setIsLoading] = useState(true);
-	const { data } = useCompanyData();
+	const { data, isLoading } = useCompanyData();
 
 	const renderFirmInfo = () => {
 		if (error) {
@@ -36,73 +37,74 @@ export default function FirmPage() {
 							</svg>
 						</div>
 					) : (
-						<Card className="border border-gray-200 rounded-lg overflow-hidden">
-							<CardHeader className="bg-white p-4 flex justify-between items-center">
-								<h1 className="text-2xl font-semibold">Perfil da Empresa</h1>
+							<Card className="p-4">
+							<h1 className="text-3xl font-bold mb-6">Perfil da Empresa</h1>
+
+							<Card className="mb-6">
+							<CardHeader>
+								<CardTitle>Dados Gerais</CardTitle>
 							</CardHeader>
-							<CardContent className="p-6 space-y-6">
-								<div className="border-b border-gray-300 pb-4 mb-4">
-									<h2 className="text-xl font-semibold mb-4">Dados Gerais</h2>
-									<div className="space-y-2">
-										<p className="text-gray-700">
-											<strong className="font-medium">CNPJ:</strong> {data?.cnpj}
-										</p>
-										<p className="text-gray-700">
-											<strong className="font-medium">Nome da Empresa:</strong> {data?.companyName}
-										</p>
-										{data?.companyPhoto && (
-											<Image
-												src={data.companyPhoto}
-												alt="Logo da Empresa"
-												width={100}
-												height={100}
-												className="w-24 mx-auto my-4 object-contain"
-											/>
-										)}
-									</div>
+							<CardContent className="flex flex-col md:flex-row items-center gap-6">
+								<div className="w-32 h-32 relative">
+								<Image
+									src={data?.companyPhoto || "/placeholder.svg"}
+									alt="Logo da Empresa"
+									width={128}
+									height={128}
+									className="rounded-full"
+								/>
 								</div>
-
-								<div className="mb-4">
-									<h3 className="text-xl font-semibold mb-4">Estrutura Organizacional</h3>
-									<ul className="space-y-2">
-										<li>
-											<span className="text-sm sm:text-base lg:text-xl font-semibold">{`Funções: ${data?.roles?.length || 0
-												}`}</span>
-										</li>
-										<li>
-											<span className="text-sm sm:text-base lg:text-xl font-semibold">{`Ordens: ${data?.Order?.length || 0
-												}`}</span>
-										</li>
-										<li>
-											<span className="text-sm sm:text-base lg:text-xl font-semibold">{`Equipes: ${data?.Team?.length || 0
-												}`}</span>
-										</li>
-										<li>
-											<span className="text-sm sm:text-base lg:text-xl font-semibold">{`Usuários: ${data?.User?.length || 0
-												}`}</span>
-										</li>
-									</ul>
-								</div>
-
-								<div className="mb-4">
-									<h3 className="text-xl font-semibold mb-4">Grupos</h3>
-									<ul className="space-y-2">
-										<li>
-											<span className="text-sm sm:text-base lg:text-xl font-semibold">{`Grupos Primários: ${data?.primaries?.length || 0
-												}`}</span>
-										</li>
-										<li>
-											<span className="text-sm sm:text-base lg:text-xl font-semibold">{`Grupos Secundários: ${data?.secondaries?.length || 0
-												}`}</span>
-										</li>
-										<li>
-											<span className="text-sm sm:text-base lg:text-xl font-semibold">{`Grupos Terciários: ${data?.tertiaries?.length || 0
-												}`}</span>
-										</li>
-									</ul>
+								<div>
+								<p><strong>Nome da Empresa:</strong> {data?.companyName || "Empresa XYZ Ltda."}</p>
+								<p><strong>CNPJ:</strong> {data?.cnpj || "00.000.000/0001-00"}</p>
 								</div>
 							</CardContent>
-						</Card>
+							</Card>
+
+							<Card className="mb-6">
+							<CardHeader>
+								<CardTitle>Estrutura Organizacional</CardTitle>
+							</CardHeader>
+							<CardContent className="grid grid-cols-2 md:grid-cols-4 gap-4">
+								<div className="flex items-center gap-2">
+								<Users className="h-5 w-5 text-muted-foreground" />
+								<p><strong>Funções:</strong> {data?.roles?.length || 0}</p>
+								</div>
+								<div className="flex items-center gap-2">
+								<FaShoppingCart className="h-5 w-5 text-muted-foreground" />
+								<p><strong>Ordens:</strong> {data?.Order?.length || 0}</p>
+								</div>
+								<div className="flex items-center gap-2">
+								<FaBriefcase className="h-5 w-5 text-muted-foreground" />
+								<p><strong>Equipes:</strong> {data?.Team?.length || 0}</p>
+								</div>
+								<div className="flex items-center gap-2">
+								<FaUser className="h-5 w-5 text-muted-foreground" />
+								<p><strong>Usuários:</strong> {data?.User?.length || 1}</p>
+								</div>
+							</CardContent>
+							</Card>
+
+							<Card>
+							<CardHeader>
+								<CardTitle>Grupos</CardTitle>
+							</CardHeader>
+							<CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
+								<div className="flex items-center gap-2">
+								<Building2 className="h-5 w-5 text-muted-foreground" />
+								<p><strong>Grupos Primários:</strong> {data?.primaries?.length || 1}</p>
+								</div>
+								<div className="flex items-center gap-2">
+								<Building2 className="h-5 w-5 text-muted-foreground" />
+								<p><strong>Grupos Secundários:</strong> {data?.secondaries?.length || 1}</p>
+								</div>
+								<div className="flex items-center gap-2">
+								<Building2 className="h-5 w-5 text-muted-foreground" />
+								<p><strong>Grupos Terciários:</strong> {data?.tertiaries?.length || 1}</p>
+								</div>
+							</CardContent>
+								</Card>
+							</Card>
 					)}
 				</main>
 			</Container>

@@ -10,6 +10,8 @@ import { getCookie } from "cookies-next";
 import { FinancialCategory } from "@/interfaces/financial.interface";
 import { Table, TableHeader, TableBody, TableRow, TableCell } from "@/components/ui/table";
 import { toast } from "react-toastify";
+import { useStore } from "@/zustandStore";
+import { hasPermission } from "@/utils/hasPermissions";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function CategoriesPage() {
@@ -19,6 +21,7 @@ export default function CategoriesPage() {
 	const router = useRouter();
 	const token = getCookie("access_token");
 	const [isLoading, setIsLoading] = useState(false);
+	const { role = [] } = useStore();
 
 	useEffect(() => {
 		setIsLoading(true);
@@ -120,37 +123,39 @@ export default function CategoriesPage() {
 											<CardTitle className="text-[#3b82f6] text-2xl font-bold">Financeiro Categorias</CardTitle>
 											<CardDescription>Cheque todas as informações relacionadas ao financeiro.</CardDescription>
 										</div>
-										<Dialog>
-											<DialogTrigger asChild>
-												<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
-													Adicionar categoria
-												</Button>
-											</DialogTrigger>
-											<DialogContent className="sm:max-w-[425px]">
-												<DialogHeader>
-													<DialogTitle>Adicionar categoria</DialogTitle>
-													<DialogDescription>Adicione as informações para criar uma categoria!!</DialogDescription>
-												</DialogHeader>
-												<div className="grid gap-4">
-													<input
-														type="text"
-														placeholder="Nome da Categoria"
-														value={newCategory.name}
-														onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
-														className="border rounded p-2"
-													/>
-													<textarea
-														placeholder="Descrição"
-														value={newCategory.description}
-														onChange={(e) => setNewCategory({ ...newCategory, description: e.target.value })}
-														className="border rounded p-2"
-													/>
-													<Button onClick={handleAddCategory} className="bg-blue-500 hover:bg-blue-600">
-														Criar Categoria
+										{hasPermission(role, "admin_management", "create") && (
+											<Dialog>
+												<DialogTrigger asChild>
+													<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
+														Adicionar categoria
 													</Button>
-												</div>
-											</DialogContent>
-										</Dialog>
+												</DialogTrigger>
+												<DialogContent className="sm:max-w-[425px]">
+													<DialogHeader>
+														<DialogTitle>Adicionar categoria</DialogTitle>
+														<DialogDescription>Adicione as informações para criar uma categoria!!</DialogDescription>
+													</DialogHeader>
+													<div className="grid gap-4">
+														<input
+															type="text"
+															placeholder="Nome da Categoria"
+															value={newCategory.name}
+															onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
+															className="border rounded p-2"
+														/>
+														<textarea
+															placeholder="Descrição"
+															value={newCategory.description}
+															onChange={(e) => setNewCategory({ ...newCategory, description: e.target.value })}
+															className="border rounded p-2"
+														/>
+														<Button onClick={handleAddCategory} className="bg-blue-500 hover:bg-blue-600">
+															Criar Categoria
+														</Button>
+													</div>
+												</DialogContent>
+											</Dialog>
+										)}
 									</div>
 								</CardHeader>
 								<div className="overflow-x-auto">

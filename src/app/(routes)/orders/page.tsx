@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { Container } from "@/components/container";
 import { EditDeleteOrder } from "@/components/editDeleteOrder";
@@ -46,15 +47,7 @@ export default function Page() {
 	const [error, setError] = useState<string | null>(null);
 	const token = getCookie("access_token");
 	const { role = [] } = useStore();
-
-	useEffect(() => {
-		if (orderStatus?.length && !selectedFilter) {
-			const openStatus = orderStatus.find((status) => status.open === true);
-			if (openStatus) {
-				setSelectedFilter(openStatus.id);
-			}
-		}
-	}, [orderStatus]);
+	const [initialFetchDone, setInitialFetchDone] = useState(false);
 
 	useEffect(() => {
 		fetch(`${BASE_URL}/order/get-all-subjects`, {
@@ -89,6 +82,14 @@ export default function Page() {
 			.then(({ status, data }) => {
 				console.log(status, data);
 				setOrderStatus(data);
+
+				if (!initialFetchDone) {
+					const openStatus = data.find((status: IOrderStatus) => status.open === true);
+					if (openStatus) {
+						setSelectedFilter(openStatus.id);
+					}
+					setInitialFetchDone(true);
+				}
 			})
 			.catch((error) => {
 				console.error("Erro ao buscar os dados", error);
@@ -114,16 +115,13 @@ export default function Page() {
 			const filterParam = selectedFilter ? `&status=${selectedFilter}` : "";
 			const searchQuery = searchText ? `&search=${searchText}` : "";
 
-			const response = await fetch(
-				`${BASE_URL}/order/get-all-orders?limit=${limit}&offset=${offset}${filterParam}${searchQuery}`,
-				{
-					method: "GET",
-					headers: {
-						"Content-type": "application/json",
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			);
+			const response = await fetch(`${BASE_URL}/order/get-all-orders?limit=${limit}&offset=${offset}${filterParam}${searchQuery}`, {
+				method: "GET",
+				headers: {
+					"Content-type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+			});
 
 			if (!response.ok) {
 				throw new Error(`HTTP error! status: ${response.status}`);
@@ -378,17 +376,24 @@ export default function Page() {
 													</h2>
 												</Link>
 											)}
+											<p className="text-gray-600 mb-2">Categoria: {order.subject.name}</p>
 											<p className="text-gray-600 mb-2">Data de abertura: {order.openningDate}</p>
 											<p className="text-gray-800 mb-2">{truncateNotes(order.notes, 100)}</p>
 										</div>
 										<div className="flex justify-between items-center">
-											{hasPermission(role, ["orders_management"], "update") && (
+											{hasPermission(role, ["orders_management"], "update") ? (
 												<OrderStatus
 													currentStatusId={order.orderStatus.id}
 													currentStatus={order.orderStatus.orderStatusName}
 													orderId={order.id}
 													statuses={orderStatus || []}
 												/>
+											) : hasPermission(role, ["orders_management"], "read") ? (
+												<p className="py-2 px-4 rounded text-sm bg-[#3b82f6] text-white">
+													{order.orderStatus.orderStatusName}
+												</p>
+											) : (
+												""
 											)}
 											{hasPermission(role, ["orders_management"], "update") && (
 												<EditDeleteOrder orderId={order.id} subjects={subjects || []} orderStatus={orderStatus || []} />

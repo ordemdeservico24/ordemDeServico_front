@@ -8,12 +8,15 @@ import { ITertiaryInfoPage } from "@/interfaces/company.interface";
 import { BarChart3, Clipboard, MapPin, Share2, Users } from "lucide-react";
 import CopyToClipboardButton from "@/components/copyToClipboard";
 import { useRouter } from "next/navigation";
+import { hasPermission } from "@/utils/hasPermissions";
+import { useStore } from "@/zustandStore";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 export default function Page({ params }: { params: { id: string } }) {
 	const [tertiary, setTertiary] = useState<ITertiaryInfoPage>();
 	const token = getCookie("access_token");
 	const router = useRouter();
 	const [isLoading, setIsLoading] = useState(true);
+	const { role = [] } = useStore();
 
 	useEffect(() => {
 		setIsLoading(true);
@@ -134,27 +137,37 @@ export default function Page({ params }: { params: { id: string } }) {
 								</div>
 							</CardContent>
 						</Card>
-						<Card>
-							<CardHeader>
-								<CardTitle>Links Rápidos</CardTitle>
-							</CardHeader>
-							<CardContent>
-								<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-									<Button variant="outline" onClick={() => router.push("/orders")}>
-										Ordens de Serviço
-									</Button>
-									<Button variant="outline" onClick={() => router.push("/teams")}>
-										Equipes
-									</Button>
-									<Button variant="outline" onClick={() => router.push("/users")}>
-										Usuários
-									</Button>
-									<Button variant="outline" onClick={() => router.push("/stock")}>
-										Estoque
-									</Button>
-								</div>
-							</CardContent>
-						</Card>
+						{hasPermission(role, ["admin_management", "orders_management", "teams_management"], "read") && (
+							<Card>
+								<CardHeader>
+									<CardTitle>Links Rápidos</CardTitle>
+								</CardHeader>
+								<CardContent>
+									<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+										{hasPermission(role, "orders_management", "read") && (
+											<Button variant="outline" onClick={() => router.push("/orders")}>
+												Ordens de Serviço
+											</Button>
+										)}
+										{hasPermission(role, "teams_management", "read") && (
+											<Button variant="outline" onClick={() => router.push("/teams")}>
+												Equipes
+											</Button>
+										)}
+										{hasPermission(role, "admin_management", "read") && (
+											<>
+												<Button variant="outline" onClick={() => router.push("/users")}>
+													Usuários
+												</Button>
+												<Button variant="outline" onClick={() => router.push("/stock")}>
+													Estoque
+												</Button>
+											</>
+										)}
+									</div>
+								</CardContent>
+							</Card>
+						)}
 					</div>
 				)}
 			</main>

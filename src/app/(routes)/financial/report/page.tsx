@@ -11,6 +11,7 @@ import { Container } from "@/components/container";
 import { getCookie } from "cookies-next";
 import { IFinancialCategory } from "@/interfaces/financial.interface";
 import MoneyFormatter from "@/components/formatMoneyValues";
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 interface financialReport {
 	totalExpenses: number;
@@ -76,16 +77,13 @@ export default function Page() {
 		} else {
 			categoryId = selectedCategory;
 		}
-		fetch(
-			`https://ordemdeservicosdev.onrender.com/api/finance/generate-report?startDate=${startDate}T00:00:00&endDate=${endDate}T23:59:59&categoryId=${categoryId}`,
-			{
-				method: "GET",
-				headers: {
-					"Content-type": "application/json",
-					Authorization: `Bearer ${token}`,
-				},
-			}
-		)
+		fetch(`${BASE_URL}/finance/generate-report?startDate=${startDate}T00:00:00&endDate=${endDate}T23:59:59&categoryId=${categoryId}`, {
+			method: "GET",
+			headers: {
+				"Content-type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+		})
 			.then((res) => {
 				const status = res.status;
 				return res.json().then((data) => ({ status, data }));
@@ -95,7 +93,7 @@ export default function Page() {
 				setFinancialReport(data);
 			});
 
-		fetch(`https://ordemdeservicosdev.onrender.com/api/finance/get-all-categories`, {
+		fetch(`${BASE_URL}/finance/get-all-categories`, {
 			method: "GET",
 			headers: {
 				"Content-type": "application/json",
@@ -110,7 +108,7 @@ export default function Page() {
 				console.log(status, data);
 				setCategories(data);
 			});
-			setIsLoading(false);
+		setIsLoading(false);
 	}, [token, startDate, endDate, selectedCategory]);
 
 	const chartData = [

@@ -16,6 +16,7 @@ import MoneyFormatter from "@/components/formatMoneyValues";
 import { FaEdit } from "react-icons/fa";
 import { Label } from "@/components/ui/label";
 import { useStore } from "@/zustandStore";
+import { hasPermission } from "@/utils/hasPermissions";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function Page() {
@@ -27,7 +28,7 @@ export default function Page() {
 	const [error, setError] = useState<string | null>(null);
 	const [isEditing, setIsEditing] = useState(false);
 	const token = getCookie("access_token");
-	const { userId } = useStore();
+	const { userId, role = [] } = useStore();
 	const router = useRouter();
 
 	const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -321,78 +322,85 @@ export default function Page() {
 											<CardTitle className="text-[#3b82f6] text-2xl font-bold">Usuários/Funcionários</CardTitle>
 											<CardDescription>Cheque todas as informações relacionadas aos usuários e funcionários.</CardDescription>
 										</div>
-										<div className="flex gap-2">
-											<Dialog>
-												<DialogTrigger asChild>
-													<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
-														Importar Funcionários
-													</Button>
-												</DialogTrigger>
-												<DialogContent className="sm:max-w-[425px]">
-													<DialogHeader>
-														<DialogTitle>Importar Funcionários</DialogTitle>
-														<DialogDescription>Envie uma planilha contendo os funcionários.</DialogDescription>
-													</DialogHeader>
-													<form
-														action="#"
-														onSubmit={(e) => onSubmit(e)}
-														className=" flex flex-col justify-center items-center"
-													>
-														<div className="flex gap-3 flex-col items-center max-w-96 w-full">
-															<Input type="file" name="sheetFile" placeholder="Envie uma planilha" className="w-full" />
-															<Button
-																className=" text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
-																type="submit"
-															>
-																Criar
-															</Button>
-														</div>
-													</form>
-												</DialogContent>
-											</Dialog>
-											<Dialog>
-												<DialogTrigger asChild>
-													<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
-														Cadastrar Funcionário
-													</Button>
-												</DialogTrigger>
-												<DialogContent className="sm:max-w-[425px]">
-													<DialogHeader>
-														<DialogTitle>Cadastrar Funcionário</DialogTitle>
-														<DialogDescription>Cadastre um funcionário no sistema.</DialogDescription>
-													</DialogHeader>
-													<form
-														action="#"
-														onSubmit={(e) => createEmployee(e)}
-														className=" flex flex-col justify-center items-center"
-													>
-														<div className="flex gap-3 flex-col items-center max-w-96 w-full">
-															<Input type="text" name="name" placeholder="Nome do Funcionário" className="w-full" />
-															<Input
-																type="text"
-																name="phone"
-																placeholder="Telefone do Funcionário"
-																className="w-full"
-															/>
-															<Input
-																type="number"
-																name="salary"
-																placeholder="Salário do Funcionário"
-																step="0.01"
-																className="w-full"
-															/>
-															<Input type="date" name="startCompanyDate" className="w-full" />
-															<Button
-																className=" text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
-																type="submit"
-															>
-																Criar
-															</Button>
-														</div>
-													</form>
-												</DialogContent>
-											</Dialog>
-										</div>
+										{hasPermission(role, "admin_management", "create") && (
+											<div className="flex gap-2">
+												<Dialog>
+													<DialogTrigger asChild>
+														<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
+															Importar Funcionários
+														</Button>
+													</DialogTrigger>
+													<DialogContent className="sm:max-w-[425px]">
+														<DialogHeader>
+															<DialogTitle>Importar Funcionários</DialogTitle>
+															<DialogDescription>Envie uma planilha contendo os funcionários.</DialogDescription>
+														</DialogHeader>
+														<form
+															action="#"
+															onSubmit={(e) => onSubmit(e)}
+															className=" flex flex-col justify-center items-center"
+														>
+															<div className="flex gap-3 flex-col items-center max-w-96 w-full">
+																<Input
+																	type="file"
+																	name="sheetFile"
+																	placeholder="Envie uma planilha"
+																	className="w-full"
+																/>
+																<Button
+																	className=" text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
+																	type="submit"
+																>
+																	Criar
+																</Button>
+															</div>
+														</form>
+													</DialogContent>
+												</Dialog>
+												<Dialog>
+													<DialogTrigger asChild>
+														<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
+															Cadastrar Funcionário
+														</Button>
+													</DialogTrigger>
+													<DialogContent className="sm:max-w-[425px]">
+														<DialogHeader>
+															<DialogTitle>Cadastrar Funcionário</DialogTitle>
+															<DialogDescription>Cadastre um funcionário no sistema.</DialogDescription>
+														</DialogHeader>
+														<form
+															action="#"
+															onSubmit={(e) => createEmployee(e)}
+															className=" flex flex-col justify-center items-center"
+														>
+															<div className="flex gap-3 flex-col items-center max-w-96 w-full">
+																<Input type="text" name="name" placeholder="Nome do Funcionário" className="w-full" />
+																<Input
+																	type="text"
+																	name="phone"
+																	placeholder="Telefone do Funcionário"
+																	className="w-full"
+																/>
+																<Input
+																	type="number"
+																	name="salary"
+																	placeholder="Salário do Funcionário"
+																	step="0.01"
+																	className="w-full"
+																/>
+																<Input type="date" name="startCompanyDate" className="w-full" />
+																<Button
+																	className=" text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
+																	type="submit"
+																>
+																	Criar
+																</Button>
+															</div>
+														</form>
+													</DialogContent>
+												</Dialog>
+											</div>
+										)}
 									</div>
 								</CardHeader>
 
@@ -451,17 +459,19 @@ export default function Page() {
 															<TableCell style={{ cursor: "pointer" }} onClick={() => router.push(`/users/${user.id}`)}>
 																<Button variant="outline">Ver dados</Button>
 															</TableCell>
-															<TableCell
-																style={{ cursor: "pointer" }}
-																onClick={() => {
-																	setIsEditing(true), getUser(user.id);
-																}}
-															>
-																<FaEdit
-																	className="text-gray-500 cursor-pointer hover:text-gray-700 transition-colors duration-200"
-																	size={20}
-																/>
-															</TableCell>
+															{hasPermission(role, "admin_management", "update") && (
+																<TableCell
+																	style={{ cursor: "pointer" }}
+																	onClick={() => {
+																		setIsEditing(true), getUser(user.id);
+																	}}
+																>
+																	<FaEdit
+																		className="text-gray-500 cursor-pointer hover:text-gray-700 transition-colors duration-200"
+																		size={20}
+																	/>
+																</TableCell>
+															)}
 														</TableRow>
 													))
 												)}

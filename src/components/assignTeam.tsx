@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getCookie } from "cookies-next";
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 interface Order {
 	orderId: string;
@@ -17,7 +18,7 @@ export const AssignTeam: React.FC<Order> = ({ orderId, teamName }) => {
 	const token = getCookie("access_token");
 
 	useEffect(() => {
-		fetch("https://ordemdeservicosdev.onrender.com/api/team/get-all-teams", {
+		fetch(`${BASE_URL}/team/get-all-teams`, {
 			method: "GET",
 			headers: {
 				"Content-type": "application/json",
@@ -45,7 +46,7 @@ export const AssignTeam: React.FC<Order> = ({ orderId, teamName }) => {
 
 	const assignTeam = async () => {
 		toast.promise(
-			fetch(`https://ordemdeservicosdev.onrender.com/api/order/assign-team/${orderId}`, {
+			fetch(`${BASE_URL}/order/assign-team/${orderId}`, {
 				method: "PATCH",
 				headers: {
 					"Content-type": "application/json",
@@ -60,7 +61,7 @@ export const AssignTeam: React.FC<Order> = ({ orderId, teamName }) => {
 					throw new Error("Falha ao atribuir equipe");
 				})
 				.then((data) => {
-					console.log(data);
+					// console.log(data);
 				})
 				.catch((error) => {
 					console.log(error);
@@ -86,6 +87,7 @@ export const AssignTeam: React.FC<Order> = ({ orderId, teamName }) => {
 					<SelectValue placeholder={teamName ? teamName : "Selecione uma equipe"} />
 				</SelectTrigger>
 				<SelectContent>
+					<SelectItem value="none">Nenhuma</SelectItem>
 					{teams.map((team) => (
 						<SelectItem key={team.id} value={team.id}>
 							{team.teamName}

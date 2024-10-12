@@ -13,6 +13,8 @@ import AddItemForm from "@/components/AddItem";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import MoneyFormatter from "@/components/formatMoneyValues";
+import { useStore } from "@/zustandStore";
+import { hasPermission } from "@/utils/hasPermissions";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function CategoryDetailPage() {
@@ -20,6 +22,7 @@ export default function CategoryDetailPage() {
 	const [error, setError] = useState<string | null>(null);
 	const params = useParams();
 	const { id } = params;
+	const { role = [] } = useStore();
 
 	const token = getCookie("access_token");
 
@@ -188,19 +191,21 @@ export default function CategoryDetailPage() {
 										<CardTitle className="text-[#3b82f6] text-2xl font-bold">{categoryItem.name}</CardTitle>
 										<CardDescription>{categoryItem.description || "Sem descrição disponível"}</CardDescription>
 									</div>
-									<Dialog>
-										<DialogTrigger asChild>
-											<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
-												Editar categoria
-											</Button>
-										</DialogTrigger>
-										<DialogContent className="sm:max-w-[425px]">
-											<DialogHeader>
-												<DialogTitle>Editar categoria</DialogTitle>
-												<DialogDescription>Modifique as informações da categoria aqui.</DialogDescription>
-											</DialogHeader>
-										</DialogContent>
-									</Dialog>
+									{/* {hasPermission(role, "admin_management", "update") && (
+										<Dialog>
+											<DialogTrigger asChild>
+												<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
+													Editar categoria
+												</Button>
+											</DialogTrigger>
+											<DialogContent className="sm:max-w-[425px]">
+												<DialogHeader>
+													<DialogTitle>Editar categoria</DialogTitle>
+													<DialogDescription>Modifique as informações da categoria aqui.</DialogDescription>
+												</DialogHeader>
+											</DialogContent>
+										</Dialog>
+									)} */}
 								</div>
 							</CardHeader>
 							<div className="p-4">
@@ -220,21 +225,23 @@ export default function CategoryDetailPage() {
 							<CardHeader>
 								<div className="w-full flex justify-between items-center">
 									<CardTitle className="text-xl font-bold">Itens da Categoria</CardTitle>
-									<Dialog open={isAddItemDialogOpen} onOpenChange={setIsAddItemDialogOpen}>
-										<DialogTrigger asChild>
-											<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
-												Adicionar Item
-											</Button>
-										</DialogTrigger>
-										<DialogContent className="sm:max-w-[600px]">
-											<DialogHeader>
-												<DialogTitle>Adicionar Item à Categoria</DialogTitle>
-												<DialogDescription>Preencha as informações do novo item.</DialogDescription>
-											</DialogHeader>
+									{hasPermission(role, "admin_management", "create") && (
+										<Dialog open={isAddItemDialogOpen} onOpenChange={setIsAddItemDialogOpen}>
+											<DialogTrigger asChild>
+												<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
+													Adicionar Item
+												</Button>
+											</DialogTrigger>
+											<DialogContent className="sm:max-w-[600px]">
+												<DialogHeader>
+													<DialogTitle>Adicionar Item à Categoria</DialogTitle>
+													<DialogDescription>Preencha as informações do novo item.</DialogDescription>
+												</DialogHeader>
 
-											<AddItemForm onAdd={handleAddItem} isLoading={isLoading} />
-										</DialogContent>
-									</Dialog>
+												<AddItemForm onAdd={handleAddItem} isLoading={isLoading} />
+											</DialogContent>
+										</Dialog>
+									)}
 								</div>
 							</CardHeader>
 							<div className="overflow-x-auto">

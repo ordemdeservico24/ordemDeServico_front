@@ -11,6 +11,8 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { Input } from "@/components/ui/input";
+import { useStore } from "@/zustandStore";
+import { hasPermission } from "@/utils/hasPermissions";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 export default function TertiaryGroupsPage() {
 	const token = getCookie("access_token");
@@ -20,6 +22,7 @@ export default function TertiaryGroupsPage() {
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const router = useRouter();
+	const { role = [] } = useStore();
 
 	useEffect(() => {
 		const fetchTertiaryGroups = async () => {
@@ -160,48 +163,50 @@ export default function TertiaryGroupsPage() {
 									<CardTitle className="text-[#3b82f6] text-2xl font-bold">Distritos</CardTitle>
 									<CardDescription>Veja todas as informações relacionadas aos distritos.</CardDescription>
 								</div>
-								<Dialog>
-									<DialogTrigger asChild>
-										<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
-											Criar Novo Distrito
-										</Button>
-									</DialogTrigger>
-									<DialogContent className="sm:max-w-[425px]">
-										<DialogHeader>
-											<DialogTitle>Adicionar nova distrito</DialogTitle>
-											<DialogDescription>
-												Adicione um novo distrito para que os usuários/funcionários entrem nele
-											</DialogDescription>
-										</DialogHeader>
-										<form
-											action="#"
-											onSubmit={(e) => handleAddDistrict(e)}
-											className=" flex flex-col justify-center items-center"
-										>
-											<div className="flex gap-3 flex-col items-center max-w-96 w-full">
-												<Select onValueChange={handleSelectChangeSecondary}>
-													<SelectTrigger className="outline-none border border-[#2a2a2a] rounded px-2 py-1">
-														<SelectValue placeholder="Escolha a cidade do distrito" />
-													</SelectTrigger>
-													<SelectContent>
-														{secondaryGroups?.map((secondary) => (
-															<SelectItem key={secondary.id} value={secondary.id || ""}>
-																{secondary.cityName}
-															</SelectItem>
-														))}
-													</SelectContent>
-												</Select>
-												<Input type="text" name="districtName" placeholder="Nome do Distrito" className="w-full" />
-												<Button
-													className=" text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
-													type="submit"
-												>
-													Criar Distrito
-												</Button>
-											</div>
-										</form>
-									</DialogContent>
-								</Dialog>
+								{hasPermission(role, "admin_management", "create") && (
+									<Dialog>
+										<DialogTrigger asChild>
+											<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
+												Criar Novo Distrito
+											</Button>
+										</DialogTrigger>
+										<DialogContent className="sm:max-w-[425px]">
+											<DialogHeader>
+												<DialogTitle>Adicionar nova distrito</DialogTitle>
+												<DialogDescription>
+													Adicione um novo distrito para que os usuários/funcionários entrem nele
+												</DialogDescription>
+											</DialogHeader>
+											<form
+												action="#"
+												onSubmit={(e) => handleAddDistrict(e)}
+												className=" flex flex-col justify-center items-center"
+											>
+												<div className="flex gap-3 flex-col items-center max-w-96 w-full">
+													<Select onValueChange={handleSelectChangeSecondary}>
+														<SelectTrigger className="outline-none border border-[#2a2a2a] rounded px-2 py-1">
+															<SelectValue placeholder="Escolha a cidade do distrito" />
+														</SelectTrigger>
+														<SelectContent>
+															{secondaryGroups?.map((secondary) => (
+																<SelectItem key={secondary.id} value={secondary.id || ""}>
+																	{secondary.cityName}
+																</SelectItem>
+															))}
+														</SelectContent>
+													</Select>
+													<Input type="text" name="districtName" placeholder="Nome do Distrito" className="w-full" />
+													<Button
+														className=" text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
+														type="submit"
+													>
+														Criar Distrito
+													</Button>
+												</div>
+											</form>
+										</DialogContent>
+									</Dialog>
+								)}
 							</div>
 						</CardHeader>
 						<div>

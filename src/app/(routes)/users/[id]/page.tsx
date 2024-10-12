@@ -12,6 +12,8 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { toast } from "react-toastify";
 import { Input } from "@/components/ui/input";
 import MoneyFormatter from "@/components/formatMoneyValues";
+import { useStore } from "@/zustandStore";
+import { hasPermission } from "@/utils/hasPermissions";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function UserPage({ params }: { params: { id: string } }) {
@@ -20,6 +22,7 @@ export default function UserPage({ params }: { params: { id: string } }) {
 	const [selectedRole, setSelectedRole] = useState<string>("");
 	const token = getCookie("access_token");
 	const [isLoading, setIsLoading] = useState(true);
+	const { role = [] } = useStore();
 
 	useEffect(() => {
 		setIsLoading(true);
@@ -215,9 +218,9 @@ export default function UserPage({ params }: { params: { id: string } }) {
 													<strong className="font-medium">Data de Início na Empresa:</strong>{" "}
 													{user.startCompanyDate ? formatDate(user.startCompanyDate) : "Não informado"}
 												</p>
-												<p className="text-gray-700 flex gap-1">
-													<strong className="font-medium">Salário:</strong>{" "}
-													{user.salary === 0 ? (
+												{hasPermission(role, "admin_management", "update") && (
+													<p className="text-gray-700 flex gap-1">
+														<strong className="font-medium">Salário:</strong> user.salary === 0 ? (
 														<Dialog>
 															<DialogTrigger asChild>
 																<p className="cursor-pointer">Adicionar salário</p>
@@ -252,30 +255,35 @@ export default function UserPage({ params }: { params: { id: string } }) {
 																</form>
 															</DialogContent>
 														</Dialog>
-													) : (
-														<MoneyFormatter value={user.salary || 0} currency="BRL" />
-													)}
-												</p>
+														) : (
+														<MoneyFormatter value={user.salary || 0} currency="BRL" />)
+													</p>
+												)}
 											</div>
 										</div>
 									</CardContent>
 									<CardContent className="px-6 space-y-6">
 										<div className="flex items-center space-x-4 w-fit">
-											<Select onValueChange={handleSelectChange} value={selectedRole}>
-												<SelectTrigger className="outline-none border border-[#2a2a2a] rounded px-2 py-1">
-													<SelectValue placeholder={user.role ? user.role.roleName : "Atribua um cargo"} />
-												</SelectTrigger>
-												<SelectContent>
-													{roles.map((role) => (
-														<SelectItem key={role.id} value={role.id}>
-															{role.roleName}
-														</SelectItem>
-													))}
-												</SelectContent>
-											</Select>
-											<Button variant="default" className="bg-blue-500 hover:bg-blue-600" onClick={assignRole}>
-												Selecionar
-											</Button>
+											{hasPermission(role, "roles_management", "read") && (
+												<Select onValueChange={handleSelectChange} value={selectedRole}>
+													<SelectTrigger className="outline-none border border-[#2a2a2a] rounded px-2 py-1">
+														<SelectValue placeholder={user.role ? user.role.roleName : "Atribua um cargo"} />
+													</SelectTrigger>
+													<SelectContent>
+														<SelectItem value="none">Nenhum</SelectItem>
+														{roles.map((role) => (
+															<SelectItem key={role.id} value={role.id}>
+																{role.roleName}
+															</SelectItem>
+														))}
+													</SelectContent>
+												</Select>
+											)}
+											{hasPermission(role, "roles_management", "update") && (
+												<Button variant="default" className="bg-blue-500 hover:bg-blue-600" onClick={assignRole}>
+													Selecionar
+												</Button>
+											)}
 										</div>
 									</CardContent>
 								</Card>

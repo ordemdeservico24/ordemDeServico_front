@@ -10,6 +10,8 @@ import { IPrimaryGroup, ISecondaryGroup } from "@/interfaces/company.interface";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "react-toastify";
+import { hasPermission } from "@/utils/hasPermissions";
+import { useStore } from "@/zustandStore";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 export default function SecondaryGroupsPage() {
 	const token = getCookie("access_token");
@@ -18,6 +20,7 @@ export default function SecondaryGroupsPage() {
 	const [primary, setPrimary] = useState<IPrimaryGroup | string>("");
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const { role = [] } = useStore();
 
 	useEffect(() => {
 		const fetchSecondaryGroups = async () => {
@@ -158,42 +161,48 @@ export default function SecondaryGroupsPage() {
 									<CardTitle className="text-[#3b82f6] text-2xl font-bold">Cidades</CardTitle>
 									<CardDescription>Veja todas as cidades cadastradas e informações adicionais.</CardDescription>
 								</div>
-								<Dialog>
-									<DialogTrigger asChild>
-										<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
-											Adicionar Cidade
-										</Button>
-									</DialogTrigger>
-									<DialogContent className="sm:max-w-[425px]">
-										<DialogHeader>
-											<DialogTitle>Adicionar nova cidade</DialogTitle>
-											<DialogDescription>Adicione uma nova cidade para cadastras novos distritos a ela</DialogDescription>
-										</DialogHeader>
-										<form action="#" onSubmit={(e) => handleAddCity(e)} className=" flex flex-col justify-center items-center">
-											<div className="flex gap-3 flex-col items-center max-w-96 w-full">
-												<Select onValueChange={handleSelectChangePrimary}>
-													<SelectTrigger className="outline-none border border-[#2a2a2a] rounded px-2 py-1">
-														<SelectValue placeholder="Escolha o estado da cidade" />
-													</SelectTrigger>
-													<SelectContent>
-														{primaryGroups?.map((primary) => (
-															<SelectItem key={primary.id} value={primary.id || ""}>
-																{primary.stateName}
-															</SelectItem>
-														))}
-													</SelectContent>
-												</Select>
-												<Input type="text" name="cityName" placeholder="Nome da Cidade" className="w-full" />
-												<Button
-													className=" text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
-													type="submit"
-												>
-													Criar Cidade
-												</Button>
-											</div>
-										</form>
-									</DialogContent>
-								</Dialog>
+								{hasPermission(role, "admin_management", "create") && (
+									<Dialog>
+										<DialogTrigger asChild>
+											<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
+												Adicionar Cidade
+											</Button>
+										</DialogTrigger>
+										<DialogContent className="sm:max-w-[425px]">
+											<DialogHeader>
+												<DialogTitle>Adicionar nova cidade</DialogTitle>
+												<DialogDescription>Adicione uma nova cidade para cadastras novos distritos a ela</DialogDescription>
+											</DialogHeader>
+											<form
+												action="#"
+												onSubmit={(e) => handleAddCity(e)}
+												className=" flex flex-col justify-center items-center"
+											>
+												<div className="flex gap-3 flex-col items-center max-w-96 w-full">
+													<Select onValueChange={handleSelectChangePrimary}>
+														<SelectTrigger className="outline-none border border-[#2a2a2a] rounded px-2 py-1">
+															<SelectValue placeholder="Escolha o estado da cidade" />
+														</SelectTrigger>
+														<SelectContent>
+															{primaryGroups?.map((primary) => (
+																<SelectItem key={primary.id} value={primary.id || ""}>
+																	{primary.stateName}
+																</SelectItem>
+															))}
+														</SelectContent>
+													</Select>
+													<Input type="text" name="cityName" placeholder="Nome da Cidade" className="w-full" />
+													<Button
+														className=" text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
+														type="submit"
+													>
+														Criar Cidade
+													</Button>
+												</div>
+											</form>
+										</DialogContent>
+									</Dialog>
+								)}
 							</div>
 						</CardHeader>
 						<div>

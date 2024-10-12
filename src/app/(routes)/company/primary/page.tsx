@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "react-toastify";
 import { useStore } from "@/zustandStore";
 import { IUser } from "@/interfaces/user.interface";
+import { hasPermission } from "@/utils/hasPermissions";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 export default function PrimaryGroupsPage() {
 	const token = getCookie("access_token");
@@ -18,7 +19,7 @@ export default function PrimaryGroupsPage() {
 	const [user, setUser] = useState<IUser | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
-	const { userId } = useStore();
+	const { userId, role = [] } = useStore();
 
 	useEffect(() => {
 		const fetchPrimaryGroups = async () => {
@@ -155,30 +156,36 @@ export default function PrimaryGroupsPage() {
 									<CardTitle className="text-[#3b82f6] text-2xl font-bold">Estados</CardTitle>
 									<CardDescription>Veja os estados em que sua empresa está atuando.</CardDescription>
 								</div>
-								<Dialog>
-									<DialogTrigger asChild>
-										<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
-											Adicionar Novo Estado
-										</Button>
-									</DialogTrigger>
-									<DialogContent className="sm:max-w-[425px]">
-										<DialogHeader>
-											<DialogTitle>Adicionar nova cidade</DialogTitle>
-											<DialogDescription>Adicione uma nova cidade para cadastras novos distritos a ela</DialogDescription>
-										</DialogHeader>
-										<form action="#" onSubmit={(e) => handleAddState(e)} className=" flex flex-col justify-center items-center">
-											<div className="flex gap-3 flex-col items-center max-w-96 w-full">
-												<Input type="text" name="stateName" placeholder="Nome do Estado" className="w-full" />
-												<Button
-													className=" text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
-													type="submit"
-												>
-													Adicionar Estado
-												</Button>
-											</div>
-										</form>
-									</DialogContent>
-								</Dialog>
+								{hasPermission(role, "admin_management", "create") && (
+									<Dialog>
+										<DialogTrigger asChild>
+											<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
+												Adicionar Novo Estado
+											</Button>
+										</DialogTrigger>
+										<DialogContent className="sm:max-w-[425px]">
+											<DialogHeader>
+												<DialogTitle>Adicionar nova cidade</DialogTitle>
+												<DialogDescription>Adicione uma nova cidade para cadastras novos distritos a ela</DialogDescription>
+											</DialogHeader>
+											<form
+												action="#"
+												onSubmit={(e) => handleAddState(e)}
+												className=" flex flex-col justify-center items-center"
+											>
+												<div className="flex gap-3 flex-col items-center max-w-96 w-full">
+													<Input type="text" name="stateName" placeholder="Nome do Estado" className="w-full" />
+													<Button
+														className=" text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
+														type="submit"
+													>
+														Adicionar Estado
+													</Button>
+												</div>
+											</form>
+										</DialogContent>
+									</Dialog>
+								)}
 							</div>
 						</CardHeader>
 						<div>

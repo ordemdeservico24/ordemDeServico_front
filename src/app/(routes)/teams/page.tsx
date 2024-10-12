@@ -14,6 +14,7 @@ import { getCookie } from "cookies-next";
 import { ICreateTeam } from "@/interfaces/create-team-request/createTeam.interface";
 import { useStore } from "@/zustandStore";
 import { hasPermission } from "@/utils/hasPermissions";
+import { FiTrash } from "react-icons/fi";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function Page() {
@@ -113,6 +114,30 @@ export default function Page() {
 	}, [token]);
 
 	const availableLeaders = Array.isArray(leaders) ? leaders.filter((leader) => !leader.teamId) : [];
+
+	const handleDelete = async (id: string) => {
+		try {
+			const response = await fetch(`${BASE_URL}/team/delete-team/${id}`, {
+				method: "DELETE",
+				headers: {
+					"Content-type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+			});
+
+			if (response.ok) {
+				toast.success("Equipe excluída com sucesso!");
+				setTimeout(() => {
+					window.location.reload();
+				}, 1500);
+			} else {
+				toast.error("Ocorreu um erro ao excluir a equipe.");
+			}
+		} catch (error) {
+			console.error("Erro ao deletar equipe:", error);
+			toast.error("Erro ao excluir o equipe.");
+		}
+	};
 
 	return (
 		<Container className="overflow-x-auto">
@@ -221,7 +246,6 @@ export default function Page() {
 																key={index}
 																className="cursor-pointer hover:bg-gray-100 whitespace-nowrap"
 																style={{ cursor: "pointer" }}
-																onClick={() => router.push(`/teams/${team.id}`)}
 															>
 																<TableCell
 																	style={{ cursor: "pointer" }}
@@ -263,6 +287,40 @@ export default function Page() {
 																		"read"
 																	) && <span className="block w-full h-full">{team.members.length}</span>}
 																</TableCell>
+																{hasPermission(role, "teams_management", "delete") && (
+																	<TableCell>
+																		<Dialog>
+																			<DialogTrigger asChild>
+																				<Button variant="ghost">
+																					<FiTrash className="text-red-500 hover:text-red-700" size={20} />
+																				</Button>
+																			</DialogTrigger>
+																			<DialogContent className="sm:max-w-[425px]">
+																				<DialogHeader>
+																					<DialogTitle>Excluir Líder</DialogTitle>
+																					<DialogDescription>
+																						Tem certeza que deseja excluir a equipe <b>{team.teamName}</b>
+																						? Esta ação não poderá ser desfeita.
+																					</DialogDescription>
+																				</DialogHeader>
+																				<div className="flex justify-end space-x-4">
+																					<Button
+																						variant="outline"
+																						onClick={() => console.log("Cancelado")}
+																					>
+																						Cancelar
+																					</Button>
+																					<Button
+																						variant="destructive"
+																						onClick={() => handleDelete(team.id)}
+																					>
+																						Confirmar Exclusão
+																					</Button>
+																				</div>
+																			</DialogContent>
+																		</Dialog>
+																	</TableCell>
+																)}
 															</TableRow>
 														))}
 													</TableBody>

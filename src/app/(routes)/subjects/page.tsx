@@ -6,10 +6,13 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@
 import { toast } from "react-toastify";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { getCookie } from "cookies-next";
 import { z } from "zod";
 import { hasPermission } from "@/utils/hasPermissions";
 import { useStore } from "@/zustandStore";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const subjectSchema = z.object({
@@ -131,7 +134,40 @@ export default function Page() {
 									<CardTitle className="text-[#3b82f6] text-2xl font-bold">Categorias</CardTitle>
 									<CardDescription>Cheque todas as informações relacionado as categorias apresentadas.</CardDescription>
 									<div className="flex items-center gap-3 justify-between">
-										{hasPermission(role, "orders_management", "create")}
+										{hasPermission(role, "orders_management", "create") && (
+											<Dialog>
+												<DialogTrigger asChild>
+													<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
+														Criar
+													</Button>
+												</DialogTrigger>
+												<DialogContent className="sm:max-w-[425px]">
+													<DialogHeader>
+														<DialogTitle>Criar categoria</DialogTitle>
+														<DialogDescription>
+															Adicione uma nova categoria e seu prazo nos campos abaixo.
+														</DialogDescription>
+													</DialogHeader>
+													<form action="#" onSubmit={onSubmit} className="flex flex-col justify-center items-center">
+														<div className="flex flex-col items-center max-w-96 w-full">
+															<Input type="text" name="name" placeholder="Nome da categoria" className="w-full my-2" />
+															<Input
+																type="number"
+																name="expirationDays"
+																placeholder="Dias de prazo"
+																className="w-full"
+															/>
+															<Button
+																className="font-medium rounded my-4 px-12 py-2 hover:-translate-y-1 transition-all w-full bg-blue-500 hover:bg-blue-600"
+																type="submit"
+															>
+																Criar
+															</Button>
+														</div>
+													</form>
+												</DialogContent>
+											</Dialog>
+										)}
 									</div>
 								</CardHeader>
 								<div className="p-3">

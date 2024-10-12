@@ -97,7 +97,7 @@ export default function Page({ params }: { params: { id: string } }) {
 								</CardHeader>
 								<CardContent className="space-y-6">
 									<div className="mt-5">
-										<h2 className="font-medium text-xl text-gray-800">{order.subject.name}</h2>
+										<h2 className="font-medium text-xl text-gray-800">{order.subject ? order.subject.name : "Não possui"}</h2>
 										<div className="flex justify-between items-center">
 											<p className="text-gray-600 text-sm max-w-md">{order.notes}</p>
 											{hasPermission(role, ["orders_management", "teams_management"], "update") && (

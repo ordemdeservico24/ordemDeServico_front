@@ -26,7 +26,7 @@ export default function Page({ params }: { params: { id: string } }) {
 		})
 			.then((res) => res.json())
 			.then((data) => {
-				console.log("Resposta da API:", data);
+				// console.log("Resposta da API:", data);
 				if (!data) {
 					toast.error("Ocorreu um erro");
 				}
@@ -34,7 +34,8 @@ export default function Page({ params }: { params: { id: string } }) {
 			})
 			.catch((error) => {
 				console.error("Erro ao buscar usuários:", error);
-			}).finally(() => {
+			})
+			.finally(() => {
 				setIsLoading(false);
 			});
 	}, [token, params.id]);
@@ -42,7 +43,7 @@ export default function Page({ params }: { params: { id: string } }) {
 	return (
 		<Container className="p-4">
 			<main className="grid flex-1 items-start gap-8 sm:px-6 sm:py-0 md:gap-12">
-			{isLoading ? (
+				{isLoading ? (
 					<div className="flex justify-center items-center">
 						<svg
 							className="h-8 w-8 animate-spin text-gray-600 mx-auto"
@@ -60,89 +61,89 @@ export default function Page({ params }: { params: { id: string } }) {
 						</svg>
 					</div>
 				) : (
-				<>
-					{role ? (
 					<>
-						<Card className="shadow-lg border border-gray-200 rounded-lg overflow-hidden">
-							<CardHeader className="bg-white p-4 flex flex-row-reverse justify-between items-center">
-								<Link href="/roles">
-									<Button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded">Voltar</Button>
-								</Link>
-								<h1 className="text-2xl font-semibold">Cargo - {role.roleName}</h1>
-							</CardHeader>
-							<CardContent className="p-6 space-y-2">
-								<div className="border-b border-gray-300 pb-4 mb-4">
-									<h2 className="text-xl font-semibold mb-4">Dados do Cargo</h2>
-									<div className="space-y-2">
-										<p className="text-gray-700">
-											<strong className="font-medium">Nome:</strong> {role.roleName}
-										</p>
-										<p className="text-gray-700">
-											<strong className="font-medium">Abrangência:</strong>{" "}
-											{role.roleLevel === "primary" ? "Empresa" : "Distrito"}
-										</p>
-										<p className="text-gray-700">
-											<strong className="font-medium">Usuários com esse cargo:</strong> {role.users?.length}
-										</p>
-									</div>
-								</div>
-							</CardContent>
-							<CardContent className="px-6 space-y-2">
-								<div className="border-b border-gray-300 pb-4 mb-4">
-									<h2 className="text-xl text-center font-semibold mb-4">Recursos e Permissões</h2>
-									{role?.permissions.map((permission, index) => (
-										<div key={index} className="flex gap-4 mb-4 md:mb-8">
-											<span className=" text-xs sm:text-sm lg:text-base w-full">{permission.resourceLabel}</span>
-											<ul className="list-none flex gap-2 md:gap-4">
-												<li className="rounded text-xs capitalize hover:cursor-pointer " title="Criar">
-													<PlusIcon
-														className={
-															permission.operations.includes("create")
-																? "opacity-100 size-4 md:size-5"
-																: "opacity-20 size-4 md:size-5"
-														}
-													/>
-												</li>
-												<li className="rounded text-xs capitalize hover:cursor-pointer " title="Criar">
-													<EyeIcon
-														className={
-															permission.operations.includes("read")
-																? "opacity-100 size-4 md:size-5"
-																: "opacity-20 size-4 md:size-5"
-														}
-													/>
-												</li>
-												<li className="rounded text-xs capitalize hover:cursor-pointer " title="Criar">
-													<EditIcon
-														className={
-															permission.operations.includes("update")
-																? "opacity-100 size-4 md:size-5"
-																: "opacity-20 size-4 md:size-5"
-														}
-													/>
-												</li>
-												<li className="rounded text-xs capitalize hover:cursor-pointer " title="Criar">
-													<TrashIcon
-														className={
-															permission.operations.includes("delete")
-																? "opacity-100 size-4 md:size-5"
-																: "opacity-20 size-4 md:size-5"
-														}
-													/>
-												</li>
-											</ul>
+						{role ? (
+							<>
+								<Card className="shadow-lg border border-gray-200 rounded-lg overflow-hidden">
+									<CardHeader className="bg-white p-4 flex flex-row-reverse justify-between items-center">
+										<Link href="/roles">
+											<Button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded">Voltar</Button>
+										</Link>
+										<h1 className="text-2xl font-semibold">Cargo - {role.roleName}</h1>
+									</CardHeader>
+									<CardContent className="p-6 space-y-2">
+										<div className="border-b border-gray-300 pb-4 mb-4">
+											<h2 className="text-xl font-semibold mb-4">Dados do Cargo</h2>
+											<div className="space-y-2">
+												<p className="text-gray-700">
+													<strong className="font-medium">Nome:</strong> {role.roleName}
+												</p>
+												<p className="text-gray-700">
+													<strong className="font-medium">Abrangência:</strong>{" "}
+													{role.roleLevel === "primary" ? "Empresa" : "Distrito"}
+												</p>
+												<p className="text-gray-700">
+													<strong className="font-medium">Usuários com esse cargo:</strong> {role.users?.length}
+												</p>
+											</div>
 										</div>
-									))}
-								</div>
-							</CardContent>
-						</Card>
-					</>
+									</CardContent>
+									<CardContent className="px-6 space-y-2">
+										<div className="border-b border-gray-300 pb-4 mb-4">
+											<h2 className="text-xl text-center font-semibold mb-4">Recursos e Permissões</h2>
+											{role?.permissions.map((permission, index) => (
+												<div key={index} className="flex gap-4 mb-4 md:mb-8">
+													<span className=" text-xs sm:text-sm lg:text-base w-full">{permission.resourceLabel}</span>
+													<ul className="list-none flex gap-2 md:gap-4">
+														<li className="rounded text-xs capitalize hover:cursor-pointer " title="Criar">
+															<PlusIcon
+																className={
+																	permission.operations.includes("create")
+																		? "opacity-100 size-4 md:size-5"
+																		: "opacity-20 size-4 md:size-5"
+																}
+															/>
+														</li>
+														<li className="rounded text-xs capitalize hover:cursor-pointer " title="Ver">
+															<EyeIcon
+																className={
+																	permission.operations.includes("read")
+																		? "opacity-100 size-4 md:size-5"
+																		: "opacity-20 size-4 md:size-5"
+																}
+															/>
+														</li>
+														<li className="rounded text-xs capitalize hover:cursor-pointer " title="Editar">
+															<EditIcon
+																className={
+																	permission.operations.includes("update")
+																		? "opacity-100 size-4 md:size-5"
+																		: "opacity-20 size-4 md:size-5"
+																}
+															/>
+														</li>
+														<li className="rounded text-xs capitalize hover:cursor-pointer " title="Deletar">
+															<TrashIcon
+																className={
+																	permission.operations.includes("delete")
+																		? "opacity-100 size-4 md:size-5"
+																		: "opacity-20 size-4 md:size-5"
+																}
+															/>
+														</li>
+													</ul>
+												</div>
+											))}
+										</div>
+									</CardContent>
+								</Card>
+							</>
 						) : (
-					<div className="text-center mt-10">
-						<h1 className="text-xl font-bold text-gray-700">Não há cargo com este id</h1>
-					</div>
-					)}		
-				</>
+							<div className="text-center mt-10">
+								<h1 className="text-xl font-bold text-gray-700">Não há cargo com este id</h1>
+							</div>
+						)}
+					</>
 				)}
 			</main>
 		</Container>

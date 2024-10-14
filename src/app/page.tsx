@@ -42,7 +42,7 @@ export default function Page() {
 	const onSubmit = async (data: any) => {
 		try {
 			const response = await axios.post(`${BASE_URL}/user/login`, data);
-			console.log("Login successful:", response.data);
+			// console.log("Login successful:", response.data);
 
 			const { token, userName, role, userId, teamId, roleLevel } = response.data;
 
@@ -64,9 +64,9 @@ export default function Page() {
 			if (roleLevel) {
 				setRoleLevel(roleLevel);
 			}
-			console.log("Login token:", token);
-			console.log("User role:", role);
-			console.log("User roleLevel:", roleLevel);
+			// console.log("Login token:", token);
+			// console.log("User role:", role);
+			// console.log("User roleLevel:", roleLevel);
 
 			router.push("/home");
 		} catch (error) {

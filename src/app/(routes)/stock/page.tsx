@@ -14,8 +14,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 import { IStockItem, ISupplier } from "@/interfaces/stock.interface";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MoneyFormatter from "@/components/formatMoneyValues";
-import { withMask } from 'use-mask-input';
-
+import { withMask } from "use-mask-input";
 
 const stockItemSchema = z.object({
 	productName: z.string().min(1, "Nome do produto é obrigatório"),
@@ -125,7 +124,6 @@ export default function StoragePage() {
 		}
 
 		const validation = stockItemSchema.safeParse(formData);
-		console.log(validation);
 
 		if (!validation.success) {
 			validation.error.errors.forEach((err) => toast.error(err.message));
@@ -373,7 +371,14 @@ export default function StoragePage() {
 																className="w-full"
 															/>
 															<Input type="email" name="email" placeholder="E-mail" required className="w-full" />
-															<Input type="tel" ref={withMask('(99) 99999-9999')} name="phone" placeholder="Telefone" required className="w-full" />
+															<Input
+																type="tel"
+																ref={withMask("(99) 99999-9999")}
+																name="phone"
+																placeholder="Telefone"
+																required
+																className="w-full"
+															/>
 															<Button
 																className="font-medium rounded my-4 px-12 py-2 hover:-translate-y-1 transition-all w-full bg-blue-500 hover:bg-blue-600"
 																type="submit"

@@ -37,7 +37,7 @@ export default function Page() {
 				return res.json().then((data) => ({ status, data }));
 			})
 			.then(({ status, data }) => {
-				console.log(status, data);
+				// console.log(status, data);
 				setOrderStatus(data);
 				setIsLoading(false);
 			})
@@ -81,7 +81,7 @@ export default function Page() {
 					throw new Error("Erro ao criar o status.");
 				})
 				.then((data) => {
-					console.log(data);
+					// console.log(data);
 				})
 				.catch((error) => {
 					console.log(error);
@@ -135,43 +135,54 @@ export default function Page() {
 											<CardDescription>Veja todos os status disponíveis para as ordens de serviço.</CardDescription>
 										</div>
 										<div>
-										{hasPermission(role, "orders_management", "create") && (
-									<Dialog>
-										<DialogTrigger asChild>
-											<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
-												Criar Status
-											</Button>
-										</DialogTrigger>
-										<DialogContent className="sm:max-w-[425px]">
-											<DialogHeader>
-												<DialogTitle>Adicionar Status</DialogTitle>
-												<DialogDescription>Adicione um status para utilizar nas ordens de serviço.</DialogDescription>
-											</DialogHeader>
-											<form action="#" onSubmit={(e) => onSubmit(e)} className=" flex flex-col justify-center items-center">
-												<div className="flex gap-3 flex-col items-center max-w-96 w-full">
-													<Input type="text" name="orderStatusName" placeholder="Nome do  status" className="w-full" />
-													<Select onValueChange={handleSelectOrderStatusChange} value={selectedStatus}>
-														<SelectTrigger className="outline-none border border-[#2a2a2a] rounded px-2 py-1">
-															<SelectValue placeholder="Selecione uma ação" />
-														</SelectTrigger>
-														<SelectContent>
-															<SelectItem value="open">Aberto</SelectItem>
-															<SelectItem value="inProgress">Em andamento</SelectItem>
-															<SelectItem value="review">Em revisão</SelectItem>
-															<SelectItem value="finish">Finalizada</SelectItem>
-														</SelectContent>
-													</Select>
-													<Button
-														className=" text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
-														type="submit"
-													>
-														Criar
-													</Button>
-												</div>
-											</form>
-										</DialogContent>
-									</Dialog>
-								)}	
+											{hasPermission(role, "orders_management", "create") && (
+												<Dialog>
+													<DialogTrigger asChild>
+														<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
+															Criar Status
+														</Button>
+													</DialogTrigger>
+													<DialogContent className="sm:max-w-[425px]">
+														<DialogHeader>
+															<DialogTitle>Adicionar Status</DialogTitle>
+															<DialogDescription>
+																Adicione um status para utilizar nas ordens de serviço.
+															</DialogDescription>
+														</DialogHeader>
+														<form
+															action="#"
+															onSubmit={(e) => onSubmit(e)}
+															className=" flex flex-col justify-center items-center"
+														>
+															<div className="flex gap-3 flex-col items-center max-w-96 w-full">
+																<Input
+																	type="text"
+																	name="orderStatusName"
+																	placeholder="Nome do  status"
+																	className="w-full"
+																/>
+																<Select onValueChange={handleSelectOrderStatusChange} value={selectedStatus}>
+																	<SelectTrigger className="outline-none border border-[#2a2a2a] rounded px-2 py-1">
+																		<SelectValue placeholder="Selecione uma ação" />
+																	</SelectTrigger>
+																	<SelectContent>
+																		<SelectItem value="open">Aberto</SelectItem>
+																		<SelectItem value="inProgress">Em andamento</SelectItem>
+																		<SelectItem value="review">Em revisão</SelectItem>
+																		<SelectItem value="finish">Finalizada</SelectItem>
+																	</SelectContent>
+																</Select>
+																<Button
+																	className=" text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
+																	type="submit"
+																>
+																	Criar
+																</Button>
+															</div>
+														</form>
+													</DialogContent>
+												</Dialog>
+											)}
 										</div>
 									</div>
 								</CardHeader>

@@ -15,7 +15,7 @@ import { useStore } from "../../../../zustandStore";
 import { EyeIcon, EyeOffIcon, Loader } from "lucide-react";
 import { useState } from "react";
 import { useHookFormMask } from "use-mask-input";
-import { toast } from "react-toastify"
+import { toast } from "react-toastify";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 interface FormData {
@@ -103,7 +103,7 @@ export default function Page() {
 				roleLevel: result.roleLevel,
 			});
 
-			console.log("User created:", result);
+			// console.log("User created:", result);
 			router.push("/");
 		} catch (error) {
 			console.error("Error creating user:", error);

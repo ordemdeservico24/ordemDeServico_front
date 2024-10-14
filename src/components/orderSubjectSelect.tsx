@@ -1,43 +1,32 @@
 import { ISubject } from "@/interfaces/subject.interface";
 import React, { useEffect, useState } from "react";
-import { getCookie } from 'cookies-next';
-export const OrderSubjectSelect: React.FC<ISubject> = ({
-	name,
-	id,
-	expirationDays,
-	value,
-}) => {
+import { getCookie } from "cookies-next";
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+export const OrderSubjectSelect: React.FC<ISubject> = ({ name, id, expirationDays, value }) => {
 	const [subjects, setSubjects] = useState<ISubject[]>();
-	const token = getCookie('access_token');
+	const token = getCookie("access_token");
 
 	useEffect(() => {
-		fetch(
-			`https://ordemdeservicosdev.onrender.com/api/order/get-all-subjects/`,
-			{
-				method: "GET",
-				headers: {
-					"Content-type": "application/json",
-					Authorization: `Bearer ${token}`,
-				},
-			}
-		)
+		fetch(`${BASE_URL}/order/get-all-subjects/`, {
+			method: "GET",
+			headers: {
+				"Content-type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+		})
 			.then((res) => {
 				const status = res.status;
 				return res.json().then((data) => ({ status, data }));
 			})
 			.then(({ status, data }) => {
-				console.log(status, data);
+				// console.log(status, data);
 				setSubjects(data);
 			});
 	}, [token]);
 
 	return (
 		<>
-			<select
-				name="subjectId"
-				id="subjectId"
-				className="outline-none border border-[#2a2a2a] rounded px-2 py-1 mb-4"
-			>
+			<select name="subjectId" id="subjectId" className="outline-none border border-[#2a2a2a] rounded px-2 py-1 mb-4">
 				<option value={id}>
 					{name} ({expirationDays} dias de prazo)
 				</option>
@@ -45,8 +34,7 @@ export const OrderSubjectSelect: React.FC<ISubject> = ({
 					?.filter((subject) => subject.id !== id)
 					.map((subject, index) => (
 						<option value={subject.id} key={index}>
-							{subject.name} ({subject.expirationDays} dias de
-							prazo)
+							{subject.name} ({subject.expirationDays} dias de prazo)
 						</option>
 					))}
 			</select>

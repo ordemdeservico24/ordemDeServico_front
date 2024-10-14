@@ -69,7 +69,7 @@ export default function Page() {
 				return res.json().then((data) => ({ status, data }));
 			})
 			.then(({ status, data }) => {
-				console.log(status, data);
+				// console.log(status, data);
 				setSubjects(data);
 			})
 			.catch((error) => {
@@ -87,7 +87,7 @@ export default function Page() {
 				return res.json().then((data) => ({ status, data }));
 			})
 			.then(({ status, data }) => {
-				console.log(status, data);
+				// console.log(status, data);
 				setOrderStatus(data);
 			})
 			.catch((error) => {
@@ -114,16 +114,13 @@ export default function Page() {
 			const filterParam = selectedFilter ? `&status=${selectedFilter}` : "";
 			const searchQuery = searchText ? `&search=${searchText}` : "";
 
-			const response = await fetch(
-				`${BASE_URL}/order/get-all-orders?limit=${limit}&offset=${offset}${filterParam}${searchQuery}`,
-				{
-					method: "GET",
-					headers: {
-						"Content-type": "application/json",
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			);
+			const response = await fetch(`${BASE_URL}/order/get-all-orders?limit=${limit}&offset=${offset}${filterParam}${searchQuery}`, {
+				method: "GET",
+				headers: {
+					"Content-type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+			});
 
 			if (!response.ok) {
 				throw new Error(`HTTP error! status: ${response.status}`);
@@ -194,7 +191,7 @@ export default function Page() {
 					throw new Error("Erro ao criar a ordem.");
 				})
 				.then((data) => {
-					console.log(data);
+					// console.log(data);
 				})
 				.catch((error) => {
 					console.log(error);
@@ -382,13 +379,17 @@ export default function Page() {
 											<p className="text-gray-800 mb-2">{truncateNotes(order.notes, 100)}</p>
 										</div>
 										<div className="flex justify-between items-center">
-											{hasPermission(role, ["orders_management"], "update") && (
+											{hasPermission(role, ["orders_management"], "update") ? (
 												<OrderStatus
 													currentStatusId={order.orderStatus.id}
 													currentStatus={order.orderStatus.orderStatusName}
 													orderId={order.id}
 													statuses={orderStatus || []}
 												/>
+											) : (
+												<p className="py-2 px-4 rounded text-sm bg-[#3b82f6] text-white">
+													{order.orderStatus.orderStatusName}
+												</p>
 											)}
 											{hasPermission(role, ["orders_management"], "update") && (
 												<EditDeleteOrder orderId={order.id} subjects={subjects || []} orderStatus={orderStatus || []} />

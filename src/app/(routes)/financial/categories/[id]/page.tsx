@@ -35,7 +35,7 @@ export default function CategoryDetailPage() {
 				return;
 			}
 
-			console.log(`Buscando dados para a categoria com ID: ${id}`);
+			// console.log(`Buscando dados para a categoria com ID: ${id}`);
 
 			try {
 				const response = await fetch(`${BASE_URL}/finance/get-category/${id}`, {
@@ -46,14 +46,14 @@ export default function CategoryDetailPage() {
 					},
 				});
 
-				console.log(`Resposta da API: ${response.status}`);
+				// console.log(`Resposta da API: ${response.status}`);
 
 				if (!response.ok) {
 					throw new Error("Falha ao buscar detalhes da categoria.");
 				}
 
 				const data: FinancialCategoryItem = await response.json();
-				console.log("Dados recebidos:", data);
+				// console.log("Dados recebidos:", data);
 				setCategoryItem(data);
 			} catch (error) {
 				console.error("Erro ao buscar detalhes da categoria:", error);

@@ -13,6 +13,7 @@ import { getCookie } from "cookies-next";
 import { IUser } from "@/interfaces/user.interface";
 import { useStore } from "@/zustandStore";
 import { hasPermission } from "@/utils/hasPermissions";
+import { useRouter } from "next/navigation";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function Page() {
@@ -21,6 +22,7 @@ export default function Page() {
 	const token = getCookie("access_token");
 	const { role = [] } = useStore();
 	const [isLoading, setIsLoading] = useState(true);
+	const router = useRouter();
 
 	useEffect(() => {
 		setIsLoading(true);
@@ -106,6 +108,9 @@ export default function Page() {
 
 			if (response.ok) {
 				toast.success("Líder de equipe excluído com sucesso!");
+				setTimeout(() => {
+					router.push("/teams/leaders");
+				}, 1500);
 				setLeaders(leaders.filter((leader) => leader.id !== id));
 			} else {
 				toast.error("Ocorreu um erro ao excluir o líder de equipe.");

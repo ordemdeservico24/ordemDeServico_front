@@ -28,7 +28,7 @@ export default function Page({ params }: { params: { id: string } }) {
 				return res.json().then((data) => ({ status, data }));
 			})
 			.then(({ status, data }) => {
-				console.log(status, data);
+				// console.log(status, data);
 				setTeam(data);
 			})
 			.finally(() => {

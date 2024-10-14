@@ -12,6 +12,7 @@ import { Textarea } from "./ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ISubject } from "@/interfaces/subject.interface";
 import { Input } from "./ui/input";
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 interface OrderID {
 	orderId: string;
@@ -33,7 +34,7 @@ export const EditDeleteOrder: React.FC<OrderID> = ({ orderId, subjects, orderSta
 
 	useEffect(() => {
 		if (orderId) {
-			fetch(`https://ordemdeservicosdev.onrender.com/api/order/get-order/${orderId}`, {
+			fetch(`${BASE_URL}/order/get-order/${orderId}`, {
 				method: "GET",
 				headers: {
 					"Content-type": "application/json",
@@ -47,7 +48,7 @@ export const EditDeleteOrder: React.FC<OrderID> = ({ orderId, subjects, orderSta
 	}, [orderId, token]);
 
 	const handleDelete = async () => {
-		await fetch(`https://ordemdeservicosdev.onrender.com/api/order/delete-order/${orderId}`, {
+		await fetch(`${BASE_URL}/order/delete-order/${orderId}`, {
 			method: "DELETE",
 			headers: {
 				"Content-type": "application/json",

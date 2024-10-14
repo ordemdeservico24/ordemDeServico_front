@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
@@ -9,6 +9,8 @@ import { Label } from "@/components/ui/label";
 import { getCookie } from "cookies-next";
 import { IOrderStatus } from "@/interfaces/order.interface";
 import { IStockItem } from "@/interfaces/stock.interface";
+import { Textarea } from "./ui/textarea";
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 interface OrderStatusProps {
 	currentStatusId: string;
@@ -34,6 +36,7 @@ export const OrderStatus: React.FC<OrderStatusProps> = ({ currentStatusId, curre
 	const [searchTerm, setSearchTerm] = useState<string>("");
 	const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({});
 	const token = getCookie("access_token");
+	const descriptionRef = useRef<HTMLTextAreaElement | null>(null);
 
 	useEffect(() => {
 		if (isModalOpen) {
@@ -44,7 +47,7 @@ export const OrderStatus: React.FC<OrderStatusProps> = ({ currentStatusId, curre
 	const fetchItems = async () => {
 		try {
 			setIsLoading(true);
-			const response = await fetch("https://ordemdeservicosdev.onrender.com/api/storage/get-all-items", {
+			const response = await fetch(`${BASE_URL}/storage/get-all-items`, {
 				headers: {
 					"Content-Type": "application/json",
 					Authorization: `Bearer ${token}`,
@@ -54,7 +57,7 @@ export const OrderStatus: React.FC<OrderStatusProps> = ({ currentStatusId, curre
 				throw new Error("Falha ao buscar itens do estoque");
 			}
 			const data = await response.json();
-			console.log("Items fetched:", data);
+			// console.log("Items fetched:", data);
 			setItems(data);
 		} catch (error) {
 			toast.error("Erro ao carregar itens do estoque");
@@ -97,9 +100,12 @@ export const OrderStatus: React.FC<OrderStatusProps> = ({ currentStatusId, curre
 
 		const preparedUsedItems = prepareUsedItems(usedItems);
 		formData.append("usedItems", JSON.stringify(preparedUsedItems));
+		if (descriptionRef.current) {
+			formData.append("description", descriptionRef.current.value);
+		}
 
 		toast.promise(
-			fetch(`https://ordemdeservicosdev.onrender.com/api/order/update-status/${orderId}`, {
+			fetch(`${BASE_URL}/order/update-status/${orderId}`, {
 				method: "PATCH",
 				headers: {
 					Authorization: `Bearer ${token}`,
@@ -113,7 +119,7 @@ export const OrderStatus: React.FC<OrderStatusProps> = ({ currentStatusId, curre
 					return res.json();
 				})
 				.then((data) => {
-					console.log(data);
+					// console.log(data);
 				}),
 			{
 				pending: "Atualizando status",
@@ -182,16 +188,15 @@ export const OrderStatus: React.FC<OrderStatusProps> = ({ currentStatusId, curre
 			toast.error("Quantidade inválida ou maior do que a disponível no estoque.");
 		}
 	};
-	console.log(usedItems);
 	const handleAddItem = (
 		itemId: string,
 		itemName: string,
 		quantityInputRef: React.RefObject<HTMLInputElement>,
 		measurementInputRef: React.RefObject<HTMLInputElement>
 	) => {
-		if (!quantityInputRef.current?.value || !measurementInputRef.current?.value) {
-			toast.error("Não é possível adicionar um item sem inserir o valor");
-		}
+		// if (!quantityInputRef.current?.value || !measurementInputRef.current?.value) {
+		// 	toast.error("Não é possível adicionar um item sem inserir o valor");
+		// }
 		const usedQuantity = Math.max(quantityInputRef.current?.valueAsNumber || 0, 0);
 		const usedMeasurement = Math.max(measurementInputRef.current?.valueAsNumber || 0, 0);
 		handleItemSelection(itemId, itemName, usedQuantity, usedMeasurement);
@@ -204,12 +209,12 @@ export const OrderStatus: React.FC<OrderStatusProps> = ({ currentStatusId, curre
 	};
 
 	const handleConfirmReview = () => {
-		if (selectedStatus && photo) {
+		if (selectedStatus) {
 			updateOrderStatus(selectedStatus.id);
 			setIsModalOpen(false);
 			setSelectedStatus(null);
 		} else {
-			toast.error("É obrigatório enviar uma foto para revisar a ordem");
+			toast.error("Ocorreu um erro");
 		}
 	};
 
@@ -299,11 +304,12 @@ export const OrderStatus: React.FC<OrderStatusProps> = ({ currentStatusId, curre
 											<Input
 												type="number"
 												ref={item.unitOfMeasurement === "unit" ? quantityInputRef : measurementInputRef}
-												className="w-20 border-[#0000007e]"
+												className="w-20 border-[#0000007e] px-1"
 												min="0"
 												step={item.unitOfMeasurement === "unit" ? "0" : "0.01"}
 												onChange={() => handleAddItem(item.id, item.productName, quantityInputRef, measurementInputRef)}
 												disabled={!checkedItems[item.id]}
+												placeholder="qtd saída"
 											/>
 											{/* <Button
 												variant="outline"
@@ -316,6 +322,7 @@ export const OrderStatus: React.FC<OrderStatusProps> = ({ currentStatusId, curre
 										</div>
 									);
 								})}
+								<Textarea name="description" placeholder="Descrição" ref={descriptionRef} className="border rounded px-2 py-1 my-4" />
 							</div>
 						)}
 					</div>

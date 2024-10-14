@@ -51,7 +51,7 @@ export default function UserPage({ params }: { params: { id: string } }) {
 			})
 				.then((res) => res.json())
 				.then((data) => {
-					console.log("Resposta da API:", data);
+					// console.log("Resposta da API:", data);
 					if (Array.isArray(data)) {
 						setRoles(data);
 					} else if (data && Array.isArray(data.users)) {
@@ -88,7 +88,7 @@ export default function UserPage({ params }: { params: { id: string } }) {
 					throw new Error("Falha ao atribuir cargo");
 				})
 				.then((data) => {
-					console.log(data);
+					// console.log(data);
 				})
 				.catch((error) => {
 					console.log(error);
@@ -134,7 +134,7 @@ export default function UserPage({ params }: { params: { id: string } }) {
 					throw new Error("Falha ao adicionar salário");
 				})
 				.then((data) => {
-					console.log(data);
+					// console.log(data);
 				})
 				.catch((error) => {
 					console.log(error);
@@ -300,7 +300,7 @@ export default function UserPage({ params }: { params: { id: string } }) {
 																}
 															/>
 														</li>
-														<li className="rounded text-sm capitalize hover:cursor-pointer " title="Criar">
+														<li className="rounded text-sm capitalize hover:cursor-pointer " title="Ver">
 															<EyeIcon
 																className={
 																	permission.operations.includes("read")
@@ -309,7 +309,7 @@ export default function UserPage({ params }: { params: { id: string } }) {
 																}
 															/>
 														</li>
-														<li className="rounded text-sm capitalize hover:cursor-pointer " title="Criar">
+														<li className="rounded text-sm capitalize hover:cursor-pointer " title="Editar">
 															<EditIcon
 																className={
 																	permission.operations.includes("update")
@@ -318,7 +318,7 @@ export default function UserPage({ params }: { params: { id: string } }) {
 																}
 															/>
 														</li>
-														<li className="rounded text-sm capitalize hover:cursor-pointer " title="Criar">
+														<li className="rounded text-sm capitalize hover:cursor-pointer " title="Deletar">
 															<TrashIcon
 																className={
 																	permission.operations.includes("delete")

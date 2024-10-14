@@ -5,6 +5,9 @@ import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getCookie } from "cookies-next";
+import { useStore } from "@/zustandStore";
+import { hasPermission } from "@/utils/hasPermissions";
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 interface Order {
 	orderId: string;
@@ -15,9 +18,10 @@ export const AssignTeam: React.FC<Order> = ({ orderId, teamName }) => {
 	const [teams, setTeams] = useState<ITeam[]>([]);
 	const [selectedTeam, setSelectedTeam] = useState<string>("");
 	const token = getCookie("access_token");
+	const { role = [] } = useStore();
 
 	useEffect(() => {
-		fetch("https://ordemdeservicosdev.onrender.com/api/team/get-all-teams", {
+		fetch(`${BASE_URL}/team/get-all-teams`, {
 			method: "GET",
 			headers: {
 				"Content-type": "application/json",
@@ -45,7 +49,7 @@ export const AssignTeam: React.FC<Order> = ({ orderId, teamName }) => {
 
 	const assignTeam = async () => {
 		toast.promise(
-			fetch(`https://ordemdeservicosdev.onrender.com/api/order/assign-team/${orderId}`, {
+			fetch(`${BASE_URL}/order/assign-team/${orderId}`, {
 				method: "PATCH",
 				headers: {
 					"Content-type": "application/json",
@@ -60,7 +64,7 @@ export const AssignTeam: React.FC<Order> = ({ orderId, teamName }) => {
 					throw new Error("Falha ao atribuir equipe");
 				})
 				.then((data) => {
-					console.log(data);
+					// console.log(data);
 				})
 				.catch((error) => {
 					console.log(error);
@@ -81,21 +85,25 @@ export const AssignTeam: React.FC<Order> = ({ orderId, teamName }) => {
 
 	return (
 		<div className="flex items-center space-x-4">
-			<Select onValueChange={handleSelectChange} value={selectedTeam}>
-				<SelectTrigger className="outline-none border border-[#2a2a2a] rounded px-2 py-1">
-					<SelectValue placeholder={teamName ? teamName : "Selecione uma equipe"} />
-				</SelectTrigger>
-				<SelectContent>
-					{teams.map((team) => (
-						<SelectItem key={team.id} value={team.id}>
-							{team.teamName}
-						</SelectItem>
-					))}
-				</SelectContent>
-			</Select>
-			<Button variant="default" className="bg-blue-500 hover:bg-blue-600" onClick={assignTeam}>
-				Selecionar
-			</Button>
+			{hasPermission(role, "teams_management", "update") && (
+				<>
+					<Select onValueChange={handleSelectChange} value={selectedTeam}>
+						<SelectTrigger className="outline-none border border-[#2a2a2a] rounded px-2 py-1">
+							<SelectValue placeholder={teamName ? teamName : "Selecione uma equipe"} />
+						</SelectTrigger>
+						<SelectContent>
+							{teams.map((team) => (
+								<SelectItem key={team.id} value={team.id}>
+									{team.teamName}
+								</SelectItem>
+							))}
+						</SelectContent>
+					</Select>
+					<Button variant="default" className="bg-blue-500 hover:bg-blue-600" onClick={assignTeam}>
+						Selecionar
+					</Button>
+				</>
+			)}
 		</div>
 	);
 };

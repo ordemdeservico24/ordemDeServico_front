@@ -350,48 +350,49 @@ export default function StoragePage() {
 														</form>
 													</DialogContent>
 												</Dialog>
-											<Dialog>
-												<DialogTrigger asChild>
-													<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
-														Adicionar Fornecedor
-													</Button>
-												</DialogTrigger>
-												<DialogContent className="sm:max-w-[425px]">
-													<DialogHeader>
-														<DialogTitle>Adicionar Fornecedor</DialogTitle>
-														<DialogDescription>
-															Preencha os campos abaixo para adicionar um novo fornecedor.
-														</DialogDescription>
-													</DialogHeader>
-													<form onSubmit={onSubmitSupplier} className="flex flex-col justify-center items-center">
-														<div className="flex flex-col items-center max-w-96 w-full space-y-4">
-															<Input
-																type="text"
-																name="name"
-																placeholder="Nome do fornecedor"
-																required
-																className="w-full"
-															/>
-															<Input type="email" name="email" placeholder="E-mail" required className="w-full" />
-															<Input
-																type="tel"
-																ref={withMask("(99) 99999-9999")}
-																name="phone"
-																placeholder="Telefone"
-																required
-																className="w-full"
-															/>
-															<Button
-																className="font-medium rounded my-4 px-12 py-2 hover:-translate-y-1 transition-all w-full bg-blue-500 hover:bg-blue-600"
-																type="submit"
-															>
-																Adicionar Fornecedor
-															</Button>
-														</div>
-													</form>
-												</DialogContent>
-											</Dialog>
-										</div>
+												<Dialog>
+													<DialogTrigger asChild>
+														<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
+															Adicionar Fornecedor
+														</Button>
+													</DialogTrigger>
+													<DialogContent className="sm:max-w-[425px]">
+														<DialogHeader>
+															<DialogTitle>Adicionar Fornecedor</DialogTitle>
+															<DialogDescription>
+																Preencha os campos abaixo para adicionar um novo fornecedor.
+															</DialogDescription>
+														</DialogHeader>
+														<form onSubmit={onSubmitSupplier} className="flex flex-col justify-center items-center">
+															<div className="flex flex-col items-center max-w-96 w-full space-y-4">
+																<Input
+																	type="text"
+																	name="name"
+																	placeholder="Nome do fornecedor"
+																	required
+																	className="w-full"
+																/>
+																<Input type="email" name="email" placeholder="E-mail" required className="w-full" />
+																<Input
+																	type="tel"
+																	ref={withMask("(99) 99999-9999")}
+																	name="phone"
+																	placeholder="Telefone"
+																	required
+																	className="w-full"
+																/>
+																<Button
+																	className="font-medium rounded my-4 px-12 py-2 hover:-translate-y-1 transition-all w-full bg-blue-500 hover:bg-blue-600"
+																	type="submit"
+																>
+																	Adicionar Fornecedor
+																</Button>
+															</div>
+														</form>
+													</DialogContent>
+												</Dialog>
+											</div>
+										)}
 									</div>
 								</CardHeader>
 								<div>

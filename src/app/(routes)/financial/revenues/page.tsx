@@ -13,6 +13,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { withMask } from "use-mask-input";
 import MoneyFormatter from "@/components/formatMoneyValues";
 import { toast } from "react-toastify";
+import { useStore } from "@/zustandStore";
+import { hasPermission } from "@/utils/hasPermissions";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function RevenuesPage() {
@@ -20,6 +22,7 @@ export default function RevenuesPage() {
 	const [error, setError] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 	const token = getCookie("access_token");
+	const { role = [] } = useStore();
 
 	useEffect(() => {
 		setIsLoading(true);
@@ -180,31 +183,33 @@ export default function RevenuesPage() {
 											<h1>
 												Total receitas: <MoneyFormatter value={revenues?.totalRevenue || 0} />
 											</h1>
-											<Dialog>
-												<DialogTrigger asChild>
-													<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
-														Criar item
-													</Button>
-												</DialogTrigger>
-												<DialogContent>
-													<DialogHeader>
-														<DialogTitle>Criar Item na Receita</DialogTitle>
-													</DialogHeader>
-													<form onSubmit={handleCreateItem} className="space-y-4">
-														<Input name="name" required placeholder="Nome" />
-														<Textarea name="description" placeholder="Descricão" />
-														<Input name="quantity" type="number" required placeholder="Quantidade" />
-														<Input name="value" type="number" step="0.01" placeholder="Valor" required />
-														<Input name="buyerName" required placeholder="Nome do Comprador" />
-														<Input name="cpf" placeholder="CPF" required ref={withMask("999.999.999-99")} />
-														<Input name="cnpj" placeholder="CNPJ" required ref={withMask("99.999.999/9999-99")} />
-														<Input name="phone" placeholder="Telefone" required ref={withMask("(99) 99999-9999")} />
-														<Button type="submit" variant="default" className="bg-blue-500 hover:bg-blue-600">
-															Salvar Item
+											{hasPermission(role, "admin_management", "create") && (
+												<Dialog>
+													<DialogTrigger asChild>
+														<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
+															Criar item
 														</Button>
-													</form>
-												</DialogContent>
-											</Dialog>
+													</DialogTrigger>
+													<DialogContent>
+														<DialogHeader>
+															<DialogTitle>Criar Item na Receita</DialogTitle>
+														</DialogHeader>
+														<form onSubmit={handleCreateItem} className="space-y-4">
+															<Input name="name" required placeholder="Nome" />
+															<Textarea name="description" placeholder="Descricão" />
+															<Input name="quantity" type="number" required placeholder="Quantidade" />
+															<Input name="value" type="number" step="0.01" placeholder="Valor" required />
+															<Input name="buyerName" required placeholder="Nome do Comprador" />
+															<Input name="cpf" placeholder="CPF" required ref={withMask("999.999.999-99")} />
+															<Input name="cnpj" placeholder="CNPJ" required ref={withMask("99.999.999/9999-99")} />
+															<Input name="phone" placeholder="Telefone" required ref={withMask("(99) 99999-9999")} />
+															<Button type="submit" variant="default" className="bg-blue-500 hover:bg-blue-600">
+																Salvar Item
+															</Button>
+														</form>
+													</DialogContent>
+												</Dialog>
+											)}
 										</div>
 									</div>
 								</CardHeader>

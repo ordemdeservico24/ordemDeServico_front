@@ -116,7 +116,7 @@ export const EditDeleteOrder: React.FC<OrderID> = ({ orderId, subjects, orderSta
 		};
 
 		toast.promise(
-			fetch(`https://ordemdeservicosdev.onrender.com/api/order/edit-order/${orderId}`, {
+			fetch(`${BASE_URL}/order/edit-order/${orderId}`, {
 				method: "PATCH",
 				headers: {
 					"Content-type": "application/json",

@@ -15,6 +15,8 @@ import { IStockItem, ISupplier } from "@/interfaces/stock.interface";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MoneyFormatter from "@/components/formatMoneyValues";
 import { withMask } from "use-mask-input";
+import { useStore } from "@/zustandStore";
+import { hasPermission } from "@/utils/hasPermissions";
 
 const stockItemSchema = z.object({
 	productName: z.string().min(1, "Nome do produto é obrigatório"),
@@ -38,6 +40,7 @@ export default function StoragePage() {
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const token = getCookie("access_token");
+	const { role = [] } = useStore();
 
 	useEffect(() => {
 		setIsLoading(true);
@@ -264,90 +267,89 @@ export default function StoragePage() {
 											<CardTitle className="text-[#3b82f6] text-2xl font-bold">Estoque</CardTitle>
 											<CardDescription>Cheque todas as informações relacionadas ao estoque.</CardDescription>
 										</div>
-
-										<div className="flex items-center gap-3">
-											<Dialog>
-												<DialogTrigger asChild>
-													<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
-														Adicionar Item
-													</Button>
-												</DialogTrigger>
-												<DialogContent className="sm:max-w-[425px]">
-													<DialogHeader>
-														<DialogTitle>Adicionar Item ao Estoque</DialogTitle>
-														<DialogDescription>
-															Preencha os campos abaixo para adicionar um novo item ao estoque.
-														</DialogDescription>
-													</DialogHeader>
-													<form onSubmit={onSubmitItem} className="flex flex-col justify-center items-center">
-														<div className="flex flex-col items-center max-w-96 w-full space-y-4">
-															<Input
-																type="text"
-																name="productName"
-																placeholder="Nome do produto"
-																required
-																className="w-full"
-															/>
-															<Input
-																type="number"
-																name="quantity"
-																placeholder="Quantidade"
-																required
-																className="w-full"
-															/>
-															<Select onValueChange={handleSelectUnitChange} value={selectedUnitMeasurement}>
-																<SelectTrigger className="outline-none border border-[#2a2a2a] rounded px-2 py-1">
-																	<SelectValue placeholder="Selecione uma Unidade de Medida" />
-																</SelectTrigger>
-																<SelectContent>
-																	<SelectItem value="unit">Unidade</SelectItem>
-																	<SelectItem value="meter">Metros</SelectItem>
-																	<SelectItem value="liter">Litros</SelectItem>
-																</SelectContent>
-															</Select>
-															{selectedUnitMeasurement === "meter" || selectedUnitMeasurement === "liter" ? (
+										{hasPermission(role, "admin_management", "update") && (
+											<div className="flex items-center gap-3">
+												<Dialog>
+													<DialogTrigger asChild>
+														<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
+															Adicionar Item
+														</Button>
+													</DialogTrigger>
+													<DialogContent className="sm:max-w-[425px]">
+														<DialogHeader>
+															<DialogTitle>Adicionar Item ao Estoque</DialogTitle>
+															<DialogDescription>
+																Preencha os campos abaixo para adicionar um novo item ao estoque.
+															</DialogDescription>
+														</DialogHeader>
+														<form onSubmit={onSubmitItem} className="flex flex-col justify-center items-center">
+															<div className="flex flex-col items-center max-w-96 w-full space-y-4">
 																<Input
-																	type="number"
-																	name="totalMeasurement"
-																	step="0.01"
-																	placeholder="Total de Medida"
+																	type="text"
+																	name="productName"
+																	placeholder="Nome do produto"
 																	required
 																	className="w-full"
 																/>
-															) : (
-																""
-															)}
-															<Input
-																type="number"
-																name="productValue"
-																step="0.01"
-																placeholder="Valor"
-																required
-																className="w-full"
-															/>
-															<Select onValueChange={handleSelectSupplierChange} value={selectedSupplier}>
-																<SelectTrigger className="outline-none border border-[#2a2a2a] rounded px-2 py-1">
-																	<SelectValue placeholder="Selecione um Fornecedor" />
-																</SelectTrigger>
-																<SelectContent>
-																	{suppliers.map((supplier) => (
-																		<SelectItem key={supplier.id} value={supplier.id}>
-																			{supplier.supplierName}
-																		</SelectItem>
-																	))}
-																</SelectContent>
-															</Select>
-															<Button
-																className="font-medium rounded my-4 px-12 py-2 hover:-translate-y-1 transition-all w-full bg-blue-500 hover:bg-blue-600"
-																type="submit"
-															>
-																Adicionar Item
-															</Button>
-														</div>
-													</form>
-												</DialogContent>
-											</Dialog>
-
+																<Input
+																	type="number"
+																	name="quantity"
+																	placeholder="Quantidade"
+																	required
+																	className="w-full"
+																/>
+																<Select onValueChange={handleSelectUnitChange} value={selectedUnitMeasurement}>
+																	<SelectTrigger className="outline-none border border-[#2a2a2a] rounded px-2 py-1">
+																		<SelectValue placeholder="Selecione uma Unidade de Medida" />
+																	</SelectTrigger>
+																	<SelectContent>
+																		<SelectItem value="unit">Unidade</SelectItem>
+																		<SelectItem value="meter">Metros</SelectItem>
+																		<SelectItem value="liter">Litros</SelectItem>
+																	</SelectContent>
+																</Select>
+																{selectedUnitMeasurement === "meter" || selectedUnitMeasurement === "liter" ? (
+																	<Input
+																		type="number"
+																		name="totalMeasurement"
+																		step="0.01"
+																		placeholder="Total de Medida"
+																		required
+																		className="w-full"
+																	/>
+																) : (
+																	""
+																)}
+																<Input
+																	type="number"
+																	name="productValue"
+																	step="0.01"
+																	placeholder="Valor"
+																	required
+																	className="w-full"
+																/>
+																<Select onValueChange={handleSelectSupplierChange} value={selectedSupplier}>
+																	<SelectTrigger className="outline-none border border-[#2a2a2a] rounded px-2 py-1">
+																		<SelectValue placeholder="Selecione um Fornecedor" />
+																	</SelectTrigger>
+																	<SelectContent>
+																		{suppliers.map((supplier) => (
+																			<SelectItem key={supplier.id} value={supplier.id}>
+																				{supplier.supplierName}
+																			</SelectItem>
+																		))}
+																	</SelectContent>
+																</Select>
+																<Button
+																	className="font-medium rounded my-4 px-12 py-2 hover:-translate-y-1 transition-all w-full bg-blue-500 hover:bg-blue-600"
+																	type="submit"
+																>
+																	Adicionar Item
+																</Button>
+															</div>
+														</form>
+													</DialogContent>
+												</Dialog>
 											<Dialog>
 												<DialogTrigger asChild>
 													<Button variant="default" className="bg-blue-500 hover:bg-blue-600">

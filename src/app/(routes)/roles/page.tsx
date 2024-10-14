@@ -9,6 +9,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { IRoleRequest } from "@/interfaces/create-role-request/createRole.interface";
 import { IRole, IRolePermission } from "@/interfaces/user.interface";
+import { hasPermission } from "@/utils/hasPermissions";
+import { useStore } from "@/zustandStore";
 import { getCookie } from "cookies-next";
 import { TrashIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -22,6 +24,7 @@ export default function Page() {
 	const [permissions, setPermissions] = useState<IRolePermission[]>([]);
 	const router = useRouter();
 	const [isLoading, setIsLoading] = useState(true);
+	const { role = [] } = useStore();
 
 	const addResource = (resource: string, resourceLabel: string) => {
 		setPermissions((prev) => {
@@ -203,94 +206,96 @@ export default function Page() {
 											<CardDescription>Cheque todas as informações relacionadas aos cargos de usuários.</CardDescription>
 										</div>
 										<div>
-											<Dialog>
-												<DialogTrigger asChild>
-													<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
-														Criar
-													</Button>
-												</DialogTrigger>
-												<DialogContent className="sm:max-w-fit">
-													<DialogHeader>
-														<DialogTitle>Criar cargo</DialogTitle>
-														<DialogDescription>Adicione as informações para criar um cargo.</DialogDescription>
-													</DialogHeader>
-													<form
-														action="#"
-														onSubmit={(e) => onSubmit(e)}
-														className="flex flex-col justify-center items-center"
-													>
-														<div className="flex gap-3 flex-col items-center max-w-full w-full">
-															<div className="flex flex-col md:flex-row max-h-fit md:max-h-12 gap-4 w-full">
-																<Input
-																	type="text"
-																	name="roleName"
-																	placeholder="Nome do cargo"
-																	className="w-full h-full"
-																/>
-																<select
-																	name="roleLevel"
-																	className="outline-none border focus:border-[#2a2a2a] rounded px-2 py-1 w-full h-full mb-1"
+											{hasPermission(role, "admin_management", "create") && (
+												<Dialog>
+													<DialogTrigger asChild>
+														<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
+															Criar
+														</Button>
+													</DialogTrigger>
+													<DialogContent className="sm:max-w-fit">
+														<DialogHeader>
+															<DialogTitle>Criar cargo</DialogTitle>
+															<DialogDescription>Adicione as informações para criar um cargo.</DialogDescription>
+														</DialogHeader>
+														<form
+															action="#"
+															onSubmit={(e) => onSubmit(e)}
+															className="flex flex-col justify-center items-center"
+														>
+															<div className="flex gap-3 flex-col items-center max-w-full w-full">
+																<div className="flex flex-col md:flex-row max-h-fit md:max-h-12 gap-4 w-full">
+																	<Input
+																		type="text"
+																		name="roleName"
+																		placeholder="Nome do cargo"
+																		className="w-full h-full"
+																	/>
+																	<select
+																		name="roleLevel"
+																		className="outline-none border focus:border-[#2a2a2a] rounded px-2 py-1 w-full h-full mb-1"
+																	>
+																		<option value="">Selecione a abrangência</option>
+																		<option value="primary">Empresa</option>
+																		<option value="tertiary">Distrito</option>
+																	</select>
+																</div>
+																<div className="w-full md:w-[600px] flex flex-col gap-4">
+																	<h1 className="text-left mb-1">Recursos:</h1>
+																	<InputCreateRole
+																		resource="orders_management"
+																		resourceLabel="Gestão em Ordens de Serviço"
+																		permissions={permissions}
+																		toggleOperation={toggleOperation}
+																		addResource={addResource}
+																	/>
+																	<InputCreateRole
+																		resource="teams_management"
+																		resourceLabel="Gestão em Equipes"
+																		permissions={permissions}
+																		toggleOperation={toggleOperation}
+																		addResource={addResource}
+																	/>
+																	<InputCreateRole
+																		resource="teamleader"
+																		resourceLabel="Líder de Equipe"
+																		permissions={permissions}
+																		toggleOperation={toggleOperation}
+																		addResource={addResource}
+																	/>
+																	<InputCreateRole
+																		resource="teammember"
+																		resourceLabel="Membro de equipe"
+																		permissions={permissions}
+																		toggleOperation={toggleOperation}
+																		addResource={addResource}
+																	/>
+																	<InputCreateRole
+																		resource="roles_management"
+																		resourceLabel="Gestão em Cargos"
+																		permissions={permissions}
+																		toggleOperation={toggleOperation}
+																		addResource={addResource}
+																	/>
+																	<InputCreateRole
+																		resource="admin_management"
+																		resourceLabel="Gestão Administrativa"
+																		permissions={permissions}
+																		toggleOperation={toggleOperation}
+																		addResource={addResource}
+																	/>
+																</div>
+																<Button
+																	className="text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
+																	type="submit"
 																>
-																	<option value="">Selecione a abrangência</option>
-																	<option value="primary">Empresa</option>
-																	<option value="tertiary">Distrito</option>
-																</select>
+																	Criar
+																</Button>
 															</div>
-															<div className="w-full md:w-[600px] flex flex-col gap-4">
-																<h1 className="text-left mb-1">Recursos:</h1>
-																<InputCreateRole
-																	resource="orders_management"
-																	resourceLabel="Gestão em Ordens de Serviço"
-																	permissions={permissions}
-																	toggleOperation={toggleOperation}
-																	addResource={addResource}
-																/>
-																<InputCreateRole
-																	resource="teams_management"
-																	resourceLabel="Gestão em Equipes"
-																	permissions={permissions}
-																	toggleOperation={toggleOperation}
-																	addResource={addResource}
-																/>
-																<InputCreateRole
-																	resource="teamleader"
-																	resourceLabel="Líder de Equipe"
-																	permissions={permissions}
-																	toggleOperation={toggleOperation}
-																	addResource={addResource}
-																/>
-																<InputCreateRole
-																	resource="teammember"
-																	resourceLabel="Membro de equipe"
-																	permissions={permissions}
-																	toggleOperation={toggleOperation}
-																	addResource={addResource}
-																/>
-																<InputCreateRole
-																	resource="roles_management"
-																	resourceLabel="Gestão em Cargos"
-																	permissions={permissions}
-																	toggleOperation={toggleOperation}
-																	addResource={addResource}
-																/>
-																<InputCreateRole
-																	resource="admin_management"
-																	resourceLabel="Gestão Administrativa"
-																	permissions={permissions}
-																	toggleOperation={toggleOperation}
-																	addResource={addResource}
-																/>
-															</div>
-															<Button
-																className="text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
-																type="submit"
-															>
-																Criar
-															</Button>
-														</div>
-													</form>
-												</DialogContent>
-											</Dialog>
+														</form>
+													</DialogContent>
+												</Dialog>
+											)}
 										</div>
 									</div>
 								</CardHeader>
@@ -309,20 +314,34 @@ export default function Page() {
 											<TableBody>
 												{roles &&
 													roles.length > 0 &&
-													roles.map((role, index) => (
+													roles.map((roleInfo, index) => (
 														<TableRow key={index} className="border-b">
-															<TableCell style={{ cursor: "pointer" }} onClick={() => router.push(`/roles/${role.id}`)}>
-																{role.roleName}
+															<TableCell
+																style={{ cursor: "pointer" }}
+																onClick={() => router.push(`/roles/${roleInfo.id}`)}
+															>
+																{roleInfo.roleName}
 															</TableCell>
-															<TableCell style={{ cursor: "pointer" }} onClick={() => router.push(`/roles/${role.id}`)}>
-																{role.roleLevel === "primary" ? "Empresa" : "Distrito"}
+															<TableCell
+																style={{ cursor: "pointer" }}
+																onClick={() => router.push(`/roles/${roleInfo.id}`)}
+															>
+																{roleInfo.roleLevel === "primary" ? "Empresa" : "Distrito"}
 															</TableCell>
-															<TableCell style={{ cursor: "pointer" }} onClick={() => router.push(`/roles/${role.id}`)}>
-																{role._count?.users || 0}
+															<TableCell
+																style={{ cursor: "pointer" }}
+																onClick={() => router.push(`/roles/${roleInfo.id}`)}
+															>
+																{roleInfo._count?.users || 0}
 															</TableCell>
-															<TableCell className="p-0">
-																<TrashIcon className="hover:cursor-pointer" onClick={() => deleteRole(role.id)} />
-															</TableCell>
+															{hasPermission(role, "admin_management", "delete") && (
+																<TableCell className="p-0">
+																	<TrashIcon
+																		className="hover:cursor-pointer"
+																		onClick={() => deleteRole(roleInfo.id)}
+																	/>
+																</TableCell>
+															)}
 														</TableRow>
 													))}
 											</TableBody>

@@ -35,6 +35,7 @@ export const OrderStatus: React.FC<OrderStatusProps> = ({ currentStatusId, curre
 	const [isLoading, setIsLoading] = useState(true);
 	const [searchTerm, setSearchTerm] = useState<string>("");
 	const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({});
+	const notesRef = useRef<HTMLTextAreaElement>(null);
 	const token = getCookie("access_token");
 	const descriptionRef = useRef<HTMLTextAreaElement | null>(null);
 
@@ -103,6 +104,9 @@ export const OrderStatus: React.FC<OrderStatusProps> = ({ currentStatusId, curre
 		if (descriptionRef.current) {
 			formData.append("description", descriptionRef.current.value);
 		}
+
+		const notesValue = notesRef.current?.value.trim() || "";
+		formData.append("notes", notesValue);
 
 		toast.promise(
 			fetch(`${BASE_URL}/order/update-status/${orderId}`, {
@@ -311,14 +315,6 @@ export const OrderStatus: React.FC<OrderStatusProps> = ({ currentStatusId, curre
 												disabled={!checkedItems[item.id]}
 												placeholder="qtd saída"
 											/>
-											{/* <Button
-												variant="outline"
-												onClick={() => handleAddItem(item.id, item.productName, quantityInputRef, measurementInputRef)}
-												className={`ml-2 `}
-												disabled={isLoading}
-											>
-												Add
-											</Button> */}
 										</div>
 									);
 								})}

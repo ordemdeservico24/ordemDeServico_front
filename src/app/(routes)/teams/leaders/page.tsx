@@ -109,9 +109,8 @@ export default function Page() {
 			if (response.ok) {
 				toast.success("Líder de equipe excluído com sucesso!");
 				setTimeout(() => {
-					router.push("/teams/leaders");
+					window.location.reload();
 				}, 1500);
-				setLeaders(leaders.filter((leader) => leader.id !== id));
 			} else {
 				toast.error("Ocorreu um erro ao excluir o líder de equipe.");
 			}
@@ -218,7 +217,9 @@ export default function Page() {
 															<TableCell className="whitespace-nowrap">{leader.user.name}</TableCell>
 															<TableCell className="whitespace-nowrap">{leader.user.email}</TableCell>
 															<TableCell className="whitespace-nowrap">{leader.user.phone}</TableCell>
-															<TableCell className="whitespace-nowrap">{leader.user.role.roleName}</TableCell>
+															<TableCell className="whitespace-nowrap">
+																{leader.user.role ? leader.user.role.roleName : "Não possui"}
+															</TableCell>
 															{hasPermission(role, "teams_management", "delete") && (
 																<TableCell>
 																	<Dialog>

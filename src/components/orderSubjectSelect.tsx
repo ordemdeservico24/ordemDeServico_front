@@ -19,7 +19,7 @@ export const OrderSubjectSelect: React.FC<ISubject> = ({ name, id, expirationDay
 				return res.json().then((data) => ({ status, data }));
 			})
 			.then(({ status, data }) => {
-				console.log(status, data);
+				// console.log(status, data);
 				setSubjects(data);
 			});
 	}, [token]);

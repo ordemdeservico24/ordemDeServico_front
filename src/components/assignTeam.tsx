@@ -5,6 +5,8 @@ import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getCookie } from "cookies-next";
+import { useStore } from "@/zustandStore";
+import { hasPermission } from "@/utils/hasPermissions";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 interface Order {
@@ -16,6 +18,7 @@ export const AssignTeam: React.FC<Order> = ({ orderId, teamName }) => {
 	const [teams, setTeams] = useState<ITeam[]>([]);
 	const [selectedTeam, setSelectedTeam] = useState<string>("");
 	const token = getCookie("access_token");
+	const { role = [] } = useStore();
 
 	useEffect(() => {
 		fetch(`${BASE_URL}/team/get-all-teams`, {
@@ -82,22 +85,25 @@ export const AssignTeam: React.FC<Order> = ({ orderId, teamName }) => {
 
 	return (
 		<div className="flex items-center space-x-4">
-			<Select onValueChange={handleSelectChange} value={selectedTeam}>
-				<SelectTrigger className="outline-none border border-[#2a2a2a] rounded px-2 py-1">
-					<SelectValue placeholder={teamName ? teamName : "Selecione uma equipe"} />
-				</SelectTrigger>
-				<SelectContent>
-					<SelectItem value="none">Nenhuma</SelectItem>
-					{teams.map((team) => (
-						<SelectItem key={team.id} value={team.id}>
-							{team.teamName}
-						</SelectItem>
-					))}
-				</SelectContent>
-			</Select>
-			<Button variant="default" className="bg-blue-500 hover:bg-blue-600" onClick={assignTeam}>
-				Selecionar
-			</Button>
+			{hasPermission(role, "teams_management", "update") && (
+				<>
+					<Select onValueChange={handleSelectChange} value={selectedTeam}>
+						<SelectTrigger className="outline-none border border-[#2a2a2a] rounded px-2 py-1">
+							<SelectValue placeholder={teamName ? teamName : "Selecione uma equipe"} />
+						</SelectTrigger>
+						<SelectContent>
+							{teams.map((team) => (
+								<SelectItem key={team.id} value={team.id}>
+									{team.teamName}
+								</SelectItem>
+							))}
+						</SelectContent>
+					</Select>
+					<Button variant="default" className="bg-blue-500 hover:bg-blue-600" onClick={assignTeam}>
+						Selecionar
+					</Button>
+				</>
+			)}
 		</div>
 	);
 };

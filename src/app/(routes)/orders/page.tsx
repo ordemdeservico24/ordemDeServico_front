@@ -62,7 +62,7 @@ export default function Page() {
 				return res.json().then((data) => ({ status, data }));
 			})
 			.then(({ status, data }) => {
-				console.log(status, data);
+				// console.log(status, data);
 				setSubjects(data);
 			})
 			.catch((error) => {
@@ -80,7 +80,7 @@ export default function Page() {
 				return res.json().then((data) => ({ status, data }));
 			})
 			.then(({ status, data }) => {
-				console.log(status, data);
+				// console.log(status, data);
 				setOrderStatus(data);
 
 				if (!initialFetchDone) {
@@ -192,7 +192,7 @@ export default function Page() {
 					throw new Error("Erro ao criar a ordem.");
 				})
 				.then((data) => {
-					console.log(data);
+					// console.log(data);
 				})
 				.catch((error) => {
 					console.log(error);
@@ -381,7 +381,7 @@ export default function Page() {
 											<p className="text-gray-800 mb-2">{truncateNotes(order.notes, 100)}</p>
 										</div>
 										<div className="flex justify-between items-center">
-											{hasPermission(role, ["orders_management"], "update") ? (
+                      {hasPermission(role, ["orders_management"], "update") ? (
 												<OrderStatus
 													currentStatusId={order.orderStatus.id}
 													currentStatus={order.orderStatus.orderStatusName}

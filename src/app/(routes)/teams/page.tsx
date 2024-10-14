@@ -79,7 +79,7 @@ export default function Page() {
 					}
 				})
 				.then((data) => {
-					console.log(data);
+					// console.log(data);
 				})
 				.catch((error) => {
 					console.log(error);
@@ -265,7 +265,11 @@ export default function Page() {
 																		role,
 																		["teams_management", "teamleader", "teammember"],
 																		"read"
-																	) && <span className="block w-full h-full">{team.leader.user.name}</span>}
+																	) && (
+																		<span className="block w-full h-full">
+																			{team.leader ? team.leader.user.name : "Não possui líder"}
+																		</span>
+																	)}
 																</TableCell>
 																<TableCell
 																	style={{ cursor: "pointer" }}

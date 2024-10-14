@@ -33,7 +33,7 @@ export default function Page({ params }: { params: { id: string } }) {
 				return res.json().then((data) => ({ status, data }));
 			})
 			.then(({ status, data }) => {
-				console.log(status, data);
+				// console.log(status, data);
 				setOrder(data);
 			});
 		fetch(`${BASE_URL}/order/get-all-orders-status`, {
@@ -48,7 +48,7 @@ export default function Page({ params }: { params: { id: string } }) {
 				return res.json().then((data) => ({ status, data }));
 			})
 			.then(({ status, data }) => {
-				console.log(status, data);
+				// console.log(status, data);
 				setOrderStatus(data);
 			})
 			.catch((error) => {

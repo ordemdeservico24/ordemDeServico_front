@@ -78,7 +78,6 @@ export default function Page() {
 			permissions,
 			roleLevel: getInput("roleLevel").value || "",
 		};
-		console.log(request);
 		toast.promise(
 			fetch(`${BASE_URL}/user/create-role`, {
 				method: "POST",
@@ -94,7 +93,7 @@ export default function Page() {
 					}
 				})
 				.then((data) => {
-					console.log(data);
+					// console.log(data);
 				})
 				.catch((error) => {
 					console.log(error);
@@ -124,7 +123,7 @@ export default function Page() {
 		})
 			.then((res) => res.json())
 			.then((data) => {
-				console.log("Resposta da API:", data);
+				// console.log("Resposta da API:", data);
 				if (Array.isArray(data)) {
 					setRoles(data);
 				} else if (data && Array.isArray(data.users)) {
@@ -157,7 +156,7 @@ export default function Page() {
 					}
 				})
 				.then((data) => {
-					console.log(data);
+					// console.log(data);
 				})
 				.catch((error) => {
 					console.log(error);

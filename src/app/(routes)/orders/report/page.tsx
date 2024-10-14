@@ -29,9 +29,10 @@ export default function Page() {
 				return res.json().then((data) => ({ status, data }));
 			})
 			.then(({ status, data }) => {
-				console.log(status, data);
+				// console.log(status, data);
 				setOrderData(data);
-			}).finally(() => setIsLoading(false));
+			})
+			.finally(() => setIsLoading(false));
 	}, [token]);
 
 	const statusColors = {
@@ -177,7 +178,15 @@ export default function Page() {
 								<div className="h-[300px]">
 									<ResponsiveContainer width="100%" height="100%">
 										<PieChart>
-											<Pie data={pieChartData} cx="50%" cy="50%" labelLine={false} outerRadius={80} fill="#8884d8" dataKey="value">
+											<Pie
+												data={pieChartData}
+												cx="50%"
+												cy="50%"
+												labelLine={false}
+												outerRadius={80}
+												fill="#8884d8"
+												dataKey="value"
+											>
 												{pieChartData.map((entry, index) => (
 													<Cell key={`cell-${index}`} fill={statusColors[entry.name]} />
 												))}

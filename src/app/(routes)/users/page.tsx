@@ -58,7 +58,7 @@ export default function Page() {
 						}
 					})
 					.then((data) => {
-						console.log(data);
+						// console.log(data);
 					})
 					.catch((error) => {
 						console.log(error);
@@ -134,7 +134,7 @@ export default function Page() {
 					}
 				})
 				.then((data) => {
-					console.log(data);
+					// console.log(data);
 				})
 				.catch((error) => {
 					console.log(error);
@@ -260,7 +260,7 @@ export default function Page() {
 					}
 				})
 				.then((data) => {
-					console.log(data);
+					// console.log(data);
 				})
 				.catch((error) => {
 					console.log(error);

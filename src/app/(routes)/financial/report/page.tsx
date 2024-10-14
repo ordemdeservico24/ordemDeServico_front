@@ -89,7 +89,7 @@ export default function Page() {
 				return res.json().then((data) => ({ status, data }));
 			})
 			.then(({ status, data }) => {
-				console.log(status, data);
+				// console.log(status, data);
 				setFinancialReport(data);
 			});
 
@@ -105,7 +105,7 @@ export default function Page() {
 				return res.json().then((data) => ({ status, data }));
 			})
 			.then(({ status, data }) => {
-				console.log(status, data);
+				// console.log(status, data);
 				setCategories(data);
 			});
 		setIsLoading(false);

@@ -49,7 +49,7 @@ export default function Page() {
 		const result = createMemberSchema.safeParse(request);
 
 		if (!result.success) {
-			console.log(result);
+			// console.log(result);
 			result.error.errors.forEach((err) => {
 				toast.error(err.message);
 			});
@@ -71,7 +71,7 @@ export default function Page() {
 					}
 				})
 				.then((data) => {
-					console.log(data);
+					// console.log(data);
 				})
 				.catch((error) => {
 					console.log(error);
@@ -102,7 +102,7 @@ export default function Page() {
 			})
 				.then((res) => res.json())
 				.then((data) => {
-					console.log(data);
+					// console.log(data);
 					setMembers(data);
 				})
 				.finally(() => {

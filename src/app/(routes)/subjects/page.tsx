@@ -40,7 +40,7 @@ export default function Page() {
 				return res.json().then((data) => ({ status, data }));
 			})
 			.then(({ status, data }) => {
-				console.log(status, data);
+				// console.log(status, data);
 				setSubjects(data);
 			})
 			.catch((error) => {
@@ -87,7 +87,7 @@ export default function Page() {
 					}
 				})
 				.then((data) => {
-					console.log(data);
+					// console.log(data);
 				})
 				.catch((error) => {
 					console.log(error);

@@ -35,7 +35,6 @@ export const OrderStatus: React.FC<OrderStatusProps> = ({ currentStatusId, curre
 	const [isLoading, setIsLoading] = useState(true);
 	const [searchTerm, setSearchTerm] = useState<string>("");
 	const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({});
-	const notesRef = useRef<HTMLTextAreaElement>(null);
 	const token = getCookie("access_token");
 	const descriptionRef = useRef<HTMLTextAreaElement | null>(null);
 
@@ -104,9 +103,6 @@ export const OrderStatus: React.FC<OrderStatusProps> = ({ currentStatusId, curre
 		if (descriptionRef.current) {
 			formData.append("description", descriptionRef.current.value);
 		}
-
-		const notesValue = notesRef.current?.value.trim() || "";
-		formData.append("notes", notesValue);
 
 		toast.promise(
 			fetch(`${BASE_URL}/order/update-status/${orderId}`, {
@@ -277,6 +273,10 @@ export const OrderStatus: React.FC<OrderStatusProps> = ({ currentStatusId, curre
 							</div>
 						) : (
 							<div className="max-h-60 overflow-y-auto">
+								<div className="flex justify-between mb-2 text-sm font-medium">
+									<span>Itens do Estoque</span>
+									<span>Quantidade de saída</span>
+								</div>
 								{filteredItems.map((item) => {
 									const quantityInputRef = React.createRef<HTMLInputElement>();
 									const measurementInputRef = React.createRef<HTMLInputElement>();

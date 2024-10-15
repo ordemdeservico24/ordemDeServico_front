@@ -92,6 +92,7 @@ export const AssignTeam: React.FC<Order> = ({ orderId, teamName }) => {
 							<SelectValue placeholder={teamName ? teamName : "Selecione uma equipe"} />
 						</SelectTrigger>
 						<SelectContent>
+							<SelectItem value="none">Nenhuma</SelectItem>
 							{teams.map((team) => (
 								<SelectItem key={team.id} value={team.id}>
 									{team.teamName}

@@ -220,43 +220,45 @@ export default function UserPage({ params }: { params: { id: string } }) {
 												</p>
 												{hasPermission(role, "admin_management", "update") && (
 													<p className="text-gray-700 flex gap-1">
-														<strong className="font-medium">Salário:</strong> user.salary === 0 ? (
-														<Dialog>
-															<DialogTrigger asChild>
-																<p className="cursor-pointer">Adicionar salário</p>
-															</DialogTrigger>
-															<DialogContent className="sm:max-w-[425px]">
-																<DialogHeader>
-																	<DialogTitle>Adicionar Salário</DialogTitle>
-																	<DialogDescription>
-																		Adicione um salário a este usuário e transforme ele num funcionário.
-																	</DialogDescription>
-																</DialogHeader>
-																<form
-																	action="#"
-																	onSubmit={(e) => addSalary(e)}
-																	className=" flex flex-col justify-center items-center"
-																>
-																	<div className="flex gap-3 flex-col items-center max-w-96 w-full">
-																		<Input
-																			type="number"
-																			step="0.01"
-																			name="salary"
-																			placeholder="Valor do salário em Reais"
-																			className="w-full"
-																		/>
-																		<Button
-																			className=" text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
-																			type="submit"
-																		>
-																			Criar
-																		</Button>
-																	</div>
-																</form>
-															</DialogContent>
-														</Dialog>
+														<strong className="font-medium">Salário:</strong>{" "}
+														{user.salary === 0 ? (
+															<Dialog>
+																<DialogTrigger asChild>
+																	<p className="cursor-pointer">Adicionar salário</p>
+																</DialogTrigger>
+																<DialogContent className="sm:max-w-[425px]">
+																	<DialogHeader>
+																		<DialogTitle>Adicionar Salário</DialogTitle>
+																		<DialogDescription>
+																			Adicione um salário a este usuário e transforme ele num funcionário.
+																		</DialogDescription>
+																	</DialogHeader>
+																	<form
+																		action="#"
+																		onSubmit={(e) => addSalary(e)}
+																		className=" flex flex-col justify-center items-center"
+																	>
+																		<div className="flex gap-3 flex-col items-center max-w-96 w-full">
+																			<Input
+																				type="number"
+																				step="0.01"
+																				name="salary"
+																				placeholder="Valor do salário em Reais"
+																				className="w-full"
+																			/>
+																			<Button
+																				className=" text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
+																				type="submit"
+																			>
+																				Criar
+																			</Button>
+																		</div>
+																	</form>
+																</DialogContent>
+															</Dialog>
 														) : (
-														<MoneyFormatter value={user.salary || 0} currency="BRL" />)
+															<MoneyFormatter value={user.salary || 0} currency="BRL" />
+														)}
 													</p>
 												)}
 											</div>

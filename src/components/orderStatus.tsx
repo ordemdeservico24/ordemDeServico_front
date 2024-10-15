@@ -313,7 +313,6 @@ export const OrderStatus: React.FC<OrderStatusProps> = ({ currentStatusId, curre
 												step={item.unitOfMeasurement === "unit" ? "0" : "0.01"}
 												onChange={() => handleAddItem(item.id, item.productName, quantityInputRef, measurementInputRef)}
 												disabled={!checkedItems[item.id]}
-												placeholder="qtd saída"
 											/>
 										</div>
 									);

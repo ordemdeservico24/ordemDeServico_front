@@ -168,7 +168,7 @@ export default function Page() {
 																	<SelectContent>
 																		<SelectItem value="open">Aberto</SelectItem>
 																		<SelectItem value="inProgress">Em andamento</SelectItem>
-																		<SelectItem value="review">Em revisão</SelectItem>
+																		<SelectItem value="review">Atendido</SelectItem>
 																		<SelectItem value="finish">Finalizada</SelectItem>
 																	</SelectContent>
 																</Select>

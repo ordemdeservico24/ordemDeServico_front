@@ -10,6 +10,10 @@ import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { getCookie } from "cookies-next";
 import { hasPermission } from "@/utils/hasPermissions";
 import { useStore } from "@/zustandStore";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@radix-ui/react-label";
+import Image from "next/image";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function Page({ params }: { params: { id: string } }) {
@@ -92,7 +96,10 @@ export default function Page({ params }: { params: { id: string } }) {
 									</Link>
 									<div className="flex justify-between items-center mb-8 mt-4">
 										<h1 className="font-semibold text-2xl text-gray-800">Ordem de Serviço - {order.orderId}</h1>
-										<p className="text-gray-500 text-sm">Data de abertura: {order.openningDate}</p>
+										<div className="flex gap-2 items-center">
+											<span className="text-gray-700 text-xs font-semibold">Aberto por: {order.createdBy.name}</span>
+											<p className="text-gray-500 text-sm">Data de abertura: {order.openningDate}</p>
+										</div>
 									</div>
 								</CardHeader>
 								<CardContent className="space-y-6">
@@ -140,7 +147,106 @@ export default function Page({ params }: { params: { id: string } }) {
 									</div>
 
 									<AssignedTeam assignedTeam={order.assignedTeam} orderId={order.id} />
+									{order.orderFinishedData.length ? (
+										<Card>
+											<CardHeader>
+												<h1 className="font-medium text-lg">Informações Adicionais</h1>
+											</CardHeader>
+											<CardContent>
+												{order.orderFinishedData.map((finishedData) => (
+													<div
+														key={finishedData.id}
+														className={`flex flex-col gap-2 mb-4 ${
+															order.orderFinishedData.length > 1 ? "border-b-2 border-gray-400" : ""
+														}`}
+													>
+														<div className="flex justify-between">
+															<p className="text-gray-600">
+																<strong>ID da ordem: </strong>
+																{order.orderId}
+															</p>
+															<p className="text-gray-600">
+																<strong>Usuário: </strong>
+																{finishedData.finishedBy.name}
+															</p>
+														</div>
+														<div>
+															<Label>Descrição:</Label>
+															<Textarea
+																value={finishedData.description ? finishedData.description : "Não possui"}
+																className="mt-1 border-gray-600"
+															></Textarea>
+														</div>
+														<div>
+															{finishedData.orderFinishPhoto ? (
+																<>
+																	<Label>Imagem: </Label>
+																	<Image
+																		alt="Foto da ordem de serviço após ser atentido"
+																		src={finishedData.orderFinishPhoto}
+																		width={300}
+																		height={300}
+																		className="max-w-full h-auto"
+																	/>
+																</>
+															) : (
+																<p>Não possui imagem</p>
+															)}
+														</div>
+														{finishedData.usedItems.length ? (
+															<div>
+																<Label>Itens usados:</Label>
+																<Table>
+																	<TableHeader>
+																		<TableRow>
+																			<TableHead>Nome</TableHead>
+																			<TableHead>Utilizou</TableHead>
+																		</TableRow>
+																	</TableHeader>
+																	<TableBody>
+																		{finishedData.usedItems.map((item) => (
+																			<TableRow key={item.id}>
+																				<TableCell>{item.itemName}</TableCell>
+																				<TableCell>
+																					{item.usedMeasurement === 0
+																						? `${item.usedQuantity} ${
+																								item.usedQuantity > 1 ? "Unidades" : "Unidade"
+																						  }`
+																						: `${item.usedMeasurement} ${
+																								item.usedMeasurement > 1
+																									? "Metros/Litros"
+																									: "Metro/Litro"
+																						  }`}
+																				</TableCell>
+																			</TableRow>
+																		))}
+																	</TableBody>
+																</Table>
+															</div>
+														) : (
+															""
+														)}
+													</div>
+												))}
+											</CardContent>
+										</Card>
+									) : (
+										""
+									)}
 								</CardContent>
+								{order.orderFinishedData.length ? (
+									<div className="flex justify-between">
+										<div></div>
+										<span className="text-gray-600 text-xs font-semibold">
+											Atendido por:{" "}
+											{order.orderFinishedData.map((orderData) => (
+												<>{orderData.finishedBy.name}</>
+											))}
+										</span>
+									</div>
+								) : (
+									""
+								)}
 							</Card>
 						) : (
 							<h1>Não há ordem de serviço com este id</h1>

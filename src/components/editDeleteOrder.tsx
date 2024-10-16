@@ -12,6 +12,9 @@ import { Textarea } from "./ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ISubject } from "@/interfaces/subject.interface";
 import { Input } from "./ui/input";
+import { hasPermission } from "@/utils/hasPermissions";
+import { Role, useStore } from "@/zustandStore";
+import { IRole } from "@/interfaces/user.interface";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 interface OrderID {
@@ -26,6 +29,7 @@ export const EditDeleteOrder: React.FC<OrderID> = ({ orderId, subjects, orderSta
 	const [selectedStatus, setSelectedStatus] = useState<string>("");
 	const [selectedSubject, setSelectedSubject] = useState<string>("");
 	const [isEditing, setIsEditing] = useState(false);
+	const { role = [] } = useStore();
 	const token = getCookie("access_token");
 
 	useEffect(() => {
@@ -153,98 +157,119 @@ export const EditDeleteOrder: React.FC<OrderID> = ({ orderId, subjects, orderSta
 		);
 	};
 
+	const permission = (roles: Role[]) => {
+		const include = roles.map((role) => role.resource.includes("teamleader"));
+		if (include.includes(true)) {
+			return false;
+		}
+		return true;
+	};
+
 	return (
 		<div className="flex gap-2 items-center">
-			<Dialog open={isEditing} onOpenChange={setIsEditing}>
-				<DialogTrigger asChild>
-					<FaEdit
-						className="text-gray-500 cursor-pointer hover:text-gray-700 transition-colors duration-200"
-						size={20}
-						title="Editar ordem"
-						onClick={() => setIsEditing(true)}
-					/>
-				</DialogTrigger>
-				<DialogContent className="sm:max-w-[425px]">
-					<DialogHeader>
-						<DialogTitle>Editar Ordem</DialogTitle>
-						<DialogDescription>Edite os dados da ordem de serviço abaixo</DialogDescription>
-					</DialogHeader>
-					{order && (
-						<form action="#" onSubmit={(e) => onSubmit(e)} className="flex flex-col gap-2">
-							<Select onValueChange={handleSelectSubjectChange} value={selectedSubject}>
-								<SelectTrigger className="outline-none border rounded px-2 py-1">
-									<SelectValue placeholder={order.subject.name} />
-								</SelectTrigger>
-								<SelectContent>
-									{subjects?.map((subject) => (
-										<SelectItem key={subject.id} value={subject.id || ""}>
-											{subject.name}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
-							<Select onValueChange={handleSelectOrderStatusChange} value={selectedStatus}>
-								<SelectTrigger className="outline-none border rounded px-2 py-1">
-									<SelectValue placeholder={order.orderStatus.orderStatusName} />
-								</SelectTrigger>
-								<SelectContent>
-									{orderStatus?.map((status) => (
-										<SelectItem key={status.id} value={status.id}>
-											{status.orderStatusName}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
-							<Input type="text" name="requesterName" placeholder={"Nome do solicitante"} required defaultValue={order.requesterName} />
-							<Input
-								type="tel"
-								name="requesterPhone"
-								placeholder="Telefone do solicitante"
-								required
-								defaultValue={order.requesterPhone}
-							/>
-							<Input
-								type="text"
-								name="requesterStreet"
-								placeholder="Endereço do solicitante"
-								required
-								defaultValue={order.requesterStreet}
-							/>
-							<Input
-								type="number"
-								name="requesterHouseNumber"
-								placeholder="N° da casa do solicitante"
-								required
-								defaultValue={order.requesterHouseNumber}
-							/>
-							<Input
-								type="text"
-								name="requesterComplement"
-								placeholder="Complemento do solicitante"
-								required
-								defaultValue={order.requesterComplement}
-							/>
-							<Input
-								type="text"
-								name="requesterZipcode"
-								placeholder="CEP do solicitante"
-								required
-								defaultValue={order.requesterZipcode}
-							/>
-							<Textarea name="notes" placeholder="Observações" className="border rounded px-2 py-1 mb-4" defaultValue={order.notes} />
-							<DialogFooter>
-								<Button type="submit" className="bg-blue-500 hover:bg-blue-600">
-									Salvar
-								</Button>
-								<Button type="button" className="bg-blue-500 hover:bg-blue-600" onClick={() => setIsEditing(false)}>
-									Cancelar
-								</Button>
-							</DialogFooter>
-						</form>
-					)}
-				</DialogContent>
-			</Dialog>
-			{isClient && (
+			{permission(role) && (
+				<Dialog open={isEditing} onOpenChange={setIsEditing}>
+					<DialogTrigger asChild>
+						<FaEdit
+							className="text-gray-500 cursor-pointer hover:text-gray-700 transition-colors duration-200"
+							size={20}
+							title="Editar ordem"
+							onClick={() => setIsEditing(true)}
+						/>
+					</DialogTrigger>
+					<DialogContent className="sm:max-w-[425px]">
+						<DialogHeader>
+							<DialogTitle>Editar Ordem</DialogTitle>
+							<DialogDescription>Edite os dados da ordem de serviço abaixo</DialogDescription>
+						</DialogHeader>
+						{order && (
+							<form action="#" onSubmit={(e) => onSubmit(e)} className="flex flex-col gap-2">
+								<Select onValueChange={handleSelectSubjectChange} value={selectedSubject}>
+									<SelectTrigger className="outline-none border rounded px-2 py-1">
+										<SelectValue placeholder={order.subject.name} />
+									</SelectTrigger>
+									<SelectContent>
+										{subjects?.map((subject) => (
+											<SelectItem key={subject.id} value={subject.id || ""}>
+												{subject.name}
+											</SelectItem>
+										))}
+									</SelectContent>
+								</Select>
+								<Select onValueChange={handleSelectOrderStatusChange} value={selectedStatus}>
+									<SelectTrigger className="outline-none border rounded px-2 py-1">
+										<SelectValue placeholder={order.orderStatus.orderStatusName} />
+									</SelectTrigger>
+									<SelectContent>
+										{orderStatus?.map((status) => (
+											<SelectItem key={status.id} value={status.id}>
+												{status.orderStatusName}
+											</SelectItem>
+										))}
+									</SelectContent>
+								</Select>
+								<Input
+									type="text"
+									name="requesterName"
+									placeholder={"Nome do solicitante"}
+									required
+									defaultValue={order.requesterName}
+								/>
+								<Input
+									type="tel"
+									name="requesterPhone"
+									placeholder="Telefone do solicitante"
+									required
+									defaultValue={order.requesterPhone}
+								/>
+								<Input
+									type="text"
+									name="requesterStreet"
+									placeholder="Endereço do solicitante"
+									required
+									defaultValue={order.requesterStreet}
+								/>
+								<Input
+									type="number"
+									name="requesterHouseNumber"
+									placeholder="N° da casa do solicitante"
+									required
+									defaultValue={order.requesterHouseNumber}
+								/>
+								<Input
+									type="text"
+									name="requesterComplement"
+									placeholder="Complemento do solicitante"
+									required
+									defaultValue={order.requesterComplement}
+								/>
+								<Input
+									type="text"
+									name="requesterZipcode"
+									placeholder="CEP do solicitante"
+									required
+									defaultValue={order.requesterZipcode}
+								/>
+								<Textarea
+									name="notes"
+									placeholder="Observações"
+									className="border rounded px-2 py-1 mb-4"
+									defaultValue={order.notes}
+								/>
+								<DialogFooter>
+									<Button type="submit" className="bg-blue-500 hover:bg-blue-600">
+										Salvar
+									</Button>
+									<Button type="button" className="bg-blue-500 hover:bg-blue-600" onClick={() => setIsEditing(false)}>
+										Cancelar
+									</Button>
+								</DialogFooter>
+							</form>
+						)}
+					</DialogContent>
+				</Dialog>
+			)}
+			{isClient && hasPermission(role, "orders_management", "delete") && (
 				<Dialog>
 					<DialogTrigger asChild>
 						<FaTrash

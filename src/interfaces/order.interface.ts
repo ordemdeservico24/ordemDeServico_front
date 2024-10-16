@@ -1,4 +1,5 @@
 import { ISubject } from "./subject.interface";
+import { IUser } from "./user.interface";
 
 export interface IOrder {
 	id: string;
@@ -37,6 +38,7 @@ export interface IOrderGet {
 	requesterComplement: string;
 	requesterZipcode: string;
 	teamId: string;
+	createdBy: IUser;
 	createdAt: string;
 	updatedAt: string;
 	assignedTeam: {
@@ -47,6 +49,27 @@ export interface IOrderGet {
 		updatedAt: string;
 	};
 	isExpired: boolean;
+	orderFinishedData: [
+		{
+			id: string;
+			orderId: string;
+			finishedById: string;
+			finishedBy: IUser;
+			usedItems: [
+				{
+					id: string;
+					itemId: string;
+					itemName: string;
+					usedQuantity: number;
+					usedMeasurement: number;
+					orderFinishDataId: string;
+				}
+			];
+			orderFinishPhoto: string;
+			description: string;
+			order: IOrderGet;
+		}
+	];
 }
 
 export interface IOrderStatus {

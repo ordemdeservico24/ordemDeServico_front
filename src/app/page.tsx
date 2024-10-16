@@ -15,6 +15,7 @@ import axios from "axios";
 import { useStore } from "../zustandStore";
 import { EyeIcon, EyeOffIcon, Loader } from "lucide-react";
 import { useState } from "react";
+import { toast } from "react-toastify";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const loginSchema = z.object({
@@ -44,7 +45,10 @@ export default function Page() {
 			const response = await axios.post(`${BASE_URL}/user/login`, data);
 			// console.log("Login successful:", response.data);
 
-			const { token, userName, role, userId, teamId, roleLevel } = response.data;
+			const { token, userName, role, userId, teamId, roleLevel, status, message } = response.data;
+			if (status === "error") {
+				toast.error(message);
+			}
 
 			if (token) {
 				setToken(token);
@@ -69,8 +73,13 @@ export default function Page() {
 			// console.log("User roleLevel:", roleLevel);
 
 			router.push("/home");
-		} catch (error) {
-			console.error("Login failed:", error);
+		} catch (error: any) {
+			if (error.response && error.response.data) {
+				const { message } = error.response.data;
+				toast.error(message || "Erro ao fazer login");
+			} else {
+				toast.error("Erro desconhecido");
+			}
 		}
 	};
 

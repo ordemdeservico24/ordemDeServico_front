@@ -381,7 +381,7 @@ export default function Page() {
 											<p className="text-gray-800 mb-2">{truncateNotes(order.notes, 100)}</p>
 										</div>
 										<div className="flex justify-between items-center">
-                      {hasPermission(role, ["orders_management"], "update") ? (
+											{hasPermission(role, ["orders_management"], "update") ? (
 												<OrderStatus
 													currentStatusId={order.orderStatus.id}
 													currentStatus={order.orderStatus.orderStatusName}

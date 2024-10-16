@@ -35,6 +35,7 @@ export const OrderStatus: React.FC<OrderStatusProps> = ({ currentStatusId, curre
 	const [isLoading, setIsLoading] = useState(true);
 	const [searchTerm, setSearchTerm] = useState<string>("");
 	const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({});
+	const [disableButton, setDisableButton] = useState<boolean>(false);
 	const token = getCookie("access_token");
 	const descriptionRef = useRef<HTMLTextAreaElement | null>(null);
 
@@ -219,7 +220,6 @@ export const OrderStatus: React.FC<OrderStatusProps> = ({ currentStatusId, curre
 	};
 
 	const filteredItems = items.filter((item) => item.productName.toLowerCase().includes(searchTerm.toLowerCase()));
-
 	return (
 		<div className="flex justify-end">
 			<Select onValueChange={handleChange} value={tempStatus}>
@@ -311,7 +311,25 @@ export const OrderStatus: React.FC<OrderStatusProps> = ({ currentStatusId, curre
 												className="w-20 border-[#0000007e] px-1"
 												min="0"
 												step={item.unitOfMeasurement === "unit" ? "0" : "0.01"}
-												onChange={() => handleAddItem(item.id, item.productName, quantityInputRef, measurementInputRef)}
+												onChange={() => {
+													handleAddItem(item.id, item.productName, quantityInputRef, measurementInputRef);
+													if ((quantityInputRef.current?.valueAsNumber || 0) > item.quantity - item.usedQuantity) {
+														setDisableButton(true);
+													} else if ((quantityInputRef.current?.valueAsNumber || 0) < item.quantity - item.usedQuantity) {
+														setDisableButton(false);
+													}
+													if (
+														(measurementInputRef.current?.valueAsNumber || 0) >
+														item.totalMeasurement - item.usedMeasurement
+													) {
+														setDisableButton(true);
+													} else if (
+														(measurementInputRef.current?.valueAsNumber || 0) <
+														item.totalMeasurement - item.usedMeasurement
+													) {
+														setDisableButton(false);
+													}
+												}}
 												disabled={!checkedItems[item.id]}
 											/>
 										</div>
@@ -325,7 +343,9 @@ export const OrderStatus: React.FC<OrderStatusProps> = ({ currentStatusId, curre
 						<Button variant="outline" onClick={handleCloseModal}>
 							Cancelar
 						</Button>
-						<Button onClick={handleConfirmReview}>Confirmar</Button>
+						<Button onClick={handleConfirmReview} disabled={disableButton ? true : false}>
+							Confirmar
+						</Button>
 					</DialogFooter>
 				</DialogContent>
 			</Dialog>

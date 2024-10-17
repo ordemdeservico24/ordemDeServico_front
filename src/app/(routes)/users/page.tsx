@@ -373,7 +373,7 @@ export default function Page() {
 															onSubmit={(e) => createEmployee(e)}
 															className=" flex flex-col justify-center items-center"
 														>
-															<div className="flex gap-3 flex-col items-center max-w-96 w-full">
+															<div className="flex gap-3 flex-col max-w-96 w-full">
 																<Input type="text" name="name" placeholder="Nome do Funcionário" className="w-full" />
 																<Input
 																	type="text"
@@ -388,7 +388,15 @@ export default function Page() {
 																	step="0.01"
 																	className="w-full"
 																/>
-																<Input type="date" name="startCompanyDate" className="w-full" />
+																<div>
+																	<label htmlFor="startCompanyDate">Data de início na empresa:</label>
+																	<Input
+																		type="date"
+																		id="startCompanyDate"
+																		name="startCompanyDate"
+																		className="w-full"
+																	/>
+																</div>
 																<Button
 																	className=" text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
 																	type="submit"

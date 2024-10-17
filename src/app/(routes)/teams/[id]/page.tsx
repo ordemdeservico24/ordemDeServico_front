@@ -7,12 +7,21 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getCookie } from "cookies-next";
+import { Button } from "@/components/ui/button";
+import { hasPermission } from "@/utils/hasPermissions";
+import { useStore } from "@/zustandStore";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { IUser } from "@/interfaces/user.interface";
+import { toast } from "react-toastify";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function Page({ params }: { params: { id: string } }) {
 	const [team, setTeam] = useState<ITeam>();
 	const token = getCookie("access_token");
 	const [isLoading, setIsLoading] = useState(true);
+	const { role = [] } = useStore();
+	const [leader, setLeader] = useState<string>("");
+	const [users, setUsers] = useState<IUser[]>([]);
 
 	useEffect(() => {
 		setIsLoading(true);
@@ -34,6 +43,19 @@ export default function Page({ params }: { params: { id: string } }) {
 			.finally(() => {
 				setIsLoading(false);
 			});
+		fetch(`${BASE_URL}/user/get-all-users?limit=${100}&type=user`, {
+			method: "GET",
+			headers: {
+				"Content-type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+		})
+			.then((res) => res.json())
+			.then((data) => setUsers(data.users))
+			.catch((error) => {
+				console.error("Erro ao buscar usuários:", error);
+				setUsers([]);
+			});
 	}, [params.id, token]);
 	const truncateNotes = (notes: string, maxLength: number) => {
 		if (notes.length > maxLength) {
@@ -46,6 +68,47 @@ export default function Page({ params }: { params: { id: string } }) {
 			timeZone: "America/Sao_Paulo",
 		});
 	};
+
+	const handleSelectChangeLeader = async (value: string) => {
+		await setLeader(value);
+
+		toast.promise(
+			fetch(`${BASE_URL}/team/assign-leader/${params.id}`, {
+				method: "PATCH",
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ teamId: params.id, leaderId: value }),
+			})
+				.then(async (res) => {
+					if (res.status === 400 || res.status === 500) {
+						const data = await res.json();
+						toast.error(data.message);
+						throw new Error(data.message);
+					}
+					if (res.ok) {
+						return res.json();
+					}
+				})
+				.then((data) => {
+					// console.log(data);
+				})
+				.catch((error) => {
+					console.log(error);
+					throw error;
+				}),
+			{
+				pending: "Atribuindo...",
+				success: {
+					render: "Atribuído com sucesso",
+				},
+				error: "Ocorreu um erro ao atribuir",
+			}
+		);
+	};
+
+	const filteredUsers = Array.isArray(users) ? users.filter((user) => !user.isTeamMember && !user.isTeamLeader) : [];
 
 	return (
 		<Container>
@@ -72,26 +135,53 @@ export default function Page({ params }: { params: { id: string } }) {
 						<TabsContent value="all">
 							<Card x-chunk="dashboard-06-chunk-0">
 								<CardHeader>
-									<CardTitle className="text-[#3b82f6] text-2xl font-bold">Ordens Atribuídas</CardTitle>
-									<CardDescription>Cheque todas as informações relacionado aos líderes apresentados.</CardDescription>
+									<CardTitle className="text-[#3b82f6] text-2xl font-bold">{team?.teamName}</CardTitle>
+									<CardDescription>Veja todas as informações da equipe.</CardDescription>
 								</CardHeader>
 
-								<div className="flex px-4 gap-2 sm:gap-4 flex-wrap">
-									{team?.orders.map((order, index) => (
-										<Link
-											className="bg-primary text-white bg-[#3b82f6] p-4 rounded flex flex-col justify-between gap-2 w-[250px] sm:max-w-sm"
-											key={index}
-											href={`/orders/order/${order.id}`}
-										>
-											<div className="flex flex-col gap-2">
-												<p className="font-semibold text-sm sm:text-base">{order.subject.name}</p>
-												<p className="text-xs sm:text-sm">{truncateNotes(order.notes, 100)}</p>
-											</div>
-											<p className="border-t border-white text-xs sm:text-sm pt-2 text-right">
-												{formattedDates(order.openningDate)}
-											</p>
-										</Link>
-									))}
+								<div className="flex px-4 flex-col gap-2 sm:gap-4 flex-wrap">
+									<h3>Ordens Atribuídas: {team?.orders.length}</h3>
+									<div className="flex flex-row gap-2 sm:gap-4 flex-w">
+										{team?.orders.map((order, index) => (
+											<Link
+												className="text-white bg-[#355ea0] p-4 rounded flex flex-col justify-between gap-2 w-[250px] sm:max-w-sm"
+												key={index}
+												href={`/orders/order/${order.id}`}
+											>
+												<div className="flex flex-col gap-2">
+													<p className="font-semibold text-sm sm:text-base">{order.subject.name}</p>
+													<p className="text-xs sm:text-sm">{truncateNotes(order.notes, 100)}</p>
+												</div>
+												<p className="border-t border-white text-xs sm:text-sm pt-2 text-right">
+													{formattedDates(order.openningDate)}
+												</p>
+											</Link>
+										))}
+									</div>
+								</div>
+
+								<div className="flex justify-between p-4 items-center">
+									<p className="flex whitespace-nowrap items-center gap-4">
+										Líder da equipe:{" "}
+										{team?.leader ? (
+											team.leader.user.name
+										) : hasPermission(role, "teams_management", "update") ? (
+											<Select onValueChange={handleSelectChangeLeader}>
+												<SelectTrigger className="outline-none border border-[#2a2a2a] rounded px-2 h-6">
+													<SelectValue placeholder="Não possui" />
+												</SelectTrigger>
+												<SelectContent>
+													{filteredUsers?.map((user) => (
+														<SelectItem key={user.id} value={user.id || ""}>
+															{user.name}
+														</SelectItem>
+													))}
+												</SelectContent>
+											</Select>
+										) : (
+											"Não possui"
+										)}
+									</p>
 								</div>
 
 								<div className="p-4">

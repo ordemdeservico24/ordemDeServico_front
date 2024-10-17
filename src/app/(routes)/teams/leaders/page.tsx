@@ -209,6 +209,7 @@ export default function Page() {
 														<TableHead className="font-bold">E-mail</TableHead>
 														<TableHead className="font-bold">Telefone</TableHead>
 														<TableHead className="font-bold">Profissão</TableHead>
+														<TableHead className="font-bold">Equipe</TableHead>
 													</TableRow>
 												</TableHeader>
 												<TableBody>
@@ -220,6 +221,7 @@ export default function Page() {
 															<TableCell className="whitespace-nowrap">
 																{leader.user.role ? leader.user.role.roleName : "Não possui"}
 															</TableCell>
+															<TableCell className="whitespace-nowrap">{leader.team.teamName}</TableCell>
 															{hasPermission(role, "teams_management", "delete") && (
 																<TableCell>
 																	<Dialog>

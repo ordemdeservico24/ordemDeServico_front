@@ -23,6 +23,8 @@ import {
 	FaFileInvoice,
 	FaChartBar,
 	FaClipboardList,
+	FaList,
+	FaHistory,
 } from "react-icons/fa";
 import { MdHomeRepairService } from "react-icons/md";
 import { IoBusinessSharp } from "react-icons/io5";
@@ -115,12 +117,36 @@ const MenuHome = () => {
 						)}
 
 						{hasPermission(role, "admin_management", "read") && (
-							<Link href="/stock">
-								<Button variant="link" className="flex items-center pl-1 gap-2 py-2">
-									<FaDatabase className="h-5 w-5" />
-									<span>Estoque</span>
+							<div>
+								<Button
+									onClick={() => toggleDropdown("estoque")}
+									className="flex w-full justify-between items-center pl-1 gap-2 py-2 text-[#000] transition-all"
+									variant="link"
+								>
+									<div className="flex items-center gap-2">
+										<FaShoppingCart className="h-5 w-5" />
+										<span>Estoque</span>
+									</div>
+									{openDropdown === "empresa" ? <FaChevronUp className="h-5 w-5" /> : <FaChevronDown className="h-5 w-5" />}
 								</Button>
-							</Link>
+
+								{openDropdown === "estoque" && (
+									<div className="flex flex-col ml-1">
+										<Link href="/stock">
+											<Button variant="link" className="flex items-center gap-2 py-2">
+												<FaList className="h-5 w-5" />
+												<span>Ver Itens</span>
+											</Button>
+										</Link>
+										<Link href="/stock/history">
+											<Button variant="link" className="flex items-center gap-2 py-2">
+												<FaHistory className="h-5 w-5" />
+												<span>Saídas</span>
+											</Button>
+										</Link>
+									</div>
+								)}
+							</div>
 						)}
 
 						{hasPermission(role, "admin_management", "read", "primary", roleLevel) && (
@@ -170,7 +196,7 @@ const MenuHome = () => {
 									variant="link"
 								>
 									<div className="flex items-center gap-2">
-										<FaShoppingCart className="h-5 w-5" />
+										<FaDatabase className="h-5 w-5" />
 										<span>Ordens de Serviço</span>
 									</div>
 									{openDropdown === "ordem" ? <FaChevronUp className="h-5 w-5" /> : <FaChevronDown className="h-5 w-5" />}

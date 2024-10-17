@@ -22,6 +22,8 @@ import {
 	FaFileInvoice,
 	FaChartBar,
 	FaClipboardList,
+	FaList,
+	FaHistory,
 } from "react-icons/fa";
 import Logo from "../assets/logo.png";
 import Image from "next/image";
@@ -126,10 +128,43 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 				)}
 
 				{hasPermission(role, "admin_management", "read") && (
-					<Link href="/stock" className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]">
-						<FaDatabase className="h-4 w-4 md:h-5 md:w-5" />
-						<span>Estoque</span>
-					</Link>
+					// <Link href="/stock" className="flex items-center pl-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9]">
+					// 	<FaDatabase className="h-4 w-4 md:h-5 md:w-5" />
+					// 	<span>Estoque</span>
+					// </Link>
+					<div>
+						<button
+							onClick={() => toggleDropdown("estoque")}
+							className="flex items-center justify-between px-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9] w-full"
+						>
+							<div className="flex items-center gap-2">
+								<FaShoppingCart className="h-4 w-4 md:h-5 md:w-5" />
+								<span>Estoque</span>
+							</div>
+							<FaChevronDown
+								className={`h-4 w-4 md:h-5 md:w-5 transition-transform ${openDropdown === "estoque" ? "rotate-180" : "rotate-0"}`}
+							/>
+						</button>
+
+						{openDropdown === "estoque" && (
+							<div className="flex flex-col ml-4">
+								<Link
+									href="/stock"
+									className="flex items-center rounded-lg pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]"
+								>
+									<FaList className="h-4 w-4 md:h-5 md:w-5" />
+									<span>Ver itens</span>
+								</Link>
+								<Link
+									href="/stock/history"
+									className="flex items-center rounded-lg pl-4 gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]"
+								>
+									<FaHistory className="h-4 w-4 md:h-5 md:w-5" />
+									<span>Saídas</span>
+								</Link>
+							</div>
+						)}
+					</div>
 				)}
 
 				{hasPermission(role, "admin_management", "read", "primary", roleLevel) && (
@@ -182,7 +217,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 							className="flex items-center justify-between px-4 gap-2 rounded-lg py-2 text-[#000] transition-all hover:bg-[#dad9d9] w-full"
 						>
 							<div className="flex items-center gap-2">
-								<FaShoppingCart className="h-5 w-5" />
+								<FaDatabase className="h-4 w-4" />
 								<span>Ordens de Serviço</span>
 							</div>
 							<FaChevronDown

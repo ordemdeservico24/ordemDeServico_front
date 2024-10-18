@@ -24,6 +24,7 @@ export default function Page() {
 	const [permissions, setPermissions] = useState<IRolePermission[]>([]);
 	const router = useRouter();
 	const [isLoading, setIsLoading] = useState(true);
+	const [isOpen, setIsOpen] = useState(false);
 	const { role = [] } = useStore();
 
 	const addResource = (resource: string, resourceLabel: string) => {
@@ -207,7 +208,13 @@ export default function Page() {
 										</div>
 										<div>
 											{hasPermission(role, "admin_management", "create") && (
-												<Dialog>
+												<Dialog
+													open={isOpen}
+													onOpenChange={(open: boolean) => {
+														setIsOpen(open);
+														if (!open) setPermissions([]);
+													}}
+												>
 													<DialogTrigger asChild>
 														<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
 															Criar
@@ -230,10 +237,12 @@ export default function Page() {
 																		name="roleName"
 																		placeholder="Nome do cargo"
 																		className="w-full h-full"
+																		required
 																	/>
 																	<select
 																		name="roleLevel"
 																		className="outline-none border focus:border-[#2a2a2a] rounded px-2 py-1 w-full h-full mb-1"
+																		required
 																	>
 																		<option value="">Selecione a abrangência</option>
 																		<option value="primary">Empresa</option>

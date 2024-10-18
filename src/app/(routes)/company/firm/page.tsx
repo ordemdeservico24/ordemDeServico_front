@@ -23,6 +23,8 @@ import { getCookie } from "cookies-next";
 import { toast } from "react-toastify";
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
+import { hasPermission } from "@/utils/hasPermissions";
+import { useStore } from "@/zustandStore";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function FirmPage() {
@@ -31,6 +33,7 @@ export default function FirmPage() {
 	const { data, isLoading } = useCompanyData();
 	const [photo, setPhoto] = useState<File | null>(null);
 	const token = getCookie("access_token");
+	const { role = [] } = useStore();
 
 	const handleEdit = async () => {
 		await fetch(`${BASE_URL}/company/get-company`, {
@@ -79,7 +82,7 @@ export default function FirmPage() {
 		}
 		formData.append("companyName", request.companyName);
 		formData.append("cnpj", request.cnpj);
-		console.log(formData);
+
 		toast.promise(
 			fetch(`${BASE_URL}/company/edit-company/${company?.id}`, {
 				method: "PATCH",
@@ -151,57 +154,60 @@ export default function FirmPage() {
 							<Card className="mb-6">
 								<CardHeader className="flex flex-row items-center justify-between">
 									<CardTitle>Dados Gerais</CardTitle>
-									{/* <Dialog>
-										<DialogTrigger asChild>
-											<Button variant="default" className="bg-blue-500 hover:bg-blue-600" onClick={handleEdit}>
-												Editar
-											</Button>
-										</DialogTrigger>
-										<DialogContent className="sm:max-w-[425px]">
-											<DialogHeader>
-												<DialogTitle>Editar empresa</DialogTitle>
-												<DialogDescription>Modifique as informações da empresa aqui.</DialogDescription>
-											</DialogHeader>
-											<form action="#" onSubmit={(e) => editCompany(e)} className="flex flex-col gap-2">
-												<Input
-													type="text"
-													name="companyName"
-													defaultValue={company?.companyName}
-													placeholder="Digite aqui o nome da empresa"
-												/>
-												<Input type="text" name="cnpj" defaultValue={company?.cnpj} placeholder="Digite aqui o cnpj" />
-												<Label htmlFor="companyPhoto">Foto da empresa:</Label>
-												<Input
-													type="file"
-													id="companyPhoto"
-													name="companyPhoto"
-													accept="image/*"
-													onChange={handlePhotoChange}
-												/>
-												<DialogFooter>
-													<Button type="submit" className="bg-blue-500 hover:bg-blue-600">
-														Salvar
-													</Button>
-													<DialogClose asChild>
-														<Button type="button" className="bg-blue-500 hover:bg-blue-600">
-															Cancelar
+									{hasPermission(role, "admin_management", "update", "primary") && (
+										<Dialog>
+											<DialogTrigger asChild>
+												<Button variant="default" className="bg-blue-500 hover:bg-blue-600" onClick={handleEdit}>
+													Editar
+												</Button>
+											</DialogTrigger>
+											<DialogContent className="sm:max-w-[425px]">
+												<DialogHeader>
+													<DialogTitle>Editar empresa</DialogTitle>
+													<DialogDescription>Modifique as informações da empresa aqui.</DialogDescription>
+												</DialogHeader>
+												<form action="#" onSubmit={(e) => editCompany(e)} className="flex flex-col gap-2">
+													<Input
+														type="text"
+														name="companyName"
+														defaultValue={company?.companyName}
+														placeholder="Digite aqui o nome da empresa"
+													/>
+													<Input type="text" name="cnpj" defaultValue={company?.cnpj} placeholder="Digite aqui o cnpj" />
+													<Label htmlFor="companyPhoto">Foto da empresa:</Label>
+													<Input
+														type="file"
+														id="companyPhoto"
+														name="companyPhoto"
+														accept="image/*"
+														onChange={handlePhotoChange}
+													/>
+													<DialogFooter>
+														<Button type="submit" className="bg-blue-500 hover:bg-blue-600">
+															Salvar
 														</Button>
-													</DialogClose>
-												</DialogFooter>
-											</form>
-										</DialogContent>
-									</Dialog> */}
+														<DialogClose asChild>
+															<Button type="button" className="bg-blue-500 hover:bg-blue-600">
+																Cancelar
+															</Button>
+														</DialogClose>
+													</DialogFooter>
+												</form>
+											</DialogContent>
+										</Dialog>
+									)}
 								</CardHeader>
 								<CardContent className="flex flex-col md:flex-row items-center gap-6">
-									<div className="w-32 h-32 relative">
+									<div className="w-32 h-32 relative rounded-full overflow-hidden">
 										<Image
 											src={data?.companyPhoto || "/placeholder.svg"}
 											alt="Logo da Empresa"
 											width={128}
 											height={128}
-											className="rounded-full"
+											className="object-cover w-full h-full"
 										/>
 									</div>
+
 									<div>
 										<p>
 											<strong>Nome da Empresa:</strong> {data?.companyName || "Empresa XYZ Ltda."}

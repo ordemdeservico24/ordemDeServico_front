@@ -107,8 +107,8 @@ export default function StoragePage() {
 																? `${item.quantity} Unidades`
 																: `${item.quantity} Unidade`
 															: item.totalMeasurement > 1
-															? `${item.totalMeasurement} Metros/Litros`
-															: `${item.totalMeasurement} Metro/Litro`}
+															? `${item.totalMeasurement} Metros`
+															: `${item.totalMeasurement} Metro`}
 													</TableCell>
 													<TableCell className="whitespace-nowrap">{item.user.name}</TableCell>
 													<TableCell className="whitespace-nowrap">{new Date(item.createdAt).toLocaleString()}</TableCell>

@@ -54,13 +54,16 @@ export default function RevenuesPage() {
 	}, [token]);
 
 	const handleGenerateReceipt = async (itemId: string) => {
+		const receiptDate = new Date().toLocaleString();
 		try {
 			const response = await toast.promise(
 				fetch(`${BASE_URL}/finance/revenues/receipt/${itemId}`, {
 					method: "POST",
 					headers: {
 						Authorization: `Bearer ${token}`,
+						"Content-Type": "application/json",
 					},
+					body: JSON.stringify({ receiptDate: receiptDate }),
 				}),
 				{
 					pending: "Gerando recibo",

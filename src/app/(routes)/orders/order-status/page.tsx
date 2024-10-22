@@ -113,7 +113,7 @@ export default function Page() {
 				},
 			})
 				.then(async (res) => {
-					if (res.status === 400) {
+					if (res.status === 400 || res.status === 401) {
 						const data = await res.json();
 						toast.error(data.message);
 						throw new Error(data.message);
@@ -277,12 +277,14 @@ export default function Page() {
 															<TableCell>{status.review ? "Sim" : "Não"}</TableCell>
 															<TableCell>{status.finish ? "Sim" : "Não"}</TableCell>
 															<TableCell>{status.orders?.length}</TableCell>
-															<TableCell>
-																<TrashIcon
-																	className="hover:cursor-pointer"
-																	onClick={() => deleteOrderStatus(status.id, status.orders?.length)}
-																/>
-															</TableCell>
+															{hasPermission(role, "orders_management", "delete") && (
+																<TableCell>
+																	<TrashIcon
+																		className="hover:cursor-pointer"
+																		onClick={() => deleteOrderStatus(status.id, status.orders?.length)}
+																	/>
+																</TableCell>
+															)}
 														</TableRow>
 													))
 												)}

@@ -70,9 +70,11 @@ export default function FirmPage() {
 		const request: {
 			companyName: string;
 			cnpj: string;
+			address: string;
 		} = {
 			companyName: getInput("companyName").value || "",
 			cnpj: getInput("cnpj").value || "",
+			address: getInput("address").value || "",
 		};
 
 		const formData = new FormData();
@@ -82,6 +84,7 @@ export default function FirmPage() {
 		}
 		formData.append("companyName", request.companyName);
 		formData.append("cnpj", request.cnpj);
+		formData.append("address", request.address);
 
 		toast.promise(
 			fetch(`${BASE_URL}/company/edit-company/${company?.id}`, {
@@ -174,6 +177,12 @@ export default function FirmPage() {
 														placeholder="Digite aqui o nome da empresa"
 													/>
 													<Input type="text" name="cnpj" defaultValue={company?.cnpj} placeholder="Digite aqui o cnpj" />
+													<Input
+														type="text"
+														name="address"
+														defaultValue={company?.address}
+														placeholder="Digite aqui o endereço"
+													/>
 													<Label htmlFor="companyPhoto">Foto da empresa:</Label>
 													<Input
 														type="file"
@@ -213,7 +222,10 @@ export default function FirmPage() {
 											<strong>Nome da Empresa:</strong> {data?.companyName || "Empresa XYZ Ltda."}
 										</p>
 										<p>
-											<strong>CNPJ:</strong> {data?.cnpj || "00.000.000/0001-00"}
+											<strong>CNPJ:</strong> {data?.cnpj || "00.000.000/0000-00"}
+										</p>
+										<p>
+											<strong>Endereço:</strong> {data?.address || "Não possui"}
 										</p>
 									</div>
 								</CardContent>

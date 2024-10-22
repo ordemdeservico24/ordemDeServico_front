@@ -14,6 +14,7 @@ import { ICreateOrderStatus } from "@/interfaces/create-order-request/create-ord
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useStore } from "@/zustandStore";
 import { hasPermission } from "@/utils/hasPermissions";
+import { TrashIcon } from "lucide-react";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function Page() {
@@ -96,6 +97,48 @@ export default function Page() {
 					autoClose: 1500,
 				},
 				error: "Ocorreu um erro",
+			}
+		);
+	};
+
+	const deleteOrderStatus = async (statusId: string, orders: number | undefined) => {
+		if (orders && orders >= 1)
+			return toast.warn("Esse status possui ordem de serviço atribuído a ele, só é possível excluir status que não tenham ordem de serviço");
+		toast.promise(
+			fetch(`${BASE_URL}/order/delete-order-status/${statusId}`, {
+				method: "DELETE",
+				headers: {
+					"Content-type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+			})
+				.then(async (res) => {
+					if (res.status === 400) {
+						const data = await res.json();
+						toast.error(data.message);
+						throw new Error(data.message);
+					}
+					if (res.ok) {
+						return res.json();
+					}
+				})
+				.then((data) => {
+					// console.log(data);
+				})
+				.catch((error) => {
+					console.log(error);
+					throw error;
+				}),
+			{
+				pending: "Deletando status",
+				success: {
+					render: "Status deletado com sucesso!",
+					onClose: () => {
+						window.location.reload();
+					},
+					autoClose: 1500,
+				},
+				error: "Ocorreu um erro ao deletar o status",
 			}
 		);
 	};
@@ -234,6 +277,12 @@ export default function Page() {
 															<TableCell>{status.review ? "Sim" : "Não"}</TableCell>
 															<TableCell>{status.finish ? "Sim" : "Não"}</TableCell>
 															<TableCell>{status.orders?.length}</TableCell>
+															<TableCell>
+																<TrashIcon
+																	className="hover:cursor-pointer"
+																	onClick={() => deleteOrderStatus(status.id, status.orders?.length)}
+																/>
+															</TableCell>
 														</TableRow>
 													))
 												)}

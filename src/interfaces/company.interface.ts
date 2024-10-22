@@ -6,6 +6,7 @@ export interface ICompany {
 	id: string;
 	name: string;
 	cnpj: string;
+	address?: string;
 	companyName: string;
 	companyPhoto: string | "";
 	planId: string;

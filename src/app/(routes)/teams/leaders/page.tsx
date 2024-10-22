@@ -221,7 +221,9 @@ export default function Page() {
 															<TableCell className="whitespace-nowrap">
 																{leader.user.role ? leader.user.role.roleName : "Não possui"}
 															</TableCell>
-															<TableCell className="whitespace-nowrap">{leader.team.teamName}</TableCell>
+															<TableCell className="whitespace-nowrap">
+																{leader.team ? leader.team.teamName : "Não possui"}
+															</TableCell>
 															{hasPermission(role, "teams_management", "delete") && (
 																<TableCell>
 																	<Dialog>

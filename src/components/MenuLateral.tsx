@@ -106,21 +106,21 @@ const Menu: React.FC<MenuProps> = ({ isOpen }) => {
 									className="flex items-center pl-4 rounded-lg gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]"
 								>
 									<FaGlobe className="h-4 w-4 md:h-5 md:w-5" />
-									<span>Estado</span>
+									<span>Estados</span>
 								</Link>
 								<Link
 									href="/company/secondary"
 									className="flex items-center pl-4 rounded-lg gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]"
 								>
 									<FaMap className="h-4 w-4 md:h-5 md:w-5" />
-									<span>Cidade</span>
+									<span>Cidades</span>
 								</Link>
 								<Link
 									href="/company/tertiary"
 									className="flex items-center pl-4 rounded-lg gap-2 p-2 text-[#000] transition-all hover:bg-[#dad9d9]"
 								>
 									<FaMapPin className="h-4 w-4 md:h-5 md:w-5" />
-									<span>Distrito</span>
+									<span>Distritos</span>
 								</Link>
 							</div>
 						)}

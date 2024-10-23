@@ -96,19 +96,19 @@ const MenuHome = () => {
 										<Link href="/company/primary">
 											<Button variant="link" className="flex items-center gap-2 py-2">
 												<FaGlobe className="h-5 w-5" />
-												<span>Estado</span>
+												<span>Estados</span>
 											</Button>
 										</Link>
 										<Link href="/company/secondary">
 											<Button variant="link" className="flex items-center gap-2 py-2">
 												<FaMap className="h-5 w-5" />
-												<span>Cidade</span>
+												<span>Cidades</span>
 											</Button>
 										</Link>
 										<Link href="/company/tertiary">
 											<Button variant="link" className="flex items-center gap-2 py-2">
 												<FaMapPin className="h-5 w-5" />
-												<span>Distrito</span>
+												<span>Distritos</span>
 											</Button>
 										</Link>
 									</div>

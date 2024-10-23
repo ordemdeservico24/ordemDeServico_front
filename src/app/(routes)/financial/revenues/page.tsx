@@ -102,10 +102,9 @@ export default function RevenuesPage() {
 
 		const formData = new FormData(e.currentTarget);
 		const newItem = {
-			name: formData.get("name") as string,
 			description: formData.get("description") as string,
 			quantity: Number(formData.get("quantity")),
-			value: Number(formData.get("value")),
+			value: formData.get("value") as string,
 			buyerName: formData.get("buyerName") as string,
 			cpf: formData.get("cpf") as string,
 			cnpj: formData.get("cnpj") as string,
@@ -120,9 +119,14 @@ export default function RevenuesPage() {
 						"Content-Type": "application/json",
 						Authorization: `Bearer ${token}`,
 					},
-					body: JSON.stringify(newItem),
+					body: JSON.stringify({ ...newItem, value: parseFloat(newItem.value.replace("R$", "").replace(/\./g, "").replace(",", ".")) }),
 				})
-					.then((res) => {
+					.then(async (res) => {
+						if (res.status === 400 || res.status === 401) {
+							const data = await res.json();
+							toast.error(data.message);
+							throw new Error(data.message);
+						}
 						if (res.ok) {
 							return res.json();
 						}
@@ -133,6 +137,7 @@ export default function RevenuesPage() {
 					})
 					.catch((error) => {
 						console.log(error);
+						throw error;
 					}),
 				{
 					pending: "Criando item",
@@ -198,11 +203,16 @@ export default function RevenuesPage() {
 															<DialogTitle>Criar Item na Receita</DialogTitle>
 														</DialogHeader>
 														<form onSubmit={handleCreateItem} className="space-y-4">
-															<Input name="name" required placeholder="Nome" />
-															<Textarea name="description" placeholder="Descricão" />
+															<Textarea name="description" placeholder="Nome ou descrição" />
 															<Input name="quantity" type="number" required placeholder="Quantidade" />
-															<Input name="value" type="number" step="0.01" placeholder="Valor" required />
-															<Input name="buyerName" required placeholder="Nome do Comprador" />
+															<Input
+																name="value"
+																type="text"
+																placeholder="Valor unitário"
+																required
+																ref={withMask("brl-currency", { rightAlign: false })}
+															/>
+															<Input name="buyerName" required placeholder="Recebido de" />
 															<Input name="cpf" placeholder="CPF" required ref={withMask("999.999.999-99")} />
 															<Input name="cnpj" placeholder="CNPJ" required ref={withMask("99.999.999/9999-99")} />
 															<Input name="phone" placeholder="Telefone" required ref={withMask("(99) 99999-9999")} />
@@ -220,8 +230,7 @@ export default function RevenuesPage() {
 									<Table>
 										<TableHeader>
 											<TableRow>
-												<TableCell className="whitespace-nowrap">Nome</TableCell>
-												<TableCell className="whitespace-nowrap">Descrição</TableCell>
+												<TableCell className="whitespace-nowrap">Nome/Descrição</TableCell>
 												<TableCell className="whitespace-nowrap">Quantidade</TableCell>
 												<TableCell className="whitespace-nowrap">Valor Unitário</TableCell>
 												<TableCell className="whitespace-nowrap">Data de Criação</TableCell>
@@ -231,7 +240,6 @@ export default function RevenuesPage() {
 										<TableBody>
 											{revenues?.items.map((item) => (
 												<TableRow key={item.id}>
-													<TableCell className="whitespace-nowrap">{item.name}</TableCell>
 													<TableCell className="whitespace-nowrap">{item.description || "-"}</TableCell>
 													<TableCell className="whitespace-nowrap">{item.quantity}</TableCell>
 													<TableCell className="whitespace-nowrap">

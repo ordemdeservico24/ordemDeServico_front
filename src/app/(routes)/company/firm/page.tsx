@@ -1,5 +1,5 @@
 "use client";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { Container } from "@/components/container";
 import Image from "next/image";
 import { Card, CardTitle, CardHeader, CardContent } from "@/components/ui/card";
@@ -25,6 +25,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
 import { hasPermission } from "@/utils/hasPermissions";
 import { useStore } from "@/zustandStore";
+import { withMask } from "use-mask-input";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function FirmPage() {
@@ -71,10 +72,16 @@ export default function FirmPage() {
 			companyName: string;
 			cnpj: string;
 			address: string;
+			city: string;
+			federationUnit: string;
+			postalCode: string;
 		} = {
 			companyName: getInput("companyName").value || "",
 			cnpj: getInput("cnpj").value || "",
 			address: getInput("address").value || "",
+			city: getInput("city").value || "",
+			federationUnit: getInput("federationUnit").value || "",
+			postalCode: getInput("postalCode").value || "",
 		};
 
 		const formData = new FormData();
@@ -85,6 +92,9 @@ export default function FirmPage() {
 		formData.append("companyName", request.companyName);
 		formData.append("cnpj", request.cnpj);
 		formData.append("address", request.address);
+		formData.append("city", request.city);
+		formData.append("federationUnit", request.federationUnit);
+		formData.append("postalCode", request.postalCode);
 
 		toast.promise(
 			fetch(`${BASE_URL}/company/edit-company/${company?.id}`, {
@@ -105,7 +115,7 @@ export default function FirmPage() {
 					}
 				})
 				.then((data) => {
-					console.log(data);
+					// console.log(data);
 				})
 				.catch((error) => {
 					console.log(error);
@@ -164,7 +174,7 @@ export default function FirmPage() {
 													Editar
 												</Button>
 											</DialogTrigger>
-											<DialogContent className="sm:max-w-[425px]">
+											<DialogContent className="sm:max-w-[425px] rounded-xl ">
 												<DialogHeader>
 													<DialogTitle>Editar empresa</DialogTitle>
 													<DialogDescription>Modifique as informações da empresa aqui.</DialogDescription>
@@ -183,6 +193,19 @@ export default function FirmPage() {
 														defaultValue={company?.address}
 														placeholder="Digite aqui o endereço"
 													/>
+													<Input type="text" name="city" defaultValue={company?.city} placeholder="Digite aqui a cidade" />
+													<Input
+														type="text"
+														name="postalCode"
+														defaultValue={company?.postalCode}
+														placeholder="Digite aqui o CEP"
+													/>
+													<Input
+														type="text"
+														name="federationUnit"
+														defaultValue={company?.federationUnit}
+														placeholder="Digite aqui a unidade federativa (UF)"
+													/>
 													<Label htmlFor="companyPhoto">Foto da empresa:</Label>
 													<Input
 														type="file"
@@ -196,7 +219,7 @@ export default function FirmPage() {
 															Salvar
 														</Button>
 														<DialogClose asChild>
-															<Button type="button" className="bg-blue-500 hover:bg-blue-600">
+															<Button type="button" className="bg-blue-500 hover:bg-blue-600 mb-2 sm:mb-0">
 																Cancelar
 															</Button>
 														</DialogClose>
@@ -226,6 +249,15 @@ export default function FirmPage() {
 										</p>
 										<p>
 											<strong>Endereço:</strong> {data?.address || "Não possui"}
+										</p>
+										<p>
+											<strong>Cidade:</strong> {data?.city || "Não possui"}
+										</p>
+										<p>
+											<strong>UF:</strong> {data?.federationUnit || "Não possui"}
+										</p>
+										<p>
+											<strong>CEP:</strong> {data?.postalCode || "Não possui"}
 										</p>
 									</div>
 								</CardContent>

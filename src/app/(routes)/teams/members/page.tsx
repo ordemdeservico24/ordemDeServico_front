@@ -211,62 +211,68 @@ export default function Page() {
 								<TabsContent value="all">
 									<Card x-chunk="dashboard-06-chunk-0">
 										<CardHeader>
-											<CardTitle className="text-[#3b82f6] text-2xl font-bold">Membros</CardTitle>
-											<CardDescription>Cheque todas as informações relacionadas aos membros apresentados.</CardDescription>
 											<div className="flex gap-3 items-center justify-between">
-												{hasPermission(role, ["teams_management", "teamleader"], "create") && (
-													<Dialog>
-														<DialogTrigger asChild>
-															<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
-																Criar
-															</Button>
-														</DialogTrigger>
-														<DialogContent className="sm:max-w-[425px]">
-															<DialogHeader>
-																<DialogTitle>Adicionar membro</DialogTitle>
-																<DialogDescription>
-																	Selecione o usuário e a equipe para criar um membro.
-																</DialogDescription>
-															</DialogHeader>
-															<form
-																action="#"
-																onSubmit={(e) => onSubmit(e)}
-																className="flex flex-col justify-center items-center"
-															>
-																<div className="flex gap-3 flex-col items-center max-w-96 w-full">
-																	<select
-																		name="id"
-																		className="outline-none border focus:border-[#2a2a2a] rounded px-2 py-1 w-full"
-																	>
-																		<option value="">Selecione um usuário</option>
-																		{filteredUsers.map((user, index) => (
-																			<option value={user.id} key={index}>
-																				{user.name}
-																			</option>
-																		))}
-																	</select>
-																	<select
-																		name="teamId"
-																		className="outline-none border focus:border-[#2a2a2a] rounded px-2 py-1 w-full"
-																	>
-																		<option value="">Selecione uma equipe</option>
-																		{teams.map((team, index) => (
-																			<option value={team.id} key={index}>
-																				{team.teamName}
-																			</option>
-																		))}
-																	</select>
-																	<Button
-																		className="text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
-																		type="submit"
-																	>
-																		Criar
-																	</Button>
-																</div>
-															</form>
-														</DialogContent>
-													</Dialog>
-												)}
+												<div>
+													<CardTitle className="text-[#3b82f6] text-2xl font-bold">Membros</CardTitle>
+													<CardDescription>
+														Cheque todas as informações relacionadas aos membros apresentados.
+													</CardDescription>
+												</div>
+												<div className="flex gap-3 items-center justify-between">
+													{hasPermission(role, ["teams_management", "teamleader"], "create") && (
+														<Dialog>
+															<DialogTrigger asChild>
+																<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
+																	Criar
+																</Button>
+															</DialogTrigger>
+															<DialogContent className="sm:max-w-[425px]">
+																<DialogHeader>
+																	<DialogTitle>Adicionar membro</DialogTitle>
+																	<DialogDescription>
+																		Selecione o usuário e a equipe para criar um membro.
+																	</DialogDescription>
+																</DialogHeader>
+																<form
+																	action="#"
+																	onSubmit={(e) => onSubmit(e)}
+																	className="flex flex-col justify-center items-center"
+																>
+																	<div className="flex gap-3 flex-col items-center max-w-96 w-full">
+																		<select
+																			name="id"
+																			className="outline-none border focus:border-[#2a2a2a] rounded px-2 py-1 w-full"
+																		>
+																			<option value="">Selecione um usuário</option>
+																			{filteredUsers.map((user, index) => (
+																				<option value={user.id} key={index}>
+																					{user.name}
+																				</option>
+																			))}
+																		</select>
+																		<select
+																			name="teamId"
+																			className="outline-none border focus:border-[#2a2a2a] rounded px-2 py-1 w-full"
+																		>
+																			<option value="">Selecione uma equipe</option>
+																			{teams.map((team, index) => (
+																				<option value={team.id} key={index}>
+																					{team.teamName}
+																				</option>
+																			))}
+																		</select>
+																		<Button
+																			className="text-white bg-blue-500 hover:bg-blue-600 font-medium rounded px-12 py-2 hover:-translate-y-1 transition-all w-full"
+																			type="submit"
+																		>
+																			Criar
+																		</Button>
+																	</div>
+																</form>
+															</DialogContent>
+														</Dialog>
+													)}
+												</div>
 											</div>
 										</CardHeader>
 										<div className="p-3">

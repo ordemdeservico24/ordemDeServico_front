@@ -15,6 +15,7 @@ import Image from "next/image";
 import MoneyFormatter from "@/components/formatMoneyValues";
 import { useStore } from "@/zustandStore";
 import { hasPermission } from "@/utils/hasPermissions";
+import { FiTrash } from "react-icons/fi";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function CategoryDetailPage() {
@@ -158,6 +159,30 @@ export default function CategoryDetailPage() {
 
 	const totalAmountSpent = categoryItem.items.reduce((sum: number, item: FinancialItem) => sum + item.amountSpent, 0);
 
+	const handleDelete = async (id: string) => {
+		try {
+			const response = await fetch(`${BASE_URL}/finance/delete-item/${id}`, {
+				method: "DELETE",
+				headers: {
+					"Content-type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+			});
+
+			if (response.ok) {
+				toast.success("Item excluído com sucesso!");
+				setTimeout(() => {
+					window.location.reload();
+				}, 1500);
+			} else {
+				toast.error("Ocorreu um erro ao excluir o item.");
+			}
+		} catch (error) {
+			console.error("Erro ao deletar líder:", error);
+			toast.error("Erro ao excluir o líder.");
+		}
+	};
+
 	return (
 		<Container className="overflow-x-auto">
 			<main className="flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">
@@ -225,23 +250,25 @@ export default function CategoryDetailPage() {
 							<CardHeader>
 								<div className="w-full flex justify-between items-center">
 									<CardTitle className="text-xl font-bold">Itens da Categoria</CardTitle>
-									{hasPermission(role, "admin_management", "create") && (
-										<Dialog open={isAddItemDialogOpen} onOpenChange={setIsAddItemDialogOpen}>
-											<DialogTrigger asChild>
-												<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
-													Adicionar Item
-												</Button>
-											</DialogTrigger>
-											<DialogContent className="sm:max-w-[600px]">
-												<DialogHeader>
-													<DialogTitle>Adicionar Item à Categoria</DialogTitle>
-													<DialogDescription>Preencha as informações do novo item.</DialogDescription>
-												</DialogHeader>
+									{hasPermission(role, "admin_management", "create") &&
+										categoryItem.name !== "Estoque" &&
+										categoryItem.name !== "Folha de pagamento" && (
+											<Dialog open={isAddItemDialogOpen} onOpenChange={setIsAddItemDialogOpen}>
+												<DialogTrigger asChild>
+													<Button variant="default" className="bg-blue-500 hover:bg-blue-600">
+														Adicionar Item
+													</Button>
+												</DialogTrigger>
+												<DialogContent className="sm:max-w-[600px]">
+													<DialogHeader>
+														<DialogTitle>Adicionar Item à Categoria</DialogTitle>
+														<DialogDescription>Preencha as informações do novo item.</DialogDescription>
+													</DialogHeader>
 
-												<AddItemForm onAdd={handleAddItem} isLoading={isLoading} />
-											</DialogContent>
-										</Dialog>
-									)}
+													<AddItemForm onAdd={handleAddItem} isLoading={isLoading} />
+												</DialogContent>
+											</Dialog>
+										)}
 								</div>
 							</CardHeader>
 							<div className="overflow-x-auto">
@@ -264,7 +291,7 @@ export default function CategoryDetailPage() {
 												<TableCell className="whitespace-nowrap">{item.name}</TableCell>
 												<TableCell className="whitespace-nowrap">{item.description || "-"}</TableCell>
 												<TableCell className="whitespace-nowrap">
-													R$ {item.amountSpent ? <MoneyFormatter value={item.amountSpent} /> : "0.00"}
+													{item.amountSpent ? <MoneyFormatter value={item.amountSpent} /> : "0.00"}
 												</TableCell>
 												<TableCell className="whitespace-nowrap">
 													{item.itemPhoto ? (
@@ -297,6 +324,34 @@ export default function CategoryDetailPage() {
 												<TableCell className="whitespace-nowrap">
 													{item.installmentValue ? <MoneyFormatter value={item.installmentValue} /> : "-"}
 												</TableCell>
+												{hasPermission(role, "teams_management", "delete") && (
+													<TableCell>
+														<Dialog>
+															<DialogTrigger asChild>
+																<Button variant="ghost">
+																	<FiTrash className="text-red-500 hover:text-red-700" size={20} />
+																</Button>
+															</DialogTrigger>
+															<DialogContent className="sm:max-w-[425px]">
+																<DialogHeader>
+																	<DialogTitle>Excluir Líder</DialogTitle>
+																	<DialogDescription>
+																		Tem certeza que deseja excluir o item <b>{item.name}</b>? Esta ação não poderá
+																		ser desfeita.
+																	</DialogDescription>
+																</DialogHeader>
+																<div className="flex justify-end space-x-4">
+																	<Button variant="outline" onClick={() => console.log("Cancelado")}>
+																		Cancelar
+																	</Button>
+																	<Button variant="destructive" onClick={() => handleDelete(item.id)}>
+																		Confirmar Exclusão
+																	</Button>
+																</div>
+															</DialogContent>
+														</Dialog>
+													</TableCell>
+												)}
 											</TableRow>
 										))}
 									</TableBody>

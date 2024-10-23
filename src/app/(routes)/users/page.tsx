@@ -17,6 +17,7 @@ import { FaEdit } from "react-icons/fa";
 import { Label } from "@/components/ui/label";
 import { useStore } from "@/zustandStore";
 import { hasPermission } from "@/utils/hasPermissions";
+import { FiTrash } from "react-icons/fi";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function Page() {
@@ -292,6 +293,47 @@ export default function Page() {
 		fetchUsers();
 	}, [currentPage, token]);
 
+	const handleDelete = async (id: string) => {
+		await toast.promise(
+			fetch(`${BASE_URL}/user/delete-user/${id}`, {
+				method: "DELETE",
+				headers: {
+					"Content-type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+			})
+				.then(async (res) => {
+					if (res.status === 400 || res.status === 401) {
+						const data = await res.json();
+						toast.error(data.message);
+						throw new Error(data.message);
+					}
+					if (res.ok) {
+						return res.json();
+					}
+					throw new Error("Erro ao excluir categoria.");
+				})
+				.then((data) => {
+					return data;
+				})
+				.catch((error) => {
+					console.log(error);
+					throw error;
+				}),
+			{
+				pending: "Excluindo usuário",
+				success: {
+					render: "Usuário excluído com sucesso",
+					onClose: () => {
+						window.location.reload();
+					},
+					autoClose: 1500,
+				},
+				error: "Ocorreu um erro ao excluir usuário",
+			}
+		);
+	};
+
 	return (
 		<Container className="p-4 overflow-x-auto">
 			<main className="grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8">
@@ -467,19 +509,49 @@ export default function Page() {
 															<TableCell style={{ cursor: "pointer" }} onClick={() => router.push(`/users/${user.id}`)}>
 																<Button variant="outline">Ver dados</Button>
 															</TableCell>
-															{hasPermission(role, "admin_management", "update") && (
-																<TableCell
-																	style={{ cursor: "pointer" }}
-																	onClick={() => {
-																		setIsEditing(true), getUser(user.id);
-																	}}
-																>
+															<TableCell className="flex gap-2">
+																{hasPermission(role, "admin_management", "update") && (
 																	<FaEdit
 																		className="text-gray-500 cursor-pointer hover:text-gray-700 transition-colors duration-200"
 																		size={20}
+																		style={{ cursor: "pointer" }}
+																		onClick={() => {
+																			setIsEditing(true), getUser(user.id);
+																		}}
 																	/>
-																</TableCell>
-															)}
+																)}
+																{hasPermission(role, "admin_management", "delete") && (
+																	<Dialog>
+																		<DialogTrigger asChild>
+																			<FiTrash
+																				className="text-gray-500 cursor-pointer hover:text-gray-700 transition-colors duration-200"
+																				size={20}
+																				style={{ cursor: "pointer" }}
+																			/>
+																		</DialogTrigger>
+																		<DialogContent className="sm:max-w-[425px]">
+																			<DialogHeader>
+																				<DialogTitle>
+																					Excluir {user.isUser ? "Usuário" : "Funcionário"}
+																				</DialogTitle>
+																				<DialogDescription>
+																					Tem certeza que deseja excluir o{" "}
+																					{user.isUser ? "Usuário" : "Funcionário"} <b>{user.name}</b>? Essa
+																					ação não poderá ser desfeita.
+																				</DialogDescription>
+																			</DialogHeader>
+																			<div className="flex justify-end space-x-4">
+																				<Button variant="outline" onClick={() => console.log("Cancelado")}>
+																					Cancelar
+																				</Button>
+																				<Button variant="destructive" onClick={() => handleDelete(user.id)}>
+																					Confirmar Exclusão
+																				</Button>
+																			</div>
+																		</DialogContent>
+																	</Dialog>
+																)}
+															</TableCell>
 														</TableRow>
 													))
 												)}

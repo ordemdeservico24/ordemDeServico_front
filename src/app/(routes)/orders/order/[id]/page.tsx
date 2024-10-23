@@ -97,7 +97,9 @@ export default function Page({ params }: { params: { id: string } }) {
 									<div className="flex justify-between items-center mb-8 mt-4">
 										<h1 className="font-semibold text-2xl text-gray-800">Ordem de Serviço - {order.orderId}</h1>
 										<div className="flex gap-2 items-center">
-											<span className="text-gray-700 text-xs font-semibold">Aberto por: {order.createdBy.name}</span>
+											<span className="text-gray-700 text-xs font-semibold">
+												Aberto por: {order.createdBy ? order.createdBy.name : "Não possui"}
+											</span>
 											<p className="text-gray-500 text-sm">Data de abertura: {order.openningDate}</p>
 										</div>
 									</div>
@@ -167,7 +169,7 @@ export default function Page({ params }: { params: { id: string } }) {
 															</p>
 															<p className="text-gray-600">
 																<strong>Usuário: </strong>
-																{finishedData.finishedBy.name}
+																{finishedData.finishedBy ? finishedData.finishedBy.name : "Não possui"}
 															</p>
 														</div>
 														<div>
@@ -213,9 +215,7 @@ export default function Page({ params }: { params: { id: string } }) {
 																								item.usedQuantity > 1 ? "Unidades" : "Unidade"
 																						  }`
 																						: `${item.usedMeasurement} ${
-																								item.usedMeasurement > 1
-																									? "Metros/Litros"
-																									: "Metro/Litro"
+																								item.usedMeasurement > 1 ? "Metros" : "Metro"
 																						  }`}
 																				</TableCell>
 																			</TableRow>
@@ -240,7 +240,7 @@ export default function Page({ params }: { params: { id: string } }) {
 										<span className="text-gray-600 text-xs font-semibold">
 											Atendido por:{" "}
 											{order.orderFinishedData.map((orderData) => (
-												<>{orderData.finishedBy.name}</>
+												<>{orderData.finishedBy ? orderData.finishedBy.name : "Não possui"}</>
 											))}
 										</span>
 									</div>

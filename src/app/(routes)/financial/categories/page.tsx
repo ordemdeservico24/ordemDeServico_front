@@ -12,6 +12,8 @@ import { Table, TableHeader, TableBody, TableRow, TableCell } from "@/components
 import { toast } from "react-toastify";
 import { useStore } from "@/zustandStore";
 import { hasPermission } from "@/utils/hasPermissions";
+import { FiTrash } from "react-icons/fi";
+import { Eye } from "lucide-react";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function CategoriesPage() {
@@ -87,6 +89,47 @@ export default function CategoriesPage() {
 			console.error("Error creating category:", error);
 			setError("Erro ao criar categoria.");
 		}
+	};
+
+	const handleDelete = async (id: string) => {
+		await toast.promise(
+			fetch(`${BASE_URL}/finance/delete-category/${id}`, {
+				method: "DELETE",
+				headers: {
+					"Content-type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+			})
+				.then(async (res) => {
+					if (res.status === 400 || res.status === 401) {
+						const data = await res.json();
+						toast.error(data.message);
+						throw new Error(data.message);
+					}
+					if (res.ok) {
+						return res.json();
+					}
+					throw new Error("Erro ao excluir categoria.");
+				})
+				.then((data) => {
+					return data;
+				})
+				.catch((error) => {
+					console.log(error);
+					throw error;
+				}),
+			{
+				pending: "Excluindo Categoria",
+				success: {
+					render: "Categoria excluída com sucesso",
+					onClose: () => {
+						window.location.reload();
+					},
+					autoClose: 1500,
+				},
+				error: "Ocorreu um erro ao excluir categoria",
+			}
+		);
 	};
 
 	return (
@@ -169,15 +212,64 @@ export default function CategoriesPage() {
 										</TableHeader>
 										<TableBody>
 											{categories.map((category) => (
-												<TableRow
-													key={category.id}
-													style={{ cursor: "pointer" }}
-													onClick={() => router.push(`/financial/categories/${category.id}`)}
-												>
-													<TableCell className="whitespace-nowrap">{category.name}</TableCell>
-													<TableCell className="whitespace-nowrap">{category.description || "-"}</TableCell>
-													<TableCell className="whitespace-nowrap">
+												<TableRow key={category.id}>
+													<TableCell
+														className="whitespace-nowrap"
+														style={{ cursor: "pointer" }}
+														onClick={() => router.push(`/financial/categories/${category.id}`)}
+													>
+														{category.name}
+													</TableCell>
+													<TableCell
+														className="whitespace-nowrap"
+														style={{ cursor: "pointer" }}
+														onClick={() => router.push(`/financial/categories/${category.id}`)}
+													>
+														{category.description || "-"}
+													</TableCell>
+													<TableCell
+														className="whitespace-nowrap"
+														style={{ cursor: "pointer" }}
+														onClick={() => router.push(`/financial/categories/${category.id}`)}
+													>
 														{new Date(category.createdAt).toLocaleDateString()}
+													</TableCell>
+													<TableCell>
+														{hasPermission(role, "admin_management", "read") && (
+															<Button
+																className="hover:bg-accent bg-transparent"
+																style={{ cursor: "pointer" }}
+																onClick={() => router.push(`/financial/categories/${category.id}`)}
+															>
+																<Eye className="text-black" />
+															</Button>
+														)}
+														{hasPermission(role, "admin_management", "delete") && (
+															<Dialog>
+																<DialogTrigger asChild>
+																	<Button variant="ghost">
+																		<FiTrash className="text-red-500 hover:text-red-700" size={20} />
+																	</Button>
+																</DialogTrigger>
+																<DialogContent className="sm:max-w-[425px]">
+																	<DialogHeader>
+																		<DialogTitle>Excluir Categoria</DialogTitle>
+																		<DialogDescription>
+																			Tem certeza que deseja excluir a categoria <b>{category.name}</b>? Os
+																			itens dentro dela serão excluídos e não poderá ser desfeito.
+																		</DialogDescription>
+																	</DialogHeader>
+																	<div className="flex justify-end space-x-4">
+																		<Button variant="outline" onClick={() => console.log("Cancelado")}>
+																			Cancelar
+																		</Button>
+																		<Button variant="destructive" onClick={() => handleDelete(category.id)}>
+																			Confirmar Exclusão
+																		</Button>
+																	</div>
+																</DialogContent>
+															</Dialog>
+														)}
 													</TableCell>
 												</TableRow>
 											))}

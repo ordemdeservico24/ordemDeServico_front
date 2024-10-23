@@ -147,7 +147,7 @@ export default function Page({ params }: { params: { id: string } }) {
 									</div>
 
 									<AssignedTeam assignedTeam={order.assignedTeam} orderId={order.id} />
-									{order.orderFinishedData.length ? (
+									{order.orderFinishedData && order.orderFinishedData.length >= 1 ? (
 										<Card>
 											<CardHeader>
 												<h1 className="font-medium text-lg">Informações Adicionais</h1>

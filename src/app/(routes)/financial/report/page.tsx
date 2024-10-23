@@ -29,7 +29,7 @@ interface financialReport {
 	revenues: [
 		{
 			itemId: string;
-			itemName: string;
+			itemDescription: string;
 			itemQuantity: number;
 			itemValue: number;
 			createdAt: string;
@@ -59,7 +59,7 @@ export default function Page() {
 		revenues: [
 			{
 				itemId: "",
-				itemName: "",
+				itemDescription: "",
 				itemQuantity: 0,
 				itemValue: 0,
 				createdAt: "",
@@ -256,8 +256,8 @@ export default function Page() {
 							<Table>
 								<TableHeader>
 									<TableRow>
-										<TableHead>Nome</TableHead>
-										<TableHead>Valor</TableHead>
+										<TableHead>Nome/descrição</TableHead>
+										<TableHead>Valor Unitário</TableHead>
 										<TableHead>Itens</TableHead>
 										<TableHead>Criado em</TableHead>
 									</TableRow>
@@ -265,7 +265,7 @@ export default function Page() {
 								<TableBody>
 									{financialReport.revenues.map((item) => (
 										<TableRow key={item.itemId}>
-											<TableCell className="whitespace-nowrap">{item.itemName}</TableCell>
+											<TableCell className="whitespace-normal">{item.itemDescription}</TableCell>
 											<TableCell className="whitespace-nowrap">
 												<MoneyFormatter value={item.itemValue} />
 											</TableCell>

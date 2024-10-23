@@ -7,6 +7,9 @@ export interface ICompany {
 	name: string;
 	cnpj: string;
 	address?: string;
+	city?: string;
+	federationUnit?: string;
+	postalCode?: string;
 	companyName: string;
 	companyPhoto: string | "";
 	planId: string;

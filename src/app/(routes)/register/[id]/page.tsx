@@ -42,7 +42,7 @@ const schema = z
 		email: z.string().email("Email inválido").nonempty("Email é obrigatório"),
 		password: z
 			.string()
-			.min(7, "A senha deve ter no mínimo 7 caracteres")
+			.min(8, "A senha deve ter no mínimo 7 caracteres")
 			.max(16, "A senha pode ter no máximo 16 caracteres")
 			.nonempty("Senha é obrigatória")
 			.regex(/[A-Z]/, "A senha deve ter pelo menos uma letra maiúscula")
